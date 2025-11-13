@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:trendycart/utils/common/app_appbar.dart';
 import 'package:trendycart/view/help_supports/help_support.dart';
+import 'package:trendycart/view/login_screen/controller/login_controller.dart';
 import 'package:trendycart/view/login_screen/login_screen.dart';
 import 'package:trendycart/view/secutity_screen/security_screen.dart';
 
@@ -23,6 +24,10 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
+
+  final LoginController loginController = Get.put(LoginController());
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,6 +120,7 @@ class _SettingScreenState extends State<SettingScreen> {
                               SizedBox(height: 15),
                               InkWell(
                                 onTap: (){
+                                  loginController.logout();
                                   Get.offAll(()=>LoginScreen(),
                                     transition: Transition.rightToLeft
                                   );

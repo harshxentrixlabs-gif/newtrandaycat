@@ -22,15 +22,27 @@ class _MyOrderState extends State<MyOrder> {
   final OrderController orderController = Get.put(OrderController());
 
   @override
+  void initState() {
+    // TODO: implement initState
+    orderController.fetchMyOrder();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppAppBar(title: AppString.myOrder),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(height: Get.height * 0.020,),
+          SizedBox(height: Get.height * 0.020),
           commonNewCategoriesListName(),
           Divider(color: Colors.black),
-          commonCartWidget()
+          Expanded(
+            child: orderController.order.isEmpty
+                ? Center(child: AppText("No Data"))
+                : Obx(() => commonCartWidget()),
+          ),
         ],
       ),
     );
@@ -38,20 +50,21 @@ class _MyOrderState extends State<MyOrder> {
 
   Widget commonNewCategoriesListName() {
     return SizedBox(
-      height: Get.height * 0.04,
+      height: Get.height * 0.05,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: orderController.oderList.length,
-        padding: EdgeInsets.symmetric(horizontal: 10),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         itemBuilder: (BuildContext context, int index) {
           return Obx(
-                () => Padding(
+            () => Padding(
               padding: EdgeInsets.only(right: Get.width * 0.035),
               child: GestureDetector(
                 onTap: () {
                   orderController.selectedIndex.value = index;
                   AppLogs.log(
-                      "Selected index: ${orderController.selectedIndex.value}");
+                    "Selected index: ${orderController.selectedIndex.value}",
+                  );
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(
@@ -91,14 +104,16 @@ class _MyOrderState extends State<MyOrder> {
     );
   }
 
-  Widget commonCartWidget(){
-    return  Expanded(
+  Widget commonCartWidget() {
+    return Expanded(
       child: ListView.builder(
-        itemCount: 5,
+        itemCount: orderController.order.length,
         padding: EdgeInsets.symmetric(horizontal: Get.width * 0.020),
         itemBuilder: (BuildContext context, int index) {
+          final data = orderController.order[index];
+          AppLogs.log("order Data $data");
           return Padding(
-            padding:  EdgeInsets.symmetric(vertical:  Get.height * 0.010),
+            padding: EdgeInsets.symmetric(vertical: Get.height * 0.010),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
@@ -117,8 +132,10 @@ class _MyOrderState extends State<MyOrder> {
                       ),
                     ),
                     child: Padding(
-                      padding:  EdgeInsets.symmetric(
-                          horizontal: 12.0, vertical:Get.height * 0.015 ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.0,
+                        vertical: Get.height * 0.015,
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -129,7 +146,9 @@ class _MyOrderState extends State<MyOrder> {
                           ),
                           Container(
                             padding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 4),
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
                             decoration: BoxDecoration(
                               color: AppColor.primary,
                               borderRadius: BorderRadius.circular(15),
@@ -166,9 +185,8 @@ class _MyOrderState extends State<MyOrder> {
                             children: [
                               Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment:
-                                CrossAxisAlignment.center,
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Expanded(
                                     child: AppText(
@@ -180,16 +198,17 @@ class _MyOrderState extends State<MyOrder> {
                                   ),
                                   Container(
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 4),
+                                      horizontal: 8,
+                                      vertical: 4,
+                                    ),
                                     decoration: BoxDecoration(
                                       color: Colors.red.withValues(alpha: 0.2),
-                                      borderRadius:
-                                      BorderRadius.circular(6),
+                                      borderRadius: BorderRadius.circular(6),
                                     ),
                                     child: AppText(
                                       "Pending Pay",
                                       fontSize: Get.height * 0.012,
-                                      color:Colors.red,
+                                      color: Colors.red,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -198,7 +217,7 @@ class _MyOrderState extends State<MyOrder> {
                               SizedBox(height: Get.height * 0.020),
                               Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   AppText(
                                     '\$3000',
@@ -223,28 +242,41 @@ class _MyOrderState extends State<MyOrder> {
                     padding: const EdgeInsets.all(10.0),
                     child: Row(
                       children: [
-                        Expanded(child: OutlineWhiteButton(text: AppString.viewDetails, onTap: () {  },)),
-                        SizedBox(width: Get.width * 0.025,),
-                        Expanded(child: CommonButton(title: "Pay Now",onTap: (){
-                          AppLogs.log("Go to Pay Now");
-                          Get.to(()=>AuctionOrderDetails(),
-                            transition: Transition.rightToLeft
-                          );
-                        },))
+                        Expanded(
+                          child: OutlineWhiteButton(
+                            text: AppString.viewDetails,
+                            onTap: () {},
+                          ),
+                        ),
+                        SizedBox(width: Get.width * 0.025),
+                        Expanded(
+                          child: CommonButton(
+                            title: "Pay Now",
+                            onTap: () {
+                              AppLogs.log("Go to Pay Now");
+                              Get.to(
+                                () => AuctionOrderDetails(),
+                                transition: Transition.rightToLeft,
+                              );
+                            },
+                          ),
+                        ),
                       ],
                     ),
                   ),
                   Container(
                     decoration: BoxDecoration(
                       color: AppColor.primary.withValues(alpha: 0.2),
-                      borderRadius:  BorderRadius.only(
+                      borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(10),
                         bottomRight: Radius.circular(10),
                       ),
                     ),
                     child: Padding(
-                      padding:  EdgeInsets.symmetric(
-                          horizontal: 12.0, vertical:Get.height * 0.015 ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.0,
+                        vertical: Get.height * 0.015,
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

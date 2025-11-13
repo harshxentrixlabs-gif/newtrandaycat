@@ -1,6 +1,7 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:trendycart/app_string/app_string.dart';
 import 'package:trendycart/utils/common/app_appbar.dart';
 import 'package:trendycart/utils/common/app_button_v1.dart';
 
@@ -20,10 +21,10 @@ class _SellerLiveStreamingState extends State<SellerLiveStreaming> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppAppBar(title: "Select Product"),
+      appBar: AppAppBar(title: AppString.selectProduct),
       bottomSheet: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: CommonButton(title: "Go Live"),
+        padding:  EdgeInsets.all(15.0),
+        child: CommonButton(title: AppString.goLive),
       ),
       body: SingleChildScrollView(
         child: Padding(

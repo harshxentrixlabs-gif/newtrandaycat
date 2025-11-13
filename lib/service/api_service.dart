@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import '../utils/app_print.dart';
 import '../utils/app_storage.dart';
+import 'api_config.dart';
 
 class ApiResponse<T> {
   final bool success;
@@ -40,6 +41,7 @@ class ApiResponse<T> {
 }
 
 class AppApi {
+
   static AppApi? _instance;
   late Dio _dio;
 
@@ -51,12 +53,17 @@ class AppApi {
 
   AppApi._internal() {
     _dio = Dio();
+    setBaseUrl(ApiConfig.BASE_URL);
     _setupInterceptors();
-    final token = AppStorage().read<String>("token");
-    AppLogs.log("$token", tag: 'API_LOG_ACCESS_TOKEN');
-    if (token != null && token.isNotEmpty) {
-      setAuthToken(token);
-    }
+    // final token = AppStorage().read<String>("token");
+    // AppLogs.log("$token", tag: 'API_LOG_ACCESS_TOKEN');
+    // if (token != null && token.isNotEmpty) {
+    //   setAuthToken(token);
+    // }
+
+    _dio.options.headers['key'] = ApiConfig.SECRET_KEY;
+    _dio.options.headers['Content-Type'] = "application/json; charset=UTF-8";
+
   }
 
   // Setup interceptors for enhanced logging
@@ -294,6 +301,7 @@ class AppApi {
         response.data as T,
         statusCode: response.statusCode,
       );
+
     } on DioException catch (e) {
       return _handleError<T>(e);
     } catch (e) {

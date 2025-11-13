@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:trendycart/app_string/app_string.dart';
 import 'package:trendycart/utils/app_color.dart';
 import 'package:trendycart/utils/common/app_appbar.dart';
 import 'package:trendycart/utils/common/app_text.dart';
@@ -15,7 +16,7 @@ class _SellerMyAddressState extends State<SellerMyAddress> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppAppBar(title: "My Address"),
+      appBar: AppAppBar(title: AppString.myAddress),
       body: Padding(
         padding:  EdgeInsets.symmetric(horizontal: Get.width * 0.050,vertical: Get.height * 0.020),
         child: Column(
@@ -44,7 +45,7 @@ class _SellerMyAddressState extends State<SellerMyAddress> {
                      ),
                      child: Padding(
                        padding: const EdgeInsets.all(5.0),
-                       child: AppText("Change Address",color: Colors.red,),
+                       child: AppText(AppString.changeAddress,color: Colors.red,),
                      ),
                    )
                  ],

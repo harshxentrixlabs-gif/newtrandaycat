@@ -1,5 +1,6 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:trendycart/app_string/app_string.dart';
 import 'package:trendycart/utils/app_color.dart';
 import 'package:trendycart/utils/app_icons.dart';
@@ -9,6 +10,7 @@ import 'package:trendycart/utils/common/app_text.dart';
 import 'package:get/get.dart';
 import 'package:trendycart/utils/common/common_appbar.dart';
 import 'package:trendycart/view/home_screen/controller/home_controller.dart';
+import 'package:trendycart/view/home_screen/model/home_model.dart';
 import 'package:trendycart/view/live_auction/live_auction.dart';
 import 'package:trendycart/view/live_screen/live_screen.dart';
 import 'package:trendycart/view/new_categories/new_categories.dart';
@@ -34,10 +36,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
   bool select = false;
 
+  final box = GetStorage();
+
+  late String userName = box.read('userName') ?? "Guest User";
+  late String userEmail = box.read('userEmail') ?? "";
+  late String userPhoto = box.read('userPhoto') ??
+      "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    homeController.liveSellerList;
+    homeController.fetchLiveSellerList();
+    homeController.fetchReels();
+    homeController.fetchJustForYou();
+    homeController.fetchProduct();
     AppLogs.log("Home Screen");
   }
   NavigationController navigationController = Get.find();
@@ -47,9 +62,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: AppColor.background,
       appBar: CommonAppBar(
-        name: "Harsh",
-        subName: "Flutter Developer",
-        images: "https://plus.unsplash.com/premium_photo-1690579805307-7ec030c75543?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
+        name: userName,
+        subName: userEmail,
+        images: userPhoto,
         actions: [
           Padding(
             padding: EdgeInsets.only(right: Get.width * 0.05),
@@ -109,33 +124,42 @@ class _HomeScreenState extends State<HomeScreen> {
               Row(
                 children: [
                   AppImage.svg(AppIcons.star),
-                  SizedBox(width: Get.width * 0.015),
+                  SizedBox(width: Get.width * 0.025),
                   AppText(AppString.liveSelling, fontWeight: FontWeight.w600),
                 ],
               ),
-              commonLiveSelling((){
+
+              SizedBox(height: Get.height * 0.015),
+             Obx(()=> commonLiveSelling((){
                 Get.to(()=>LiveScreen());
               }),
+             ),
+              SizedBox(height: Get.height * 0.015),
+              if(homeController.reelsResponse.isNotEmpty)
               commonViewAllAndTitle(title: AppString.shorts, images: AppIcons.flash, onTap: () {AppLogs.log("Shorts"); navigationController.changeIndex(1); }),
+              if(homeController.reelsResponse.isNotEmpty)
+              SizedBox(height: Get.height * 0.015),
+              if(homeController.reelsResponse.isNotEmpty)
               commonShorts((){
                 navigationController.changeIndex(1);
               }),
-              SizedBox(height: Get.height * 0.010),
-              commonViewAllAndTitle(title: AppString.liveAuction, images: AppIcons.auction,
-                  onTap: ()
-                  {
-                    AppLogs.log("Live Auction");
-                    Get.to(()=>LiveAuction(),
-                      transition: Transition.rightToLeft
-                    );
-                  }),
-              SizedBox(height: Get.height * 0.010),
-              commonLiveAuction((){
-                AppLogs.log("Live Auction");
-                Get.to(()=>ProductDetailsScreen(),
-                    transition: Transition.rightToLeft
-                );
-              }),
+
+              // SizedBox(height: Get.height * 0.015),
+              // commonViewAllAndTitle(title: AppString.liveAuction, images: AppIcons.auction,
+              //     onTap: ()
+              //     {
+              //       AppLogs.log("Live Auction");
+              //       Get.to(()=>LiveAuction(),
+              //         transition: Transition.rightToLeft
+              //       );
+              //     }),
+              // SizedBox(height: Get.height * 0.015),
+              // commonLiveAuction((){
+              //   AppLogs.log("Live Auction");
+              //   Get.to(()=>ProductDetailsScreen(),
+              //       transition: Transition.rightToLeft
+              //   );
+              // }),
               SizedBox(height: Get.height * 0.020),
               commonViewAllAndTitle(title: AppString.newCategories, images: AppIcons.menu,
                   onTap: () {
@@ -144,18 +168,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     transition: Transition.rightToLeft
                 );
               }),
+              SizedBox(height: Get.height * 0.020),
               commonNewCategoriesListName((){
                 // AppLogs.log("New Categories List");
                 // Get.to(()=>ProductDetailsScreen(),
                 // );
               }),
-              SizedBox(height: Get.height * 0.020),
-              commonNewCategoriesAndPopular(title: 'New Categories',onTap: (){
+              SizedBox(height: Get.height * 0.015),
+            Obx(()=>  commonNewCategoriesAndPopular(title: 'New Categories',onTap: (){
                 AppLogs.log("New Categories List");
                 Get.to(()=>ProductDetailsScreen(),
                 );
               }),
-              SizedBox(height: Get.height * 0.020),
+            ),
+              SizedBox(height: Get.height * 0.015),
               commonViewAllAndTitle(title: AppString.popularProducts, onTap: () {
                 AppLogs.log("Popular Products");
                 AppLogs.log("Popular Products");
@@ -163,20 +189,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     transition: Transition.rightToLeft
                 );
                 }, images:'',),
-              SizedBox(height: Get.height * 0.020),
-              commonNewCategoriesAndPopular(title: 'Popular Products', onTap: () {
+              SizedBox(height: Get.height * 0.015),
+             Obx(()=> commonNewCategoriesAndPopular(title: 'Popular Products', onTap: () {
                 AppLogs.log("Popular Products");
                 Get.to(()=>ProductDetailsScreen(),
                     transition: Transition.rightToLeft
                 );
               }),
-              SizedBox(height: Get.height * 0.020),
+             ),
+              SizedBox(height: Get.height * 0.015),
               AppText(AppString.justForYou, fontWeight: FontWeight.w600),
-              commonJustForYou((){
+             Obx(()=> commonJustForYou((){
                 Get.to(()=>ProductDetailsScreen(),
                     transition: Transition.rightToLeft
                 );
-              })
+              }),
+             )
             ],
           ),
         ),
@@ -215,8 +243,10 @@ class _HomeScreenState extends State<HomeScreen> {
       height: 80,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: 5,
+        itemCount: homeController.liveSellerList.length,
         itemBuilder: (BuildContext context, int index) {
+          final data = homeController.liveSellerList[index];
+          AppLogs.log("data $data");
           return Padding(
             padding: EdgeInsets.all(8.0),
             child: DottedBorder(
@@ -228,7 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: 60,
                     height: 60,
                     child: AppImage.network(
-                      "https://thrivenextgen.com/wp-content/uploads/AdobeStock_162765779_45-scaled.webp",
+                      data.image ?? "",
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -246,12 +276,13 @@ class _HomeScreenState extends State<HomeScreen> {
       height: Get.height * 0.25,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: 5,
+        itemCount: homeController.reelsResponse.length,
         itemBuilder: (BuildContext context, int index) {
+          final reel = homeController.reelsResponse[index];
+          AppLogs.log("reel $reel");
           return Padding(
             padding: EdgeInsets.only(
               right: Get.width * 0.05,
-              top: Get.height * 0.010,
             ),
             child: GestureDetector(
               onTap: Function,
@@ -290,7 +321,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget commonLiveAuction(Function() onTap) {
     return SizedBox(
-      height: Get.height * 0.22,
+      height: Get.height * 0.23,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: 5,
@@ -299,7 +330,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: onTap,
             child: Container(
               width: Get.width * 0.35,
-              margin: EdgeInsets.only(right: Get.width * 0.04),
+              margin: EdgeInsets.only(right: Get.width * 0.04,bottom: 5),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(15),
@@ -312,7 +343,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ClipRRect(
                     borderRadius: const BorderRadius.only(
@@ -326,25 +357,29 @@ class _HomeScreenState extends State<HomeScreen> {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      AppText(
-                        'Live Selling',
-                        fontSize: Get.height * 0.016,
-                        fontWeight: FontWeight.w600,
-                        color: AppColor.textBlack,
-                      ),
-                      SizedBox(height: 3),
-                      AppText(
-                        'Limited Time Offer!',
-                        fontSize: Get.height * 0.014,
-                        color: AppColor.textBlack,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
+                  Padding(
+                    padding:  EdgeInsets.only(left: 8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 5),
+                        AppText(
+                          'Live Selling',
+                          fontSize: Get.height * 0.016,
+                          fontWeight: FontWeight.w600,
+                          color: AppColor.textBlack,
+                        ),
+                        SizedBox(height: 5),
+                        AppText(
+                          'Limited Time Offer!',
+                          fontSize: Get.height * 0.012,
+                          color: AppColor.textBlack,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
                   ),
+                  SizedBox(height: 5),
                   Expanded(
                     child: Container(
                       alignment: Alignment.center,
@@ -375,18 +410,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget commonNewCategoriesListName(Function() onTap) {
     return SizedBox(
-        height: Get.height * 0.07,
+        height: Get.height * 0.06,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: 5,
-          padding:  EdgeInsets.symmetric(horizontal: 10),
+          padding:  EdgeInsets.only(right: 10),
           itemBuilder: (BuildContext context, int index) {
+
             AppLogs.log(
                 "Selected index: ${homeController.selectedIndex.value == index}");
             return Obx(()=> Padding(
               padding: EdgeInsets.only(
                 right: Get.width * 0.035,
-                top: Get.height * 0.019,
+                // top: Get.height * 0.019,
               ),
               child: GestureDetector(
                 onTap: (){
@@ -438,18 +474,19 @@ class _HomeScreenState extends State<HomeScreen> {
   }) {
     bool showLike = title != 'Popular Products';
     return SizedBox(
-      height: Get.height * 0.22,
+      height: Get.height * 0.24,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: 5,
-        padding:  EdgeInsets.symmetric(horizontal: 12),
+        itemCount: homeController.newCollectionProduct.length,
+        padding:  EdgeInsets.only(right: 10),
         itemBuilder: (BuildContext context, int index) {
-           bool isSelected = false;
+          final data = homeController.newCollectionProduct[index];
+          AppLogs.log("data NewCollection $data");
           return GestureDetector(
             onTap: onTap,
             child: Container(
               width: Get.width * 0.38,
-              margin:  EdgeInsets.only(right: 14),
+              margin:  EdgeInsets.only(right: 14,bottom: 4),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
@@ -472,7 +509,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           topRight: Radius.circular(16),
                         ),
                         child: AppImage.network(
-                          'https://thrivenextgen.com/wp-content/uploads/AdobeStock_162765779_45-scaled.webp',
+                          data.mainImage,
                           width: double.infinity,
                           height: Get.height * 0.14,
                           fit: BoxFit.cover,
@@ -485,26 +522,22 @@ class _HomeScreenState extends State<HomeScreen> {
                           right: 6,
                           child: GestureDetector(
                             onTap: () {
-                              AppLogs.log('Liked item $index');
+                              homeController.like(data);   // ← only on tap
                             },
                             child: Container(
-                              padding:  EdgeInsets.all(5),
+                              padding: EdgeInsets.all(5),
                               decoration: BoxDecoration(
                                 color: Colors.white70,
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
-                                isSelected
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
-                                color: isSelected
-                                    ? Colors.redAccent
-                                    : Colors.black54,
-                                size: 20,
+                                data.isFavorite ? Icons.favorite : Icons.favorite_border,
+                                color: data.isFavorite ? Colors.red : Colors.black54,
                               ),
                             ),
                           ),
                         ),
+
                     ],
                   ),
                   Expanded(
@@ -516,7 +549,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Expanded(
                             child: AppText(
-                              'Live Selling',
+                              data.productName,
                               fontSize: Get.height * 0.014,
                               fontWeight: FontWeight.w600,
                               color: AppColor.textBlack,
@@ -528,7 +561,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Row(
                               children: [
                                 AppText(
-                                  '\$3000',
+                                  '\$${data.price ?? 0}',
                                   fontSize: Get.height * 0.016,
                                   color: AppColor.primary,
                                   fontWeight: FontWeight.bold,
@@ -541,7 +574,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: Colors.yellow,
                                 ),
                                 AppText(
-                                  '4.5',
+                                  data.review == 0 ? 'No Reviews' : '${data.review} Reviews',
                                   fontSize: Get.height * 0.013,
                                   color: AppColor.textBlack,
                                   overflow: TextOverflow.ellipsis,
@@ -549,9 +582,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                           ),
+                          SizedBox(height: Get.height * 0.005),
                           Expanded(
                             child: AppText(
-                              'Top Trending Product',
+                              data.description,
                               fontSize: Get.height * 0.013,
                               fontWeight: FontWeight.w500,
                               color: Colors.grey[700],
@@ -572,13 +606,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 
-  Widget commonJustForYou(Function() onTap){
+  Widget commonJustForYou(Function() onTap) {
     return ListView.builder(
       scrollDirection: Axis.vertical,
-      itemCount: 5,
+      itemCount: homeController.justForYouProduct.length,
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: (BuildContext context, int index) {
+        final just = homeController.justForYouProduct[index];
+
         return GestureDetector(
           onTap: onTap,
           child: Container(
@@ -590,92 +626,107 @@ class _HomeScreenState extends State<HomeScreen> {
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.08),
                   blurRadius: 6,
-                  offset:  Offset(0, 3),
+                  offset: Offset(0, 3),
                 ),
               ],
             ),
             child: Padding(
-              padding:  EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(8.0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  /// Product Image
                   ClipRRect(
-                    borderRadius:  BorderRadius.all(Radius.circular(15)
-                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
                     child: AppImage.network(
+                      just.mainImage.toString(),
                       width: Get.width * 0.25,
                       height: Get.height * 0.10,
-                      'https://thrivenextgen.com/wp-content/uploads/AdobeStock_162765779_45-scaled.webp',
                       fit: BoxFit.cover,
                     ),
                   ),
-                  SizedBox(width: Get.width * 0.030,),
+
+                  SizedBox(width: Get.width * 0.030),
+
+                  /// Product Details
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        AppText("Hello",fontWeight: FontWeight.bold,overflow: TextOverflow.ellipsis,),
-                        SizedBox(height: Get.height * 0.008,),
+                        /// Product Name
+                        AppText(
+                          just.productName.toString(),
+                          fontWeight: FontWeight.bold,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+
+                        SizedBox(height: Get.height * 0.008),
+
+                        /// 🔥 Attributes (Perfect Working)
                         SizedBox(
-                          height: Get.height * 0.02,
+                          height: Get.height * 0.03,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: 5,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                  right: Get.width * 0.02,
-                                ),
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: Get.width * 0.02,
-                                      // vertical: Get.height * 0.01,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color:  Colors.black ,),
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: Padding(
-                                    padding:  EdgeInsets.symmetric(vertical: Get.height * 0.001),
-                                    child: Center(
-                                      child: AppText(
-                                        "Red",
-                                        fontSize: Get.height * 0.008,
-                                        color:  AppColor.textBlack,
-                                      ),
+                            itemCount: just.attributes.length,
+                            itemBuilder: (context, attrIndex) {
+                              final attr = just.attributes[attrIndex];
+                              return Row(
+                                children: attr.value.map((v) {
+                                  return Container(
+                                    margin: EdgeInsets.only(right: 8),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 4,
                                     ),
-                                  ),
-                                ),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.black),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: AppText(
+                                      v.toString(),
+                                      fontSize: Get.height * 0.010,
+                                    ),
+                                  );
+                                }).toList(),
                               );
                             },
                           ),
                         ),
-                        SizedBox(height: Get.height * 0.008,),
+
+                        SizedBox(height: Get.height * 0.008),
+
+                        /// Price
                         AppText(
-                          '\$3000',
+                          '\$${just.price ?? 0}',
                           fontSize: Get.height * 0.014,
                           color: AppColor.primary,
                           fontWeight: FontWeight.bold,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        SizedBox(height: Get.height * 0.008,),
+
+                        SizedBox(height: Get.height * 0.008),
+
+                        /// Reviews
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            AppImage.svg(AppIcons.star,height: Get.height * 0.020,color: Colors.yellow),
-                            SizedBox(width: Get.width * 0.010,),
+                            AppImage.svg(
+                              AppIcons.star,
+                              height: Get.height * 0.020,
+                              color: Colors.yellow,
+                            ),
+                            SizedBox(width: Get.width * 0.010),
                             AppText(
-                              'No Reviews',
+                              just.review == 0
+                                  ? 'No Reviews'
+                                  : '${just.review} Reviews',
                               fontSize: Get.height * 0.012,
                               color: AppColor.textBlack,
-                              overflow: TextOverflow.ellipsis,
                             ),
                           ],
                         ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -684,5 +735,6 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
+
 
 }

@@ -144,6 +144,48 @@ class AppString{
    static String get liveStreaming => "liveStreaming".tr;
    static String get uploadedShort => "uploadedShort".tr;
    static String get bankAccount => "bankAccount".tr;
+   static String get auction => "auction".tr;
+   static String get deActivate => "deActivate".tr;
+   static String get listingSummary => "listingSummary".tr;
+   static String get photos => "photos".tr;
+   static String get pleaseProvidePhotosForYourItem => "pleaseProvidePhotosForYourItem".tr;
+   static String get uploadPhotos => "uploadPhotos".tr;
+   static String get takePhotos => "takePhotos".tr;
+   static String get title => "title".tr;
+   static String get pleaseProvideATitleForYourItem => "pleaseProvideATitleForYourItem".tr;
+   static String get category => "category".tr;
+   static String get pleaseProvideACategoryForYourItem => "pleaseProvideACategoryForYourItem".tr;
+   static String get itemSpecific => "itemSpecific".tr;
+   static String get additionalSpecificAreRequired => "additionalSpecificAreRequired".tr;
+   static String get description => "description".tr;
+   static String get pleaseProvideADescriptiveTitleForYourItem => "pleaseProvideADescriptiveTitleForYourItem".tr;
+   static String get pricing => "pricing".tr;
+   static String get pleaseProvideAStartingBidForYourItem => "pleaseProvideAStartingBidForYourItem".tr;
+   static String get preferences => "preferences".tr;
+   static String get pleaseProvideAPreferencesForYourItem => "pleaseProvideAPreferencesForYourItem".tr;
+   static String get preview => "preview".tr;
+   static String get selectDate => "selectDate".tr;
+   static String get selectDateRange => "selectDateRange".tr;
+   static String get orderList => "orderList".tr;
+   static String get pendingOrder => "pendingOrder".tr;
+   static String get confirmedOrder=> "confirmedOrder".tr;
+   static String get outOfDeliveryOrder=> "outOfDeliveryOrder".tr;
+   static String get deliveredOrder=> "deliveredOrder".tr;
+   static String get cancelOrder=> "cancelOrder".tr;
+   static String get totalOrder=> "totalOrder".tr;
+   static String get totalEarning => "totalEarning".tr;
+   static String get enterAmount => "enterAmount".tr;
+   static String get enterWithdrawAmount => "enterWithdrawAmount".tr;
+   static String get selectPaymentGateway => "selectPaymentGateway".tr;
+   static String get withdraw => "Withdraw".tr;
+   static String get selectProduct => "selectProduct".tr;
+   static String get goLive => "goLive".tr;
+   static String get changeAddress => "changeAddress".tr;
+   static String get accountNumber => "accountNumber".tr;
+   static String get iFSCCode => "iFSCCode".tr;
+   static String get branchName => "branchName".tr;
+   static String get changeBankDetails => "changeBankDetails".tr;
+
 
 
 

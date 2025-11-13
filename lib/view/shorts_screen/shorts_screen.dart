@@ -1,15 +1,11 @@
-import 'dart:developer' as AppLogs;
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:trendycart/app_string/app_string.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:trendycart/utils/common/app_text.dart';
 import 'package:video_player/video_player.dart';
-
+import '../../app_string/app_string.dart';
 import '../../utils/app_color.dart';
-import '../../utils/app_icons.dart';
 import '../../utils/common/app_image.dart';
-import '../splash_screen/controller/splash_screen.dart';
 import 'controller/shorts_controller.dart';
 
 class ShortsScreen extends StatefulWidget {
@@ -20,33 +16,56 @@ class ShortsScreen extends StatefulWidget {
 }
 
 class _ShortsScreenState extends State<ShortsScreen> {
-
   final ShortsController controller = Get.put(ShortsController());
 
+  final box = GetStorage();
 
-
-  SplashScreenController splashScreenController = Get.find();
+  late String userName = box.read('userName') ?? "Guest User";
+  late String userEmail = box.read('userEmail') ?? "";
+  late String userPhoto = box.read('userPhoto') ??
+      "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: GetBuilder<ShortsController>(
         builder: (controller) {
           return PageView.builder(
             scrollDirection: Axis.vertical,
-            controller: splashScreenController.controller,
             itemCount: controller.videoUrls.length,
             onPageChanged: (index) {
-              splashScreenController.dotsIndicator.value = index;
+              controller.onPageChanged(index);
             },
             itemBuilder: (context, index) {
               return Stack(
                 children: [
-                  InkWell(
-                    onTap: controller.togglePlayPause,
-                    child: controller.videoController.value.isInitialized
-                        ? VideoPlayer(controller.videoController)
-                        :  Center(child: CircularProgressIndicator()),
+                  Center(
+                    child: GestureDetector(
+                      onTap: controller.togglePlayPause,
+                      child: controller.videoController.value.isInitialized
+                           ?  ClipRect(
+                             child: Align(
+                                alignment: Alignment.center,
+                                heightFactor: 0.998,
+                                widthFactor: 0.998,
+                                                       child: VideoPlayer(controller.videoController)),
+                           )
+                          :  Center(child: CircularProgressIndicator(color: Colors.white,)),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 150,
+                    right: 20,
+                    child: Column(
+                      children: [
+                        commonButton(Icons.favorite_border, () {}),
+                        SizedBox(height: 10),
+                        commonButton(Icons.share, () {}),
+                        SizedBox(height: 10),
+                        commonButton(Icons.more_vert, () {}),
+                      ],
+                    ),
                   ),
                   Positioned(
                     bottom: 20,
@@ -76,7 +95,9 @@ class _ShortsScreenState extends State<ShortsScreen> {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 border: Border.all(
-                                    width: 1, color: Colors.black),
+                                  width: 1,
+                                  color: Colors.black,
+                                ),
                               ),
                               child: Padding(
                                 padding: EdgeInsets.all(2.0),
@@ -88,11 +109,13 @@ class _ShortsScreenState extends State<ShortsScreen> {
                                     shape: BoxShape.circle,
                                   ),
                                   child: Image.network(
-                                    "https://plus.unsplash.com/premium_photo-1690579805307-7ec030c75543?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
+                                    userPhoto,
                                     fit: BoxFit.cover,
-                                    errorBuilder: (context, error,
-                                        stackTrace) =>
-                                        Icon(Icons.person, color: Colors.grey),
+                                    errorBuilder:
+                                        (context, error, stackTrace) => Icon(
+                                          Icons.person,
+                                          color: Colors.grey,
+                                        ),
                                   ),
                                 ),
                               ),
@@ -104,7 +127,7 @@ class _ShortsScreenState extends State<ShortsScreen> {
                                 Row(
                                   children: [
                                     AppText(
-                                      "Harsh",
+                                     userName,
                                       fontSize: Get.height * 0.015,
                                       fontWeight: FontWeight.bold,
                                       color: AppColor.textWhite,
@@ -113,7 +136,8 @@ class _ShortsScreenState extends State<ShortsScreen> {
                                     Container(
                                       decoration: BoxDecoration(
                                         color: Colors.black.withValues(
-                                            alpha: 0.3),
+                                          alpha: 0.3,
+                                        ),
                                         borderRadius: BorderRadius.all(
                                           Radius.circular(15),
                                         ),
@@ -136,7 +160,7 @@ class _ShortsScreenState extends State<ShortsScreen> {
                                   ],
                                 ),
                                 AppText(
-                                  "Flutter Developer",
+                                  userEmail,
                                   fontSize: Get.height * 0.012,
                                   color: AppColor.textWhite,
                                 ),
@@ -146,7 +170,7 @@ class _ShortsScreenState extends State<ShortsScreen> {
                         ),
                         SizedBox(height: Get.height * 0.010),
                         AppText(
-                          'User Info & Caption,huhehjfhsvdsddf.',
+                          'User Info & Caption',
                           color: Colors.white,
                           fontSize: Get.height * 0.014,
                           overflow: TextOverflow.ellipsis,
@@ -162,7 +186,7 @@ class _ShortsScreenState extends State<ShortsScreen> {
                                 child: Container(
                                   width: Get.width * 0.65,
                                   decoration: BoxDecoration(
-                                    color: Colors.black.withValues(alpha: 0.3),
+                                    color: Colors.white.withValues(alpha: 0.3),
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(15),
                                     ),
@@ -186,14 +210,14 @@ class _ShortsScreenState extends State<ShortsScreen> {
                                         Flexible(
                                           child: Column(
                                             crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Expanded(
                                                 child: AppText(
                                                   "Hello",
                                                   color: AppColor.textWhite,
-                                                  overflow: TextOverflow
-                                                      .ellipsis,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
                                               ),
                                               SizedBox(height: 5),
@@ -201,8 +225,8 @@ class _ShortsScreenState extends State<ShortsScreen> {
                                                 child: AppText(
                                                   "Hello madfnsjdn sdsdf jkdshfisdfhisdfsdjfhsiofdjfoisuh",
                                                   color: AppColor.textWhite,
-                                                  overflow: TextOverflow
-                                                      .ellipsis,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                   fontSize: Get.height * 0.010,
                                                 ),
                                               ),
@@ -213,35 +237,40 @@ class _ShortsScreenState extends State<ShortsScreen> {
                                                     AppText(
                                                       "\$ 300",
                                                       color: AppColor.primary,
-                                                      fontWeight: FontWeight
-                                                          .bold,
-                                                      overflow: TextOverflow
-                                                          .ellipsis,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                     ),
                                                     Spacer(),
                                                     Container(
                                                       decoration: BoxDecoration(
                                                         color: AppColor.primary,
                                                         borderRadius:
-                                                        BorderRadius.all(
-                                                          Radius.circular(10),
-                                                        ),
+                                                            BorderRadius.all(
+                                                              Radius.circular(
+                                                                10,
+                                                              ),
+                                                            ),
                                                       ),
                                                       child: Padding(
-                                                        padding: EdgeInsets
-                                                            .only(left: 15.0,
-                                                            right: 15,
-                                                            top: 2,
-                                                            bottom: 2),
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                              left: 15.0,
+                                                              right: 15,
+                                                              top: 2,
+                                                              bottom: 2,
+                                                            ),
                                                         child: AppText(
                                                           AppString.byNow,
                                                           color: AppColor
                                                               .textWhite,
                                                           overflow: TextOverflow
                                                               .ellipsis,
-                                                          fontWeight: FontWeight
-                                                              .bold,
-                                                          fontSize: Get.height *
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize:
+                                                              Get.height *
                                                               0.012,
                                                         ),
                                                       ),
@@ -263,38 +292,26 @@ class _ShortsScreenState extends State<ShortsScreen> {
                       ],
                     ),
                   ),
-                  Positioned(
-                    bottom: 150,
-                    right: 20,
-                    child: Column(
-                      children: [
-                        commonButton(Icons.favorite_border, () {}),
-                        SizedBox(height: 10),
-                        commonButton(Icons.share, () {}),
-                        SizedBox(height: 10),
-                        commonButton(Icons.more_vert, () {}),
-                      ],
-                    ),
-                  ),
+
                 ],
               );
             },
           );
-        }
+        },
       ),
     );
   }
 
   Widget commonButton(IconData icon, Function() onTap) {
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.black.withValues(alpha: 0.3),
+          color: Colors.black.withOpacity(0.3),
           shape: BoxShape.circle,
         ),
         child: Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           child: Icon(icon, color: Colors.white),
         ),
       ),

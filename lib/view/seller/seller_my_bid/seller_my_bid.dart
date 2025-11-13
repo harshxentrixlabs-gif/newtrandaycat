@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trendycart/app_string/app_string.dart';
 import 'package:trendycart/utils/common/app_appbar.dart';
 import 'package:trendycart/utils/common/app_text.dart';
 
@@ -13,7 +14,7 @@ class _SellerMyBidState extends State<SellerMyBid> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppAppBar(title: "Auction Bid"),
+      appBar: AppAppBar(title: AppString.auctionBid),
       body: Center(child: AppText("No Bid")),
     );
   }

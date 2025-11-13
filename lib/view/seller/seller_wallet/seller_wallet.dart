@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:trendycart/app_string/app_string.dart';
 import 'package:trendycart/utils/app_color.dart';
 import 'package:trendycart/utils/common/app_appbar.dart';
 import 'package:trendycart/utils/common/app_button_v1.dart';
@@ -19,14 +20,16 @@ class SellerWallet extends StatefulWidget {
 
 class _SellerWalletState extends State<SellerWallet> {
   TextEditingController textEditingController = TextEditingController();
-
   var select = "";
+
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppAppBar(
-        title: "My Wallet",
+        title: AppString.myWallet,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 20.0),
@@ -52,7 +55,7 @@ class _SellerWalletState extends State<SellerWallet> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        AppText("Total Earning",fontSize: Get.height * 0.016,fontWeight: FontWeight.bold,color: Colors.grey,),
+                        AppText(AppString.totalEarning,fontSize: Get.height * 0.016,fontWeight: FontWeight.bold,color: Colors.grey,),
                         SizedBox(height: 10,),
                         AppText("\$ 500",fontSize: Get.height * 0.020,fontWeight: FontWeight.bold,),
                       ],
@@ -63,13 +66,13 @@ class _SellerWalletState extends State<SellerWallet> {
               ),
             ),
             SizedBox(height: Get.height * 0.015,),
-            AppText("Enter Amount"),
+            AppText(AppString.enterAmount),
             SizedBox(height: Get.height * 0.015,),
-            CommonTextField(controller: textEditingController, hintText: "Enter withdraw amount"),
+            CommonTextField(controller: textEditingController, hintText: AppString.enterWithdrawAmount),
             SizedBox(height: Get.height * 0.015,),
-            CommonDropdown(hint: "Select Payment Gateway", items: [], selectedValue: select.obs),
+            CommonDropdown(hint: AppString.selectPaymentGateway, items: [], selectedValue: select.obs),
             Spacer(),
-            CommonButton(title: "Withdraw")
+            CommonButton(title: AppString.withdraw)
           ],
         ),
       ),

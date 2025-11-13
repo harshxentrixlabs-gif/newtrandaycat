@@ -30,7 +30,7 @@ class _SellerMyOrderState extends State<SellerMyOrder> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 AppText(
-                  "Select Date",
+                  AppString.selectDate,
                   fontSize: Get.height * 0.020,
                   fontWeight: FontWeight.bold,
                 ),
@@ -44,7 +44,7 @@ class _SellerMyOrderState extends State<SellerMyOrder> {
                     child: Row(
                       children: [
                         AppText(
-                          "Select Date Range",
+                          AppString.selectDateRange,
                           fontSize: Get.height * 0.014,
                           fontWeight: FontWeight.w600,
                           color: AppColor.textWhite,
@@ -71,7 +71,7 @@ class _SellerMyOrderState extends State<SellerMyOrder> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AppText("Order List",fontWeight: FontWeight.w700,color: AppColor.primary,),
+                    AppText(AppString.orderList,fontWeight: FontWeight.w700,color: AppColor.primary,),
                     DottedBorder(
                       options: CustomPathDottedBorderOptions(
                         padding: EdgeInsets.all(8),
@@ -88,7 +88,7 @@ class _SellerMyOrderState extends State<SellerMyOrder> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        AppText("Pending Order"),
+                        AppText(AppString.pendingOrder),
                         Row(
                           children: [
                             AppText("0"),
@@ -98,7 +98,6 @@ class _SellerMyOrderState extends State<SellerMyOrder> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 15,),
                     DottedBorder(
                       options: CustomPathDottedBorderOptions(
                         padding: EdgeInsets.all(8),
@@ -115,7 +114,7 @@ class _SellerMyOrderState extends State<SellerMyOrder> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        AppText("Confirmed Order Order"),
+                        AppText(AppString.confirmedOrder),
                         Row(
                           children: [
                             AppText("0"),
@@ -125,7 +124,6 @@ class _SellerMyOrderState extends State<SellerMyOrder> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 15,),
                     DottedBorder(
                       options: CustomPathDottedBorderOptions(
                         padding: EdgeInsets.all(8),
@@ -142,7 +140,7 @@ class _SellerMyOrderState extends State<SellerMyOrder> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        AppText("Out of Delivery Order"),
+                        AppText(AppString.outOfDeliveryOrder),
                         Row(
                           children: [
                             AppText("0"),
@@ -152,7 +150,6 @@ class _SellerMyOrderState extends State<SellerMyOrder> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 15,),
                     DottedBorder(
                       options: CustomPathDottedBorderOptions(
                         padding: EdgeInsets.all(8),
@@ -169,7 +166,7 @@ class _SellerMyOrderState extends State<SellerMyOrder> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        AppText("Delivered Order"),
+                        AppText(AppString.deliveredOrder),
                         Row(
                           children: [
                             AppText("0"),
@@ -179,7 +176,7 @@ class _SellerMyOrderState extends State<SellerMyOrder> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 15,),
+
                     DottedBorder(
                       options: CustomPathDottedBorderOptions(
                         padding: EdgeInsets.all(8),
@@ -196,7 +193,7 @@ class _SellerMyOrderState extends State<SellerMyOrder> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        AppText("Cancel Order"),
+                        AppText(AppString.cancelOrder),
                         Row(
                           children: [
                             AppText("0"),
@@ -221,7 +218,7 @@ class _SellerMyOrderState extends State<SellerMyOrder> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    AppText("Total Order"),
+                    AppText(AppString.totalOrder),
                     Row(
                       children: [
                         AppText("0"),

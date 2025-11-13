@@ -101,7 +101,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           SizedBox(height: Get.height * 0.010),
           CommonTextField(
             controller: signUpController.nameController,
-            hintText: AppString.enterYourEmailAddress,
+            hintText: AppString.enterYourFirstName,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return AppString.pleaseEnterName;

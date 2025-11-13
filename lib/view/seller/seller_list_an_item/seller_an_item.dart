@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:trendycart/app_string/app_string.dart';
 import 'package:trendycart/utils/common/app_appbar.dart';
 import 'package:trendycart/utils/common/app_button_v1.dart';
 import 'package:trendycart/utils/common/app_text.dart';
@@ -23,7 +24,7 @@ class _SellerAnItemState extends State<SellerAnItem> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppAppBar(title: "Listing Summary"),
+      appBar: AppAppBar(title: AppString.listingSummary),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(
@@ -32,14 +33,14 @@ class _SellerAnItemState extends State<SellerAnItem> {
           ),
           child: Column(
             children: [
-              commonTitleAndIcon("Photos", () {}),
+              commonTitleAndIcon(AppString.photos, () {}),
               SizedBox(height: Get.height * 0.020),
               Row(
                 children: [
                   Icon(Icons.ac_unit_outlined),
                   SizedBox(width: Get.width * 0.020),
                   AppText(
-                    "Please provide photos for your item",
+                    AppString.pleaseProvidePhotosForYourItem,
                     fontSize: Get.height * 0.012,
                   ),
                   SizedBox(height: Get.height * 0.020),
@@ -49,7 +50,7 @@ class _SellerAnItemState extends State<SellerAnItem> {
               Obx(() {
                 if (listANItemController.pickedImages.isEmpty) {
                   return commonSubTitleAndIcons(
-                    "Upload Photos",
+                    AppString.uploadPhotos,
                     Icons.upload,
                     () {
                       listANItemController.pickImagesFromGallery();
@@ -131,7 +132,7 @@ class _SellerAnItemState extends State<SellerAnItem> {
               Obx(() {
                 if (listANItemController.pickedImages.isEmpty) {
                   return commonSubTitleAndIcons(
-                    "Take Photos",
+                    AppString.takePhotos,
                     Icons.camera_alt,
                     () {},
                   );
@@ -139,33 +140,33 @@ class _SellerAnItemState extends State<SellerAnItem> {
                 return SizedBox(height: Get.height * 0.020);
               }),
               SizedBox(height: Get.height * 0.020),
-              commonTitleAndIcon("Title", () {}),
+              commonTitleAndIcon(AppString.title, () {}),
               SizedBox(height: Get.height * 0.020),
-              commonText("Please provide a title for your item"),
+              commonText(AppString.pleaseProvideATitleForYourItem),
               SizedBox(height: Get.height * 0.020),
-              commonTitleAndIcon("Category", () {}),
+              commonTitleAndIcon(AppString.category, () {}),
               SizedBox(height: Get.height * 0.020),
-              commonText("Please provide a category for your item"),
+              commonText(AppString.pleaseProvideACategoryForYourItem),
               SizedBox(height: Get.height * 0.020),
-              commonTitleAndIcon("Item Specific", () {}),
+              commonTitleAndIcon(AppString.itemSpecific, () {}),
               SizedBox(height: Get.height * 0.020),
-              commonText("Additional specific are required"),
+              commonText(AppString.additionalSpecificAreRequired),
               SizedBox(height: Get.height * 0.020),
-              commonTitleAndIcon("Description", () {}),
+              commonTitleAndIcon(AppString.description, () {}),
               SizedBox(height: Get.height * 0.020),
-              commonText("Please provide a descriptive title for your item"),
+              commonText(AppString.pleaseProvideADescriptiveTitleForYourItem),
               SizedBox(height: Get.height * 0.020),
-              commonTitleAndIcon("Pricing", () {}),
+              commonTitleAndIcon(AppString.pricing, () {}),
               SizedBox(height: Get.height * 0.020),
-              commonText("Please provide a Starting bid for your item"),
+              commonText(AppString.pleaseProvideAStartingBidForYourItem),
               SizedBox(height: Get.height * 0.020),
-              commonTitleAndIcon("Preferences", () {}),
+              commonTitleAndIcon(AppString.preferences, () {}),
               SizedBox(height: Get.height * 0.020),
-              commonText("Please provide a Preferences for your item"),
+              commonText(AppString.pleaseProvideAPreferencesForYourItem),
               SizedBox(height: Get.height * 0.030),
-              CommonButton(title: "List an item"),
+              CommonButton(title: AppString.listAnItem),
               SizedBox(height: Get.height * 0.020),
-              OutlineWhiteButton(text: 'Preview', onTap: () {}),
+              OutlineWhiteButton(text: AppString.preview, onTap: () {}),
             ],
           ),
         ),

@@ -20,7 +20,6 @@ class ProductDetailsScreen extends StatefulWidget {
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
-
   final ProductController productController = Get.put(ProductController());
 
   @override
@@ -49,7 +48,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       ),
       bottomSheet: Padding(
         padding: const EdgeInsets.all(15.0),
-        child: OutlineWhiteButton(text: AppString.placeBid, onTap: () {  },),
+        child: OutlineWhiteButton(text: AppString.placeBid, onTap: () {}),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -97,17 +96,34 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           SizedBox(height: 8),
                           Row(
                             children: [
-                              AppImage.svg(AppIcons.map,color: Colors.grey),
-                              SizedBox(width: 3,),
-                              AppText("Ordino,Andorra",fontSize: Get.height * 0.011,),
-                              SizedBox(width: 3,),
-                              AppImage.svg(AppIcons.cart1,color: Colors.grey,height: 18),
-                              SizedBox(width: 3,),
-                              AppText(AppString.oSoda,fontSize: Get.height * 0.011,),
-                              SizedBox(width: 3,),
-                              AppImage.svg(AppIcons.star,color: Colors.yellow,height: 18),
-                              SizedBox(width: 3,),
-                              AppText(AppString.noReviews,fontSize: Get.height * 0.011,)
+                              AppImage.svg(AppIcons.map, color: Colors.grey),
+                              SizedBox(width: 3),
+                              AppText(
+                                "Ordino,Andorra",
+                                fontSize: Get.height * 0.011,
+                              ),
+                              SizedBox(width: 3),
+                              AppImage.svg(
+                                AppIcons.cart1,
+                                color: Colors.grey,
+                                height: 18,
+                              ),
+                              SizedBox(width: 3),
+                              AppText(
+                                AppString.oSoda,
+                                fontSize: Get.height * 0.011,
+                              ),
+                              SizedBox(width: 3),
+                              AppImage.svg(
+                                AppIcons.star,
+                                color: Colors.yellow,
+                                height: 18,
+                              ),
+                              SizedBox(width: 3),
+                              AppText(
+                                AppString.noReviews,
+                                fontSize: Get.height * 0.011,
+                              ),
                             ],
                           ),
                           SizedBox(height: 10),
@@ -122,16 +138,24 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             children: [
                               Container(
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                                    color: AppColor.primary.withValues(alpha: 0.2)
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(15),
+                                  ),
+                                  color: AppColor.primary.withValues(
+                                    alpha: 0.2,
+                                  ),
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Icon(Icons.alarm,size: 12,color: AppColor.primary,),
-                                      SizedBox(width: 2,),
+                                      Icon(
+                                        Icons.alarm,
+                                        size: 12,
+                                        color: AppColor.primary,
+                                      ),
+                                      SizedBox(width: 2),
                                       AppText(
                                         AppString.daysLeft,
                                         overflow: TextOverflow.ellipsis,
@@ -144,11 +168,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 ),
                               ),
                               InkWell(
-                                onTap: (){},
+                                onTap: () {},
                                 child: Container(
                                   decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    border: Border.all(color: Colors.black)
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                    border: Border.all(color: Colors.black),
                                   ),
                                   child: Padding(
                                     padding: const EdgeInsets.all(8),
@@ -162,16 +188,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   ),
                                 ),
                               ),
-        
                             ],
-                          )
+                          ),
                         ],
                       ),
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: Get.height * 0.030,),
+              SizedBox(height: Get.height * 0.030),
               AppText(
                 'Type',
                 fontSize: Get.height * 0.018,
@@ -179,9 +204,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 color: AppColor.textBlack,
                 overflow: TextOverflow.ellipsis,
               ),
-              SizedBox(height: Get.height * 0.015,),
+              SizedBox(height: Get.height * 0.015),
               commonNewCategoriesListName(),
-              SizedBox(height: Get.height * 0.030,),
+              SizedBox(height: Get.height * 0.030),
               AppText(
                 AppString.productDetails,
                 fontSize: Get.height * 0.018,
@@ -189,7 +214,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 color: AppColor.textBlack,
                 overflow: TextOverflow.ellipsis,
               ),
-              SizedBox(height: Get.height * 0.015,),
+              SizedBox(height: Get.height * 0.015),
               Row(
                 children: [
                   AppText(
@@ -198,7 +223,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     color: AppColor.textBlack,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(width: Get.width * 0.020,),
+                  SizedBox(width: Get.width * 0.020),
                   AppText(
                     'Product Details ',
                     fontSize: Get.height * 0.014,
@@ -208,7 +233,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: Get.height * 0.015,),
+              SizedBox(height: Get.height * 0.015),
               Row(
                 children: [
                   AppText(
@@ -217,7 +242,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     color: AppColor.textBlack,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(width: Get.width * 0.020,),
+                  SizedBox(width: Get.width * 0.020),
                   AppText(
                     'Product Details ',
                     fontSize: Get.height * 0.014,
@@ -227,13 +252,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: Get.height * 0.015,),
+              SizedBox(height: Get.height * 0.015),
               AppText(
                 'sodjfskdfjoifgdoigjdfgmdogjdokfghdiufhsdifhsdihfidhosdfijdfoisdihgijfushfsndjfjhhfghhhlkjdsfsdlkfgdskngdfkmgdfkngdfkgmdkmflkmdlkfgdjfngmmnfg',
                 color: AppColor.textBlack,
                 fontSize: Get.height * 0.012,
               ),
-              SizedBox(height: Get.height * 0.030,),
+              SizedBox(height: Get.height * 0.030),
               AppText(
                 AppString.relatedProducts,
                 fontSize: Get.height * 0.018,
@@ -241,11 +266,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 color: AppColor.textBlack,
                 overflow: TextOverflow.ellipsis,
               ),
-              SizedBox(height: Get.height * 0.015,),
-              commonLiveAuction((){
+              SizedBox(height: Get.height * 0.015),
+              commonLiveAuction(() {
                 AppLogs.log("Live Auction");
               }),
-              SizedBox(height: Get.height * 0.030,),
+              SizedBox(height: Get.height * 0.030),
               AppText(
                 AppString.aboutThisSeller,
                 fontSize: Get.height * 0.018,
@@ -253,7 +278,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 color: AppColor.textBlack,
                 overflow: TextOverflow.ellipsis,
               ),
-              SizedBox(height: Get.height * 0.015,),
+              SizedBox(height: Get.height * 0.015),
               Row(
                 children: [
                   Container(
@@ -267,9 +292,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         width: Get.width * 0.09,
                         height: 40,
                         clipBehavior: Clip.antiAlias,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                        ),
+                        decoration: const BoxDecoration(shape: BoxShape.circle),
                         child: Image.network(
                           "https://plus.unsplash.com/premium_photo-1690579805307-7ec030c75543?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
                           fit: BoxFit.cover,
@@ -297,13 +320,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       ),
                     ],
                   ),
-                 Spacer(),
+                  Spacer(),
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.black.withValues(alpha: 0.3),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(15),
-                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
                     ),
                     child: Padding(
                       padding: EdgeInsets.only(
@@ -315,15 +336,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       child: AppText(
                         AppString.follow,
                         color: Colors.white,
-                        fontSize: Get.height * 0.018,
+                        fontSize: Get.height * 0.012,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-
                 ],
               ),
-              SizedBox(height: 60,),
+              SizedBox(height: 60),
             ],
           ),
         ),
@@ -331,10 +351,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-
   Widget commonLiveAuction(Function() onTap) {
     return SizedBox(
-      height: Get.height * 0.22,
+      height: Get.height * 0.24,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: 5,
@@ -343,7 +362,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             onTap: onTap,
             child: Container(
               width: Get.width * 0.35,
-              margin: EdgeInsets.only(right: Get.width * 0.04),
+              margin: EdgeInsets.only(right: Get.width * 0.04, bottom: 5),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(15),
@@ -372,8 +391,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   ),
                   Expanded(
                     child: Padding(
-                      padding:
-                      EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -412,6 +430,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               ],
                             ),
                           ),
+                          SizedBox(height: Get.height * 0.005),
                           Expanded(
                             child: AppText(
                               'Top Trending Product',
@@ -436,19 +455,20 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   Widget commonNewCategoriesListName() {
     return SizedBox(
-      height: Get.height * 0.04,
+      height: Get.height * 0.05,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: 5,
         itemBuilder: (BuildContext context, int index) {
           return Obx(
-                () => Padding(
-              padding: EdgeInsets.only(right: Get.width * 0.035),
+            () => Padding(
+              padding: EdgeInsets.only(right: Get.width * 0.035,bottom: 5,top: 5),
               child: GestureDetector(
                 onTap: () {
                   productController.selectedIndex.value = index;
                   AppLogs.log(
-                      "Selected index: ${productController.selectedIndex.value}");
+                    "Selected index: ${productController.selectedIndex.value}",
+                  );
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(
@@ -487,5 +507,4 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       ),
     );
   }
-
 }

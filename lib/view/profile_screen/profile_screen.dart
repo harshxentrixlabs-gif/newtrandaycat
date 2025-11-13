@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:http/http.dart' as box;
 import 'package:trendycart/app_string/app_string.dart';
 import 'package:trendycart/utils/app_color.dart';
 import 'package:trendycart/utils/app_icons.dart';
@@ -15,6 +17,7 @@ import 'package:trendycart/view/my_bid_screen/my_bid_screen.dart';
 import 'package:trendycart/view/my_order/my_order.dart';
 import 'package:trendycart/view/setting/setting_screen.dart';
 
+import '../login_screen/model/login_model.dart';
 import '../seller_account_screen/seller_account.dart';
 import 'widget/profile_container_common.dart';
 
@@ -26,6 +29,18 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+
+
+  LoginModel? userLogin;
+
+
+  final box = GetStorage();
+
+  late String userName = box.read('userName') ?? "Guest User";
+  late String userEmail = box.read('userEmail') ?? "";
+  late String userPhoto = box.read('userPhoto') ??
+      "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,7 +83,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         children: [
                           CircleAvatar(
                             radius: 50,
-                            backgroundImage: NetworkImage('https://plus.unsplash.com/premium_photo-1690579805307-7ec030c75543?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170'),
+                            backgroundImage: NetworkImage(userPhoto),
                           ),
                           Positioned(
                               left: Get.width * 0.18,
@@ -87,11 +102,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     SizedBox(height: Get.height * 0.015),
                     AppText(
-                      'Harsh Shiroya',
+                      userName,
                       fontSize:  Get.height * 0.020, fontWeight: FontWeight.bold,
                     ),
                     AppText(
-                      'Flutter Developer',
+                      userEmail,
                       fontSize: Get.height * 0.014, color: Colors.grey,
                     ),
                   ],
@@ -130,6 +145,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 );
               },),
               SizedBox(height: 10,),
+              if(userLogin?.user?.isSeller == true)
               ProfileContainerCommon(images: AppIcons.seller, title: "Zen cart", onTap: () {
                 AppLogs.log("Become Seller");
                 Get.to(()=>SellerAccount(),

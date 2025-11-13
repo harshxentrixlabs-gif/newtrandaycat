@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:trendycart/app_string/app_string.dart';
 import 'package:trendycart/utils/common/app_appbar.dart';
 import 'package:trendycart/utils/common/app_button_v1.dart';
 import 'package:trendycart/utils/common/app_text.dart';
@@ -18,7 +19,7 @@ class _SellerBankAccountState extends State<SellerBankAccount> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppAppBar(title: "Bank Account"),
+      appBar: AppAppBar(title: AppString.bankAccount),
       body: Padding(
         padding:  EdgeInsets.symmetric(horizontal: Get.width * 0.050,vertical: Get.height * 0.020),
         child: Column(
@@ -36,13 +37,13 @@ class _SellerBankAccountState extends State<SellerBankAccount> {
                   children: [
                     AppText("SBI",fontSize: Get.height * 0.018,fontWeight: FontWeight.bold,),
                     SizedBox(height: 20,),
-                    AppText("Account Number:",fontSize: Get.height * 0.012,),
+                    AppText(AppString.accountNumber,fontSize: Get.height * 0.012,),
                     AppText("15005000025895546",fontSize: Get.height * 0.014,),
                     SizedBox(height: 15,),
-                    AppText("IFSC Code:",fontSize: Get.height * 0.012,),
+                    AppText(AppString.iFSCCode,fontSize: Get.height * 0.012,),
                     AppText("SBI1234",fontSize: Get.height * 0.012,),
                     SizedBox(height: 15,),
-                    AppText("Branch Name:",fontSize: Get.height * 0.012,),
+                    AppText(AppString.branchName,fontSize: Get.height * 0.012,),
                     AppText("munich",fontSize: Get.height * 0.012,),
 
                   ],
@@ -51,7 +52,7 @@ class _SellerBankAccountState extends State<SellerBankAccount> {
 
             ),
             Spacer(),
-            CommonButton(title: "CHANGE BANK DETAILS")
+            CommonButton(title: AppString.changeBankDetails)
           ],
         ),
       ),

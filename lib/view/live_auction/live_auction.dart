@@ -61,7 +61,7 @@ class _LiveAuctionState extends State<LiveAuction> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 ClipRRect(
-                  borderRadius: const BorderRadius.only(
+                  borderRadius:  BorderRadius.only(
                     topLeft: Radius.circular(15),
                     topRight: Radius.circular(15),
                   ),
@@ -76,21 +76,23 @@ class _LiveAuctionState extends State<LiveAuction> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    SizedBox(height: 5),
                     AppText(
                       'Live Selling',
                       fontSize: Get.height * 0.016,
                       fontWeight: FontWeight.w600,
                       color: AppColor.textBlack,
                     ),
-                    SizedBox(height: 3),
+                    SizedBox(height: 5),
                     AppText(
                       'Limited Time Offer!',
-                      fontSize: Get.height * 0.014,
+                      fontSize: Get.height * 0.012,
                       color: AppColor.textBlack,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
+                SizedBox(height: 5),
                 Expanded(
                   child: Container(
                     alignment: Alignment.center,

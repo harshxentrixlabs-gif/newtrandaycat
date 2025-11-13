@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "238726799721",
+    "project_id": "trandaycat",
+    "storage_bucket": "trandaycat.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:238726799721:android:5b80f4e9e58c48f7859df8",
+        "android_client_info": {
+          "package_name": "com.example.trendycart"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBry8gstsi_6s0L8czD6v8DG06VCeLzCgg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

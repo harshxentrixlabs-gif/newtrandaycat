@@ -10,7 +10,9 @@ import 'package:trendycart/utils/common/app_text.dart';
 import 'package:trendycart/view/home_screen/home_screen.dart';
 import 'package:trendycart/view/login_screen/controller/login_controller.dart';
 import '../../utils/app_color.dart';
+import '../../utils/app_loader.dart';
 import '../../utils/common/app_button_v1.dart';
+import '../../utils/common/app_loader.dart';
 import '../../utils/common/app_textfield.dart';
 import '../../utils/common/common_line.dart';
 import '../../utils/common/widgets.dart';
@@ -40,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
+      body: Obx(()=>   Stack(
         children: [
           Column(
             children: [
@@ -122,6 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           onTap: () {
                             AppLogs.log("Continue login...");
                             if (_formKey.currentState!.validate()) {
+                              // loginController.loginMethod();
                               AppLogs.log(" Continue login...");
                             } else {
                               AppLogs.log("Validation failed");
@@ -136,10 +139,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             AppLogs.log(AppString.demoLogin);
                             loginController.showDialog(
                               onTap: () {
-                                Get.offAll(
-                                  () => NavigationMenu(),
-                                  transition: Transition.rightToLeft,
-                                );
+                                loginController.googleLogin();
+                                // Get.offAll(
+                                //   () => NavigationMenu(),
+                                //   transition: Transition.rightToLeft,
+                                // );
                               },
                             );
                           },
@@ -163,10 +167,11 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             SizedBox(width: Get.width * 0.020),
-                            Expanded(
-                              child: CommonButton(
+                          Expanded(
+                              child:loginController.isLoading.value ? Center(child: AppLoaderWidget()) : CommonButton(
                                 onTap: () {
                                   AppLogs.log("Google Login");
+                                  loginController.googleLogin();
                                 },
                                 title: AppString.googleLogin,
                                 image: AppIcons.google,
@@ -218,6 +223,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ],
       ),
+      )
     );
   }
 

@@ -129,7 +129,7 @@ class _LiveScreenState extends State<LiveScreen> {
                               ),
                               Expanded(
                                 child: AppText(
-                                  "Harsh Shiroya",
+                                  "Hello Guys Welcome",
                                   overflow: TextOverflow.ellipsis,
                                   fontSize: Get.height * 0.010,
                                   color: AppColor.textWhite,

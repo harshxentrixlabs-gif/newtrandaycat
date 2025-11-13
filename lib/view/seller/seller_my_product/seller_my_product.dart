@@ -47,11 +47,12 @@ class _SellerMyOrderState extends State<SellerMyProduct> {
 
   Widget commonSellerMyOrder() {
     return SizedBox(
-      height: Get.height * 0.04,
+      height: Get.height * 0.05,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
+        physics: NeverScrollableScrollPhysics(),
         itemCount: sellerMyOrderController.oderList.length,
-        padding: EdgeInsets.symmetric(horizontal: 10),
+        padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
         itemBuilder: (BuildContext context, int index) {
           return Obx(
             () => Padding(
@@ -105,7 +106,7 @@ class _SellerMyOrderState extends State<SellerMyProduct> {
   Widget commonProduct(Function() onTap) {
     return ListView.builder(
       scrollDirection: Axis.vertical,
-      itemCount: 5,
+      itemCount: 8,
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: (BuildContext context, int index) {
