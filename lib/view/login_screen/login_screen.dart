@@ -139,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             AppLogs.log(AppString.demoLogin);
                             loginController.showDialog(
                               onTap: () {
-                                loginController.googleLogin();
+                                loginController.googleLoginAndApiCall();
                                 // Get.offAll(
                                 //   () => NavigationMenu(),
                                 //   transition: Transition.rightToLeft,

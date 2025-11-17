@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:trendycart/app_string/app_string.dart';
 import 'package:trendycart/utils/common/app_appbar.dart';
+import 'package:trendycart/view/home_screen/controller/home_controller.dart';
 
 import '../../utils/app_color.dart';
 import '../../utils/app_icons.dart';
@@ -17,7 +18,20 @@ class PopularProduct extends StatefulWidget {
   State<PopularProduct> createState() => _PopularProductState();
 }
 
+
+
+
 class _PopularProductState extends State<PopularProduct> {
+
+  final HomeController homeController = Get.find();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    homeController.popularProductMethods();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +40,7 @@ class _PopularProductState extends State<PopularProduct> {
         padding:  EdgeInsets.symmetric(horizontal: Get.width * 0.050,vertical: Get.height * 0.010),
         child: Column(
           children: [
-            commonPopularProduct((){})
+            Obx(()=>commonPopularProduct((){})),
           ],
         ),
       ),
@@ -42,8 +56,9 @@ class _PopularProductState extends State<PopularProduct> {
           mainAxisSpacing: 20.0,
           childAspectRatio: 0.80,
         ),
-        itemCount:12,
+        itemCount:homeController.data.length,
         itemBuilder: (BuildContext context, int index) {
+          final data = homeController.data[index];
           return  GestureDetector(
             onTap: onTap,
             child: Container(
@@ -69,7 +84,7 @@ class _PopularProductState extends State<PopularProduct> {
                           topRight: Radius.circular(16),
                         ),
                         child: AppImage.network(
-                          'https://thrivenextgen.com/wp-content/uploads/AdobeStock_162765779_45-scaled.webp',
+                         data.mainImage.toString(),
                           width: double.infinity,
                           height: Get.height * 0.14,
                           fit: BoxFit.cover,
@@ -83,7 +98,7 @@ class _PopularProductState extends State<PopularProduct> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           AppText(
-                            'Live Selling',
+                            data.productName.toString(),
                             fontSize: Get.height * 0.014,
                             fontWeight: FontWeight.w600,
                             color: AppColor.textBlack,
@@ -93,7 +108,7 @@ class _PopularProductState extends State<PopularProduct> {
                             child: Row(
                               children: [
                                 AppText(
-                                  '\$3000',
+                                  '\$${data.price}',
                                   fontSize: Get.height * 0.016,
                                   color: AppColor.primary,
                                   fontWeight: FontWeight.bold,
@@ -106,7 +121,7 @@ class _PopularProductState extends State<PopularProduct> {
                                   color: Colors.yellow,
                                 ),
                                 AppText(
-                                  '4.5',
+                                  data.rating == null ? "0" : "No Review",
                                   fontSize: Get.height * 0.013,
                                   color: AppColor.textBlack,
                                   overflow: TextOverflow.ellipsis,
@@ -116,7 +131,7 @@ class _PopularProductState extends State<PopularProduct> {
                           ),
                           Expanded(
                             child: AppText(
-                              'Top Trending Product',
+                              data.description.toString(),
                               fontSize: Get.height * 0.013,
                               fontWeight: FontWeight.w500,
                               color: Colors.grey[700],

@@ -6,14 +6,19 @@ import 'package:trendycart/app_string/app_string.dart';
 import 'package:trendycart/utils/app_color.dart';
 import 'package:trendycart/utils/app_icons.dart';
 import 'package:trendycart/utils/common/app_appbar.dart';
+import 'package:trendycart/utils/common/app_button_v1.dart';
 import 'package:trendycart/utils/common/app_image.dart';
 import 'package:trendycart/utils/common/app_text.dart';
+import 'package:trendycart/view/home_screen/controller/home_controller.dart';
 import 'package:trendycart/view/product_details_screen/controller/product_controller.dart';
 
 import '../../utils/common/widgets.dart';
+import 'model/product_details_model.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
-  const ProductDetailsScreen({super.key});
+  const ProductDetailsScreen({super.key, this.productData});
+
+  final dynamic productData;
 
   @override
   State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
@@ -21,9 +26,18 @@ class ProductDetailsScreen extends StatefulWidget {
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   final ProductController productController = Get.put(ProductController());
+  final HomeController homeController = Get.find();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    productController.productDetailsMethods();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final data = widget.productData;
     return Scaffold(
       appBar: AppAppBar(
         title: AppString.productDetails,
@@ -47,8 +61,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         ],
       ),
       bottomSheet: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: OutlineWhiteButton(text: AppString.placeBid, onTap: () {}),
+        padding: EdgeInsets.all(15.0),
+        child: Row(
+          children: [
+            IconButton(onPressed: (){}, icon: Icon(Icons.favorite)),
+            Expanded(
+              child: SizedBox(height: 45,child: OutlineWhiteButton(text: "By Now", onTap: () {})),
+            ),
+            SizedBox(width: 10,),
+            Expanded(child: SizedBox(height: 45,child: CommonButton(title: "Add To Cart")))
+          ],
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -69,7 +92,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(25)),
                       child: AppImage.network(
-                        "https://thrivenextgen.com/wp-content/uploads/AdobeStock_162765779_45-scaled.webp",
+                        data.mainImage ?? "",
                         width: double.infinity,
                         height: Get.height * 0.45,
                       ),
@@ -83,13 +106,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           AppText(
-                            'Harsh Shiroya',
+                            data.productName,
                             color: AppColor.textBlack,
                             fontWeight: FontWeight.bold,
                           ),
                           SizedBox(height: 5),
                           AppText(
-                            'sodjfskdfjoifgdoigjdfgmdogjdokfghdiufhsdifhsdihfidhosdfijdfoisdihgijfushfsndjfjhhfghhhlkjdsfsdlkfgdskngdfkmgdfkngdfkgmdkmflkmdlkfgdjfngmmnfg',
+                            data.description ?? "",
                             color: AppColor.textBlack,
                             fontSize: Get.height * 0.012,
                           ),
@@ -128,7 +151,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           ),
                           SizedBox(height: 10),
                           AppText(
-                            '\$500',
+                            '\$${data.price}',
                             color: AppColor.primary,
                             fontWeight: FontWeight.bold,
                           ),
@@ -205,7 +228,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 overflow: TextOverflow.ellipsis,
               ),
               SizedBox(height: Get.height * 0.015),
-              commonNewCategoriesListName(),
               SizedBox(height: Get.height * 0.030),
               AppText(
                 AppString.productDetails,
@@ -254,7 +276,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ),
               SizedBox(height: Get.height * 0.015),
               AppText(
-                'sodjfskdfjoifgdoigjdfgmdogjdokfghdiufhsdifhsdihfidhosdfijdfoisdihgijfushfsndjfjhhfghhhlkjdsfsdlkfgdskngdfkmgdfkngdfkgmdkmflkmdlkfgdjfngmmnfg',
+                data.description,
                 color: AppColor.textBlack,
                 fontSize: Get.height * 0.012,
               ),
@@ -314,7 +336,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       ),
                       SizedBox(width: Get.width * 0.020),
                       AppText(
-                        "Follower : " + "0",
+                        "Follower : ${productController.product.isEmpty ? 0 : (productController.product.first.followerCount ?? 0)}",
                         fontSize: Get.height * 0.012,
                         color: AppColor.textBlack,
                       ),
@@ -356,36 +378,39 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       height: Get.height * 0.24,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: 5,
+        itemCount: homeController.data.length,
+        padding: EdgeInsets.only(right: 10),
         itemBuilder: (BuildContext context, int index) {
+          final data = homeController.data[index];
+          AppLogs.log("data NewCollection $data");
           return GestureDetector(
-            onTap: onTap,
+            onTap: () => onTap,
             child: Container(
-              width: Get.width * 0.35,
-              margin: EdgeInsets.only(right: Get.width * 0.04, bottom: 5),
+              width: Get.width * 0.38,
+              margin: EdgeInsets.only(right: 14, bottom: 4),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.08),
-                    blurRadius: 6,
-                    offset: const Offset(0, 3),
+                    blurRadius: 8,
+                    offset: Offset(0, 3),
                   ),
                 ],
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(15),
-                      topRight: Radius.circular(15),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16),
                     ),
                     child: AppImage.network(
+                      data.mainImage.toString(),
                       width: double.infinity,
                       height: Get.height * 0.14,
-                      'https://thrivenextgen.com/wp-content/uploads/AdobeStock_162765779_45-scaled.webp',
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -397,7 +422,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         children: [
                           Expanded(
                             child: AppText(
-                              'Live Selling',
+                              data.productName.toString(),
                               fontSize: Get.height * 0.014,
                               fontWeight: FontWeight.w600,
                               color: AppColor.textBlack,
@@ -409,23 +434,28 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             child: Row(
                               children: [
                                 AppText(
-                                  '\$3000',
+                                  '\$${data.price ?? 0}',
                                   fontSize: Get.height * 0.016,
                                   color: AppColor.primary,
                                   fontWeight: FontWeight.bold,
                                   overflow: TextOverflow.ellipsis,
                                 ),
-                                Spacer(),
+                                SizedBox(width: 10),
                                 AppImage.svg(
                                   AppIcons.star,
                                   height: Get.height * 0.020,
                                   color: Colors.yellow,
                                 ),
-                                AppText(
-                                  '4.5',
-                                  fontSize: Get.height * 0.013,
-                                  color: AppColor.textBlack,
-                                  overflow: TextOverflow.ellipsis,
+
+                                Flexible(
+                                  child: AppText(
+                                    data.rating == null
+                                        ? 'No rating'
+                                        : '${data.rating} No Reviews',
+                                    fontSize: Get.height * 0.013,
+                                    color: AppColor.textBlack,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
                               ],
                             ),
@@ -433,7 +463,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           SizedBox(height: Get.height * 0.005),
                           Expanded(
                             child: AppText(
-                              'Top Trending Product',
+                              data.description.toString(),
                               fontSize: Get.height * 0.013,
                               fontWeight: FontWeight.w500,
                               color: Colors.grey[700],
@@ -453,58 +483,58 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  Widget commonNewCategoriesListName() {
-    return SizedBox(
-      height: Get.height * 0.05,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: 5,
-        itemBuilder: (BuildContext context, int index) {
-          return Obx(
-            () => Padding(
-              padding: EdgeInsets.only(right: Get.width * 0.035,bottom: 5,top: 5),
-              child: GestureDetector(
-                onTap: () {
-                  productController.selectedIndex.value = index;
-                  AppLogs.log(
-                    "Selected index: ${productController.selectedIndex.value}",
-                  );
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: Get.width * 0.04,
-                    vertical: Get.height * 0.01,
-                  ),
-                  decoration: BoxDecoration(
-                    color: productController.selectedIndex.value == index
-                        ? Colors.white
-                        : AppColor.primary,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      if (productController.selectedIndex.value == index)
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.15),
-                          blurRadius: 8,
-                          offset: Offset(0, 3),
-                        ),
-                    ],
-                  ),
-                  child: Center(
-                    child: AppText(
-                      "Hello",
-                      fontSize: Get.height * 0.014,
-                      color: productController.selectedIndex.value == index
-                          ? AppColor.textBlack
-                          : AppColor.textWhite.withOpacity(0.9),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
+  // Widget commonNewCategoriesListName() {
+  //   return SizedBox(
+  //     height: Get.height * 0.05,
+  //     child: ListView.builder(
+  //       scrollDirection: Axis.horizontal,
+  //       itemCount: 5,
+  //       itemBuilder: (BuildContext context, int index) {
+  //         return Obx(
+  //           () => Padding(
+  //             padding: EdgeInsets.only(right: Get.width * 0.035,bottom: 5,top: 5),
+  //             child: GestureDetector(
+  //               onTap: () {
+  //                 productController.selectedIndex.value = index;
+  //                 AppLogs.log(
+  //                   "Selected index: ${productController.selectedIndex.value}",
+  //                 );
+  //               },
+  //               child: Container(
+  //                 padding: EdgeInsets.symmetric(
+  //                   horizontal: Get.width * 0.04,
+  //                   vertical: Get.height * 0.01,
+  //                 ),
+  //                 decoration: BoxDecoration(
+  //                   color: productController.selectedIndex.value == index
+  //                       ? Colors.white
+  //                       : AppColor.primary,
+  //                   borderRadius: BorderRadius.circular(10),
+  //                   boxShadow: [
+  //                     if (productController.selectedIndex.value == index)
+  //                       BoxShadow(
+  //                         color: Colors.black.withOpacity(0.15),
+  //                         blurRadius: 8,
+  //                         offset: Offset(0, 3),
+  //                       ),
+  //                   ],
+  //                 ),
+  //                 child: Center(
+  //                   child: AppText(
+  //                     "Hello",
+  //                     fontSize: Get.height * 0.014,
+  //                     color: productController.selectedIndex.value == index
+  //                         ? AppColor.textBlack
+  //                         : AppColor.textWhite.withOpacity(0.9),
+  //                     fontWeight: FontWeight.bold,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
 }

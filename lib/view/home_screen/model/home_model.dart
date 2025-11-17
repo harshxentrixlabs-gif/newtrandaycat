@@ -1,164 +1,10 @@
 import 'dart:convert';
 
-GetLiveSellerListModel getLiveSellerListModelFromJson(String str) =>
-    GetLiveSellerListModel.fromJson(json.decode(str));
 
-String getLiveSellerListModelToJson(GetLiveSellerListModel data) => json.encode(data.toJson());
 
-class GetLiveSellerListModel {
-  GetLiveSellerListModel({
-    bool? status,
-    String? message,
-    List<LiveSeller>? liveSeller,
-  }) {
-    _status = status;
-    _message = message;
-    _liveSeller = liveSeller;
-  }
 
-  GetLiveSellerListModel.fromJson(dynamic json) {
-    _status = json['status'];
-    _message = json['message'];
-    if (json['liveSeller'] != null) {
-      _liveSeller = [];
-      json['liveSeller'].forEach((v) {
-        _liveSeller?.add(LiveSeller.fromJson(v));
-      });
-    }
-  }
 
-  bool? _status;
-  String? _message;
-  List<LiveSeller>? _liveSeller;
 
-  GetLiveSellerListModel copyWith({
-    bool? status,
-    String? message,
-    List<LiveSeller>? liveSeller,
-  }) =>
-      GetLiveSellerListModel(
-        status: status ?? _status,
-        message: message ?? _message,
-        liveSeller: liveSeller ?? _liveSeller,
-      );
-
-  bool? get status => _status;
-
-  String? get message => _message;
-
-  List<LiveSeller>? get liveSeller => _liveSeller;
-
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['status'] = _status;
-    map['message'] = _message;
-    if (_liveSeller != null) {
-      map['liveSeller'] = _liveSeller?.map((v) => v.toJson()).toList();
-    }
-    return map;
-  }
-}
-
-LiveSeller liveSellerFromJson(String str) => LiveSeller.fromJson(json.decode(str));
-
-String liveSellerToJson(LiveSeller data) => json.encode(data.toJson());
-
-class LiveVideo {
-  bool? status;
-  String? message;
-  int? total;
-  List<LiveSeller>? liveSeller;
-
-  LiveVideo({this.status, this.message, this.total, this.liveSeller});
-
-  LiveVideo.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    message = json['message'];
-    total = json['total'];
-    if (json['liveSeller'] != null) {
-      liveSeller = <LiveSeller>[];
-      json['liveSeller'].forEach((v) {
-        liveSeller!.add(new LiveSeller.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
-    data['total'] = this.total;
-    if (this.liveSeller != null) {
-      data['liveSeller'] = this.liveSeller!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class LiveSeller {
-  String? sId;
-  String? firstName;
-  String? lastName;
-  String? businessTag;
-  String? businessName;
-  String? email;
-  String? mobileNumber;
-  String? image;
-  bool? isLive;
-  bool? isFake;
-  String? video;
-  Null? liveSellingHistoryId;
-  int? view;
-
-  LiveSeller(
-      {this.sId,
-        this.firstName,
-        this.lastName,
-        this.businessTag,
-        this.businessName,
-        this.email,
-        this.mobileNumber,
-        this.image,
-        this.isLive,
-        this.isFake,
-        this.video,
-        this.liveSellingHistoryId,
-        this.view});
-
-  LiveSeller.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    firstName = json['firstName'];
-    lastName = json['lastName'];
-    businessTag = json['businessTag'];
-    businessName = json['businessName'];
-    email = json['email'];
-    mobileNumber = json['mobileNumber'];
-    image = json['image'];
-    isLive = json['isLive'];
-    isFake = json['isFake'];
-    video = json['video'];
-    liveSellingHistoryId = json['liveSellingHistoryId'];
-    view = json['view'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['firstName'] = this.firstName;
-    data['lastName'] = this.lastName;
-    data['businessTag'] = this.businessTag;
-    data['businessName'] = this.businessName;
-    data['email'] = this.email;
-    data['mobileNumber'] = this.mobileNumber;
-    data['image'] = this.image;
-    data['isLive'] = this.isLive;
-    data['isFake'] = this.isFake;
-    data['video'] = this.video;
-    data['liveSellingHistoryId'] = this.liveSellingHistoryId;
-    data['view'] = this.view;
-    return data;
-  }
-}
 
 SelectedProducts selectedProductsFromJson(String str) => SelectedProducts.fromJson(json.decode(str));
 
@@ -306,72 +152,7 @@ class Attributes {
 }
 
 
-class ReelResponse {
-  final bool status;
-  final String message;
-  final List<Reel> reels;
 
-  ReelResponse({
-    required this.status,
-    required this.message,
-    required this.reels,
-  });
-
-  factory ReelResponse.fromJson(Map<String, dynamic> json) {
-    return ReelResponse(
-      status: json['status'] ?? false,
-      message: json['message'] ?? '',
-      reels: (json['reels'] as List<dynamic>?)
-          ?.map((item) => Reel.fromJson(item))
-          .toList() ??
-          [],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'message': message,
-      'reels': reels.map((e) => e.toJson()).toList(),
-    };
-  }
-}
-
-class Reel {
-  final String? id;
-  final String? title;
-  final String? videoUrl;
-  final String? thumbnail;
-  final String? userId;
-
-  Reel({
-    this.id,
-    this.title,
-    this.videoUrl,
-    this.thumbnail,
-    this.userId,
-  });
-
-  factory Reel.fromJson(Map<String, dynamic> json) {
-    return Reel(
-      id: json['_id'] ?? '',
-      title: json['title'] ?? '',
-      videoUrl: json['videoUrl'] ?? '',
-      thumbnail: json['thumbnail'] ?? '',
-      userId: json['userId'] ?? '',
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      '_id': id,
-      'title': title,
-      'videoUrl': videoUrl,
-      'thumbnail': thumbnail,
-      'userId': userId,
-    };
-  }
-}
 
 
 class JustForYouProductResponse {
@@ -407,45 +188,50 @@ class JustForYouProductResponse {
 }
 
 class JustForYouProduct {
-  final String? id;
-  final String? productName;
-  final num? price;
-  final int? review;
-  final int? sold;
-  final String? createStatus;
-  final String? seller;
-  final String? mainImage;
+  final String id;
+  final String productName;
+  final num price;
+  final int review;
+  final int sold;
+  final String createStatus;
+  final String seller;
+  final String mainImage;
+  final String description;
   final List<Attribute> attributes;
-  final List<dynamic>? rating;
+  final List<dynamic> rating;
 
   JustForYouProduct({
-    this.id,
-    this.productName,
-    this.price,
-    this.review,
-    this.sold,
-    this.createStatus,
-    this.seller,
-    this.mainImage,
+    this.id = '',
+    this.productName = '',
+    this.price = 0,
+    this.review = 0,
+    this.sold = 0,
+    this.createStatus = '',
+    this.seller = '',
+    this.mainImage = '',
+    this.description = '',
     this.attributes = const [],
-    this.rating,
+    this.rating = const [],
   });
 
   factory JustForYouProduct.fromJson(Map<String, dynamic> json) {
     return JustForYouProduct(
-      id: json['_id'] ?? '',
-      productName: json['productName'] ?? '',
+      id: (json['_id'] ?? "").toString(),
+      productName: (json['productName'] ?? "").toString(),
       price: json['price'] ?? 0,
       review: json['review'] ?? 0,
       sold: json['sold'] ?? 0,
-      createStatus: json['createStatus'] ?? '',
-      seller: json['seller'] ?? '',
-      mainImage: json['mainImage'] ?? '',
-      attributes: (json['attributes'] as List<dynamic>?)
-          ?.map((e) => Attribute.fromJson(e))
-          .toList() ??
-          [],
-      rating: json['rating'] ?? [],
+      createStatus: (json['createStatus'] ?? "").toString(),
+      seller: (json['seller'] ?? "").toString(),
+      description: (json['description'] ?? "").toString(),
+      mainImage: (json['mainImage'] ?? "").toString(),
+
+      // SAFE LIST HANDLING
+      attributes: (json['attributes'] as List<dynamic>? ?? [])
+          .map((e) => Attribute.fromJson(e))
+          .toList(),
+
+      rating: json['rating'] as List<dynamic>? ?? [],
     );
   }
 
@@ -455,6 +241,7 @@ class JustForYouProduct {
       'productName': productName,
       'price': price,
       'review': review,
+      'description': description,
       'sold': sold,
       'createStatus': createStatus,
       'seller': seller,
@@ -464,6 +251,7 @@ class JustForYouProduct {
     };
   }
 }
+
 
 
 
@@ -648,4 +436,302 @@ class Attribute {
   @override
   String toString() => jsonEncode(toJson());
 }
+
+
+class LiveSellerResponse {
+  final bool status;
+  final String message;
+  final int total;
+  final List<LiveSeller> liveSeller;
+
+  LiveSellerResponse({
+    required this.status,
+    required this.message,
+    required this.total,
+    required this.liveSeller,
+  });
+
+  factory LiveSellerResponse.fromJson(Map<String, dynamic> json) {
+    return LiveSellerResponse(
+      status: json['status'] ?? false,
+      message: json['message'] ?? '',
+      total: json['total'] ?? 0,
+      liveSeller: (json['liveSeller'] as List<dynamic>?)
+          ?.map((e) => LiveSeller.fromJson(e))
+          .toList() ??
+          [],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'status': status,
+      'message': message,
+      'total': total,
+      'liveSeller': liveSeller.map((e) => e.toJson()).toList(),
+    };
+  }
+}
+
+class LiveSeller {
+  final String id;
+  final String firstName;
+  final String lastName;
+  final String businessTag;
+  final String businessName;
+  final String email;
+  final String mobileNumber;
+  final String image;
+  final bool isLive;
+  final bool isFake;
+  final String video;
+  final String? liveSellingHistoryId;
+  final int view;
+
+  LiveSeller({
+    required this.id,
+    required this.firstName,
+    required this.lastName,
+    required this.businessTag,
+    required this.businessName,
+    required this.email,
+    required this.mobileNumber,
+    required this.image,
+    required this.isLive,
+    required this.isFake,
+    required this.video,
+    required this.liveSellingHistoryId,
+    required this.view,
+  });
+
+  factory LiveSeller.fromJson(Map<String, dynamic> json) {
+    return LiveSeller(
+      id: json['_id'] ?? '',
+      firstName: json['firstName'] ?? '',
+      lastName: json['lastName'] ?? '',
+      businessTag: json['businessTag'] ?? '',
+      businessName: json['businessName'] ?? '',
+      email: json['email'] ?? '',
+      mobileNumber: json['mobileNumber'] ?? '',
+      image: json['image'] ?? '',
+      isLive: json['isLive'] ?? false,
+      isFake: json['isFake'] ?? false,
+      video: json['video'] ?? '',
+      liveSellingHistoryId: json['liveSellingHistoryId'],
+      view: json['view'] ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'firstName': firstName,
+      'lastName': lastName,
+      'businessTag': businessTag,
+      'businessName': businessName,
+      'email': email,
+      'mobileNumber': mobileNumber,
+      'image': image,
+      'isLive': isLive,
+      'isFake': isFake,
+      'video': video,
+      'liveSellingHistoryId': liveSellingHistoryId,
+      'view': view,
+    };
+  }
+}
+
+class ReelsResponse {
+  final bool status;
+  final String message;
+  final List<Reel> reels;
+
+  ReelsResponse({
+    required this.status,
+    required this.message,
+    required this.reels,
+  });
+
+  factory ReelsResponse.fromJson(Map<String, dynamic> json) {
+    return ReelsResponse(
+      status: json["status"] ?? false,
+      message: json["message"] ?? "",
+      reels: json["reels"] == null
+          ? []
+          : List<Reel>.from(json["reels"].map((x) => Reel.fromJson(x))),
+    );
+  }
+}
+
+/// Reel Model
+class Reel {
+  final String id;
+  final String thumbnail;
+  final String video;
+  final String description;
+  final int videoType;
+  final int thumbnailType;
+  final List<Product> productId;
+  final Seller sellerId;
+  final int duration;
+  final int like;
+  final bool isFake;
+  final String createdAt;
+  final bool isLike;
+
+  Reel({
+    required this.id,
+    required this.thumbnail,
+    required this.video,
+    required this.description,
+    required this.videoType,
+    required this.thumbnailType,
+    required this.productId,
+    required this.sellerId,
+    required this.duration,
+    required this.like,
+    required this.isFake,
+    required this.createdAt,
+    required this.isLike,
+  });
+
+  factory Reel.fromJson(Map<String, dynamic> json) {
+    return Reel(
+      id: json["_id"] ?? "",
+      thumbnail: json["thumbnail"] ?? "",
+      video: json["video"] ?? "",
+      description: json["description"] ?? "",
+      videoType: json["videoType"] ?? 0,
+      thumbnailType: json["thumbnailType"] ?? 0,
+      productId: json["productId"] == null
+          ? []
+          : List<Product>.from(
+          json["productId"].map((x) => Product.fromJson(x))),
+      sellerId: Seller.fromJson(json["sellerId"] ?? {}),
+      duration: json["duration"] ?? 0,
+      like: json["like"] ?? 0,
+      isFake: json["isFake"] ?? false,
+      createdAt: json["createdAt"] ?? "",
+      isLike: json["isLike"] ?? false,
+    );
+  }
+}
+
+/// Seller Model
+class Seller {
+  final String id;
+  final String firstName;
+  final String lastName;
+  final String businessTag;
+  final String businessName;
+  final String image;
+
+  Seller({
+    required this.id,
+    required this.firstName,
+    required this.lastName,
+    required this.businessTag,
+    required this.businessName,
+    required this.image,
+  });
+
+  factory Seller.fromJson(Map<String, dynamic> json) {
+    return Seller(
+      id: json["_id"] ?? "",
+      firstName: json["firstName"] ?? "",
+      lastName: json["lastName"] ?? "",
+      businessTag: json["businessTag"] ?? "",
+      businessName: json["businessName"] ?? "",
+      image: json["image"] ?? "",
+    );
+  }
+}
+
+
+class PopularProducts {
+  bool? status;
+  String? message;
+  List<Data>? data;
+
+  PopularProducts({this.status, this.message, this.data});
+
+  PopularProducts.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    message = json['message'];
+    if (json['data'] != null) {
+      data = <Data>[];
+      json['data'].forEach((v) {
+        data!.add(Data.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+    data['status'] = this.status;
+    data['message'] = this.message;
+    if (this.data != null) {
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+
+class Data {
+  String? sId;
+  String? productCode;
+  int? price;
+  int? shippingCharges;
+  String? productName;
+  String? description;
+  String? mainImage;
+  List<dynamic>? rating;   // FIXED ⭐
+  String? categoryName;
+
+  Data({
+    this.sId,
+    this.productCode,
+    this.price,
+    this.shippingCharges,
+    this.productName,
+    this.description,
+    this.mainImage,
+    this.rating,
+    this.categoryName,
+  });
+
+  Data.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    productCode = json['productCode'];
+    price = json['price'];
+    shippingCharges = json['shippingCharges'];
+    productName = json['productName'];
+    description = json['description'];
+    mainImage = json['mainImage'];
+
+    rating = json['rating'] != null ? List<dynamic>.from(json['rating']) : [];
+
+    categoryName = json['categoryName'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+    data['_id'] = this.sId;
+    data['productCode'] = this.productCode;
+    data['price'] = this.price;
+    data['shippingCharges'] = this.shippingCharges;
+    data['productName'] = this.productName;
+    data['description'] = this.description;
+    data['mainImage'] = this.mainImage;
+
+    /// SAFE EXPORT
+    data['rating'] = this.rating;
+
+    data['categoryName'] = this.categoryName;
+    return data;
+  }
+}
+
+
 

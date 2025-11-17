@@ -18,6 +18,9 @@ class ApiConfig {
   static const newCollection = "$baseUrl/product/geAllNewCollection";
   static const myOrder = "$baseUrl/order/orderDetailsForUser";
   static const favorite = "$baseUrl/favorite/favoriteProduct";
+  static const bank = "$baseUrl/bank/getBanks";
+  static const popularProduct = "$baseUrl/product/featuredProducts";
+  static const productDetails = "$baseUrl/product/detail";
 
 
 

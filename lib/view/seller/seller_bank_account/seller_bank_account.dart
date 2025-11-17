@@ -1,61 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:trendycart/app_string/app_string.dart';
-import 'package:trendycart/utils/common/app_appbar.dart';
-import 'package:trendycart/utils/common/app_button_v1.dart';
-import 'package:trendycart/utils/common/app_text.dart';
+import 'package:trendycart/view/seller/seller_bank_account/controller/bank_controller.dart';
 
 import '../../../utils/app_color.dart';
+import '../../../utils/common/app_appbar.dart';
+import '../../../utils/common/app_text.dart';
 
-class SellerBankAccount extends StatefulWidget {
-  const SellerBankAccount({super.key});
+class SellerBankAccount extends StatelessWidget {
+  SellerBankAccount({super.key});
 
-  @override
-  State<SellerBankAccount> createState() => _SellerBankAccountState();
-}
+  final BankController controller = Get.put(BankController());
 
-class _SellerBankAccountState extends State<SellerBankAccount> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppAppBar(title: AppString.bankAccount),
-      body: Padding(
-        padding:  EdgeInsets.symmetric(horizontal: Get.width * 0.050,vertical: Get.height * 0.020),
-        child: Column(
-          children: [
-            Container(
-              width: double.infinity,
+      appBar: AppAppBar(title: "Bank List"),
+
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        if (controller.bankList.isEmpty) {
+          return Center(child: Text("No Banks Found"));
+        }
+
+        return ListView.builder(
+          itemCount: controller.bankList.length,
+          itemBuilder: (context, index) {
+            final bank = controller.bankList[index];
+
+            return Container(
+              margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              padding: EdgeInsets.all(15),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(15)),
-                color: AppColor.primary.withValues(alpha: 0.2)
+                borderRadius: BorderRadius.circular(12),
+                color: AppColor.primary.withOpacity(0.2),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AppText("SBI",fontSize: Get.height * 0.018,fontWeight: FontWeight.bold,),
-                    SizedBox(height: 20,),
-                    AppText(AppString.accountNumber,fontSize: Get.height * 0.012,),
-                    AppText("15005000025895546",fontSize: Get.height * 0.014,),
-                    SizedBox(height: 15,),
-                    AppText(AppString.iFSCCode,fontSize: Get.height * 0.012,),
-                    AppText("SBI1234",fontSize: Get.height * 0.012,),
-                    SizedBox(height: 15,),
-                    AppText(AppString.branchName,fontSize: Get.height * 0.012,),
-                    AppText("munich",fontSize: Get.height * 0.012,),
-
-                  ],
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppText(
+                    bank.name,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  SizedBox(height: 8),
+                  AppText("ID: ${bank.id}"),
+                  AppText("ID: ${bank.createdAt}"),
+                  AppText("ID: ${bank.updatedAt}"),
+                ],
               ),
-
-            ),
-            Spacer(),
-            CommonButton(title: AppString.changeBankDetails)
-          ],
-        ),
-      ),
+            );
+          },
+        );
+      }),
     );
   }
 }

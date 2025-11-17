@@ -145,7 +145,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 );
               },),
               SizedBox(height: 10,),
-              if(userLogin?.user?.isSeller == true)
+              // if(userLogin?.user?.isSeller == true)
               ProfileContainerCommon(images: AppIcons.seller, title: "Zen cart", onTap: () {
                 AppLogs.log("Become Seller");
                 Get.to(()=>SellerAccount(),

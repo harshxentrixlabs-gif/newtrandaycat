@@ -10,6 +10,7 @@ import '../../utils/app_color.dart';
 import '../../utils/app_icons.dart';
 import '../../utils/common/app_image.dart';
 import '../../utils/common/app_text.dart';
+import '../home_screen/controller/home_controller.dart';
 
 class NewCategories extends StatefulWidget {
   const NewCategories({super.key});
@@ -22,6 +23,15 @@ class _NewCategoriesState extends State<NewCategories> {
 
   final NewCategoriesController newCategoriesController = Get.put(NewCategoriesController());
 
+
+  final HomeController homeController = Get.find();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    homeController.popularProductMethods();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,59 +52,58 @@ class _NewCategoriesState extends State<NewCategories> {
 
   Widget commonNewCategoriesListName(Function() onTap) {
     return SizedBox(
-      height: Get.height * 0.07,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: 5,
-        itemBuilder: (BuildContext context, int index) {
-          AppLogs.log(
-              "Selected index: ${newCategoriesController.selectedIndex.value == index}");
-          return Obx(()=> Padding(
-            padding: EdgeInsets.only(
-              right: Get.width * 0.035,
-              top: Get.height * 0.019,
-            ),
-            child: GestureDetector(
-              onTap: (){
-                newCategoriesController.selectedIndex.value = index;
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Get.width * 0.04,
-                  vertical: Get.height * 0.01,
-                ),
-                decoration: BoxDecoration(
-                  color: newCategoriesController.selectedIndex.value == index ? Colors.black : AppColor.primary,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    if (newCategoriesController.selectedIndex.value == index)
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.15),
-                        blurRadius: 8,
-                        offset:  Offset(0, 3),
-                      ),
-                  ],
-                ),
-                child: Center(
-                  child: Container(
+        height: Get.height * 0.05,
+        child:  ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: homeController.titleList.length,
+          padding: EdgeInsets.only(right: 10),
+          itemBuilder: (BuildContext context, int index) {
+
+            final title = homeController.titleList[index];
+
+            return Padding(
+              padding: EdgeInsets.only(right: Get.width * 0.035),
+              child: GestureDetector(
+                onTap: () {
+                  homeController.selectedIndex.value = index;
+                  onTap(); // optional
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Get.width * 0.04,
+                    vertical: Get.height * 0.01,
+                  ),
+                  decoration: BoxDecoration(
+                    color: homeController.selectedIndex.value == index
+                        ? AppColor.primary
+                        : Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      if (homeController.selectedIndex.value == index)
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.15),
+                          blurRadius: 8,
+                          offset: Offset(0, 3),
+                        ),
+                    ],
+                  ),
+                  child: Center(
                     child: AppText(
-                      "Hello & Hello",
-                      fontSize: Get.height * 0.018,
-                      color: newCategoriesController.selectedIndex.value == index
+                      title,
+                      fontSize: Get.height * 0.014,
+                      color: homeController.selectedIndex.value == index
                           ? Colors.white
-                          : AppColor.textWhite.withValues(alpha: 0.9),
-                      fontWeight:
-                      newCategoriesController.selectedIndex.value == index ? FontWeight.bold : FontWeight.w500,
+                          : AppColor.textBlack.withOpacity(0.9),
+                      fontWeight: homeController.selectedIndex.value == index
+                          ? FontWeight.bold
+                          : FontWeight.w500,
                     ),
                   ),
                 ),
               ),
-            ),
-          )
-          );
-        },
-      ),
-    );
+            );
+          },
+        ));
   }
 
   Widget commonNewCategories(Function() onTap) {
@@ -104,10 +113,11 @@ class _NewCategoriesState extends State<NewCategories> {
           crossAxisCount: 2,
           crossAxisSpacing: 20.0,
           mainAxisSpacing: 20.0,
-          childAspectRatio: 0.80,
+          childAspectRatio: 0.85,
         ),
-        itemCount:12,
+        itemCount:homeController.data.length,
         itemBuilder: (BuildContext context, int index) {
+          final data = homeController.data[index];
           return  GestureDetector(
             onTap: onTap,
             child: Container(
@@ -135,13 +145,12 @@ class _NewCategoriesState extends State<NewCategories> {
                           topRight: Radius.circular(16),
                         ),
                         child: AppImage.network(
-                          'https://thrivenextgen.com/wp-content/uploads/AdobeStock_162765779_45-scaled.webp',
+                          data.mainImage ?? "",
                           width: double.infinity,
                           height: Get.height * 0.14,
                           fit: BoxFit.cover,
                         ),
                       ),
-
                         Positioned(
                           top: 6,
                           right: 6,
@@ -156,8 +165,6 @@ class _NewCategoriesState extends State<NewCategories> {
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
-
-
                                 Icons.favorite_border,color:  Colors.black54,
                                 size: 20,
                               ),
@@ -174,7 +181,7 @@ class _NewCategoriesState extends State<NewCategories> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           AppText(
-                            'Live Selling',
+                           data.productName ?? "",
                             fontSize: Get.height * 0.014,
                             fontWeight: FontWeight.w600,
                             color: AppColor.textBlack,
@@ -184,7 +191,7 @@ class _NewCategoriesState extends State<NewCategories> {
                             child: Row(
                               children: [
                                 AppText(
-                                  '\$3000',
+                                  '\$${data.price}',
                                   fontSize: Get.height * 0.016,
                                   color: AppColor.primary,
                                   fontWeight: FontWeight.bold,
@@ -197,7 +204,7 @@ class _NewCategoriesState extends State<NewCategories> {
                                   color: Colors.yellow,
                                 ),
                                 AppText(
-                                  '4.5',
+                                  data.rating == null ? "0" :"NO Review",
                                   fontSize: Get.height * 0.013,
                                   color: AppColor.textBlack,
                                   overflow: TextOverflow.ellipsis,
@@ -207,7 +214,7 @@ class _NewCategoriesState extends State<NewCategories> {
                           ),
                           Expanded(
                             child: AppText(
-                              'Top Trending Product',
+                              data.description ?? "",
                               fontSize: Get.height * 0.013,
                               fontWeight: FontWeight.w500,
                               color: Colors.grey[700],

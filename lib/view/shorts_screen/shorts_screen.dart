@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:trendycart/utils/app_print.dart';
 import 'package:trendycart/utils/common/app_text.dart';
+import 'package:trendycart/view/home_screen/controller/home_controller.dart';
 import 'package:video_player/video_player.dart';
 import '../../app_string/app_string.dart';
 import '../../utils/app_color.dart';
@@ -25,6 +27,21 @@ class _ShortsScreenState extends State<ShortsScreen> {
   late String userPhoto = box.read('userPhoto') ??
       "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
+  HomeController homeController = Get.find();
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    homeController.productMethods();
+
+    // INITIAL VIDEO LOAD
+    if (homeController.reel.isNotEmpty) {
+      controller.initVideo(homeController.reel[0].video);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,26 +50,33 @@ class _ShortsScreenState extends State<ShortsScreen> {
         builder: (controller) {
           return PageView.builder(
             scrollDirection: Axis.vertical,
-            itemCount: controller.videoUrls.length,
+            itemCount: homeController.reel.length,
             onPageChanged: (index) {
               controller.onPageChanged(index);
             },
             itemBuilder: (context, index) {
+              final data = homeController.reel[index];
               return Stack(
                 children: [
                   Center(
                     child: GestureDetector(
                       onTap: controller.togglePlayPause,
                       child: controller.videoController.value.isInitialized
-                           ?  ClipRect(
-                             child: Align(
-                                alignment: Alignment.center,
-                                heightFactor: 0.998,
-                                widthFactor: 0.998,
-                                                       child: VideoPlayer(controller.videoController)),
-                           )
-                          :  Center(child: CircularProgressIndicator(color: Colors.white,)),
-                    ),
+                          ? ClipRect(
+                        child: Align(
+                          alignment: Alignment.center,
+                          heightFactor: 0.998,
+                          widthFactor: 0.998,
+                          child: VideoPlayer(controller.videoController),
+                        ),
+                      )
+                          : Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                    ,
                   ),
                   Positioned(
                     bottom: 150,
@@ -175,12 +199,14 @@ class _ShortsScreenState extends State<ShortsScreen> {
                           fontSize: Get.height * 0.014,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        SizedBox(
+                       Obx(()=> SizedBox(
                           height: Get.height * 0.10,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: 6,
+                            itemCount: homeController.product.length,
                             itemBuilder: (BuildContext context, int index) {
+                              final data = homeController.product[index];
+                              AppLogs.log(" reels ${data}");
                               return Padding(
                                 padding: EdgeInsets.only(right: 8.0, top: 8),
                                 child: Container(
@@ -202,7 +228,7 @@ class _ShortsScreenState extends State<ShortsScreen> {
                                           child: AppImage.network(
                                             width: Get.width * 0.14,
                                             height: Get.height * 0.14,
-                                            'https://thrivenextgen.com/wp-content/uploads/AdobeStock_162765779_45-scaled.webp',
+                                            data.mainImage,
                                             fit: BoxFit.cover,
                                           ),
                                         ),
@@ -214,7 +240,7 @@ class _ShortsScreenState extends State<ShortsScreen> {
                                             children: [
                                               Expanded(
                                                 child: AppText(
-                                                  "Hello",
+                                                  data.productName,
                                                   color: AppColor.textWhite,
                                                   overflow:
                                                       TextOverflow.ellipsis,
@@ -223,7 +249,7 @@ class _ShortsScreenState extends State<ShortsScreen> {
                                               SizedBox(height: 5),
                                               Expanded(
                                                 child: AppText(
-                                                  "Hello madfnsjdn sdsdf jkdshfisdfhisdfsdjfhsiofdjfoisuh",
+                                                  data.description,
                                                   color: AppColor.textWhite,
                                                   overflow:
                                                       TextOverflow.ellipsis,
@@ -235,7 +261,7 @@ class _ShortsScreenState extends State<ShortsScreen> {
                                                 child: Row(
                                                   children: [
                                                     AppText(
-                                                      "\$ 300",
+                                                      "\$${data.price}",
                                                       color: AppColor.primary,
                                                       fontWeight:
                                                           FontWeight.bold,
@@ -289,6 +315,7 @@ class _ShortsScreenState extends State<ShortsScreen> {
                             },
                           ),
                         ),
+                       ),
                       ],
                     ),
                   ),

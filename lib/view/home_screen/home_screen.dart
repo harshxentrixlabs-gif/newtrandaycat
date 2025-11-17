@@ -49,9 +49,10 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO: implement initState
     super.initState();
     homeController.liveSellerList;
-    homeController.fetchLiveSellerList();
-    homeController.fetchReels();
     homeController.fetchJustForYou();
+    homeController.liveSellerResponseMethods();
+    homeController.popularProductMethods();
+    homeController.reelsMethods();
     homeController.fetchProduct();
     AppLogs.log("Home Screen");
   }
@@ -130,19 +131,20 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
 
               SizedBox(height: Get.height * 0.015),
-             Obx(()=> commonLiveSelling((){
-                Get.to(()=>LiveScreen());
+            Obx(()=> commonLiveSelling((){
+
               }),
-             ),
+            ),
               SizedBox(height: Get.height * 0.015),
-              if(homeController.reelsResponse.isNotEmpty)
+              // if(homeController.reelsResponse.isNotEmpty)
               commonViewAllAndTitle(title: AppString.shorts, images: AppIcons.flash, onTap: () {AppLogs.log("Shorts"); navigationController.changeIndex(1); }),
-              if(homeController.reelsResponse.isNotEmpty)
+              // if(homeController.reelsResponse.isNotEmpty)
               SizedBox(height: Get.height * 0.015),
-              if(homeController.reelsResponse.isNotEmpty)
-              commonShorts((){
+              // if(homeController.reelsResponse.isNotEmpty)
+             Obx(()=> commonShorts((){
                 navigationController.changeIndex(1);
               }),
+             ),
 
               // SizedBox(height: Get.height * 0.015),
               // commonViewAllAndTitle(title: AppString.liveAuction, images: AppIcons.auction,
@@ -169,17 +171,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               }),
               SizedBox(height: Get.height * 0.020),
-              commonNewCategoriesListName((){
-                // AppLogs.log("New Categories List");
-                // Get.to(()=>ProductDetailsScreen(),
-                // );
+             commonNewCategoriesListName((){
+
               }),
               SizedBox(height: Get.height * 0.015),
-            Obx(()=>  commonNewCategoriesAndPopular(title: 'New Categories',onTap: (){
-                AppLogs.log("New Categories List");
-                Get.to(()=>ProductDetailsScreen(),
-                );
-              }),
+            Obx(()=>  commonNewCategoriesAndPopular(
+              title: "New",
+              onTap: (productData) {
+                Get.to(() => ProductDetailsScreen(productData: productData));
+              },
+            )
             ),
               SizedBox(height: Get.height * 0.015),
               commonViewAllAndTitle(title: AppString.popularProducts, onTap: () {
@@ -190,27 +191,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
                 }, images:'',),
               SizedBox(height: Get.height * 0.015),
-             Obx(()=> commonNewCategoriesAndPopular(title: 'Popular Products', onTap: () {
-                AppLogs.log("Popular Products");
-                Get.to(()=>ProductDetailsScreen(),
-                    transition: Transition.rightToLeft
-                );
-              }),
+             Obx(()=>  commonNewCategoriesAndPopular(
+               title: "Popular Products",
+               onTap: (productData) {
+                 Get.to(() => ProductDetailsScreen(productData: productData));
+               },
+             )
              ),
               SizedBox(height: Get.height * 0.015),
               AppText(AppString.justForYou, fontWeight: FontWeight.w600),
-             Obx(()=> commonJustForYou((){
-                Get.to(()=>ProductDetailsScreen(),
-                    transition: Transition.rightToLeft
-                );
-              }),
-             )
+            Obx(() => commonJustForYou((just) {
+            Get.to(() => ProductDetailsScreen(productData: just));
+          }))
             ],
           ),
         ),
       ),
     );
   }
+
 
   Widget commonViewAllAndTitle({
     required String title,
@@ -243,22 +242,24 @@ class _HomeScreenState extends State<HomeScreen> {
       height: 80,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: homeController.liveSellerList.length,
+        itemCount:homeController.liveSellerResponse.length,
         itemBuilder: (BuildContext context, int index) {
-          final data = homeController.liveSellerList[index];
-          AppLogs.log("data $data");
+         final data = homeController.liveSellerResponse[index];
+           AppLogs.log("data $data");
           return Padding(
             padding: EdgeInsets.all(8.0),
             child: DottedBorder(
               options: CircularDottedBorderOptions(strokeWidth: 1,color: AppColor.primary),
               child: GestureDetector(
-                onTap: onTap,
+                onTap:() {
+                  Get.to(()=>LiveScreen(video: data.video, name: data.firstName, view: data.view.toString(),));
+                },
                 child: ClipOval(
                   child: SizedBox(
                     width: 60,
                     height: 60,
                     child: AppImage.network(
-                      data.image ?? "",
+                      data.image,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -271,15 +272,16 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+
   Widget commonShorts(Function()? Function) {
     return SizedBox(
       height: Get.height * 0.25,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: homeController.reelsResponse.length,
+        itemCount: homeController.reel.length,
         itemBuilder: (BuildContext context, int index) {
-          final reel = homeController.reelsResponse[index];
-          AppLogs.log("reel $reel");
+          final reel = homeController.reel[index];
+          AppLogs.log("reel get  $reel");
           return Padding(
             padding: EdgeInsets.only(
               right: Get.width * 0.05,
@@ -295,7 +297,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: Get.width * 0.35,
                       height: Get.height * 0.3,
                       child: AppImage.network(
-                        "https://thrivenextgen.com/wp-content/uploads/AdobeStock_162765779_45-scaled.webp",
+                       reel.thumbnail,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -319,171 +321,80 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget commonLiveAuction(Function() onTap) {
+  Widget commonNewCategoriesListName(Function() onTap) {
     return SizedBox(
-      height: Get.height * 0.23,
-      child: ListView.builder(
+      height: Get.height * 0.05,
+      child:  ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: 5,
+        itemCount: homeController.titleList.length,
+        padding: EdgeInsets.only(right: 10),
         itemBuilder: (BuildContext context, int index) {
-          return GestureDetector(
-            onTap: onTap,
-            child: Container(
-              width: Get.width * 0.35,
-              margin: EdgeInsets.only(right: Get.width * 0.04,bottom: 5),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.08),
-                    blurRadius: 6,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(15),
-                      topRight: Radius.circular(15),
-                    ),
-                    child: AppImage.network(
-                      width: double.infinity,
-                      height: Get.height * 0.14,
-                      'https://thrivenextgen.com/wp-content/uploads/AdobeStock_162765779_45-scaled.webp',
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Padding(
-                    padding:  EdgeInsets.only(left: 8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 5),
-                        AppText(
-                          'Live Selling',
-                          fontSize: Get.height * 0.016,
-                          fontWeight: FontWeight.w600,
-                          color: AppColor.textBlack,
-                        ),
-                        SizedBox(height: 5),
-                        AppText(
-                          'Limited Time Offer!',
-                          fontSize: Get.height * 0.012,
-                          color: AppColor.textBlack,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  Expanded(
-                    child: Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: AppColor.primary,
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(15),
-                          bottomRight: Radius.circular(15),
-                        ),
+
+          final title = homeController.titleList[index];
+
+          return Padding(
+            padding: EdgeInsets.only(right: Get.width * 0.035),
+            child: GestureDetector(
+              onTap: () {
+                homeController.selectedIndex.value = index;
+                onTap(); // optional
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: Get.width * 0.04,
+                  vertical: Get.height * 0.01,
+                ),
+                decoration: BoxDecoration(
+                  color: homeController.selectedIndex.value == index
+                      ? AppColor.primary
+                      : Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    if (homeController.selectedIndex.value == index)
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.15),
+                        blurRadius: 8,
+                        offset: Offset(0, 3),
                       ),
-                      child: AppText(
-                        "7 day left",
-                        fontSize: Get.height * 0.014,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
+                  ],
+                ),
+                child: Center(
+                  child: AppText(
+                    title,
+                    fontSize: Get.height * 0.014,
+                    color: homeController.selectedIndex.value == index
+                        ? Colors.white
+                        : AppColor.textBlack.withOpacity(0.9),
+                    fontWeight: homeController.selectedIndex.value == index
+                        ? FontWeight.bold
+                        : FontWeight.w500,
                   ),
-                ],
+                ),
               ),
             ),
           );
         },
-      ),
-    );
+      ));
   }
 
-  Widget commonNewCategoriesListName(Function() onTap) {
-    return SizedBox(
-        height: Get.height * 0.06,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: 5,
-          padding:  EdgeInsets.only(right: 10),
-          itemBuilder: (BuildContext context, int index) {
-
-            AppLogs.log(
-                "Selected index: ${homeController.selectedIndex.value == index}");
-            return Obx(()=> Padding(
-              padding: EdgeInsets.only(
-                right: Get.width * 0.035,
-                // top: Get.height * 0.019,
-              ),
-              child: GestureDetector(
-                onTap: (){
-                  homeController.selectedIndex.value = index;
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: Get.width * 0.04,
-                    vertical: Get.height * 0.01,
-                  ),
-                  decoration: BoxDecoration(
-                    color: homeController.selectedIndex.value == index ? Colors.black : AppColor.primary,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      if (homeController.selectedIndex.value == index)
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.15),
-                          blurRadius: 8,
-                          offset:  Offset(0, 3),
-                        ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Container(
-                      child: AppText(
-                        "Hello & Hello",
-                        fontSize: Get.height * 0.018,
-                        color: homeController.selectedIndex.value == index
-                            ? Colors.white
-                            : AppColor.textWhite.withValues(alpha: 0.9),
-                        fontWeight:
-                        homeController.selectedIndex.value == index ? FontWeight.bold : FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            )
-            );
-          },
-        ),
-      );
-  }
 
 
   Widget commonNewCategoriesAndPopular({
     String? title,
-    required Function() onTap,
+    required Function(dynamic data) onTap,
   }) {
     bool showLike = title != 'Popular Products';
     return SizedBox(
       height: Get.height * 0.24,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: homeController.newCollectionProduct.length,
+        itemCount: homeController.data.length,
         padding:  EdgeInsets.only(right: 10),
         itemBuilder: (BuildContext context, int index) {
-          final data = homeController.newCollectionProduct[index];
+          final data = homeController.data[index];
           AppLogs.log("data NewCollection $data");
           return GestureDetector(
-            onTap: onTap,
+            onTap: () => onTap(data),
             child: Container(
               width: Get.width * 0.38,
               margin:  EdgeInsets.only(right: 14,bottom: 4),
@@ -509,7 +420,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           topRight: Radius.circular(16),
                         ),
                         child: AppImage.network(
-                          data.mainImage,
+                          data.mainImage.toString(),
                           width: double.infinity,
                           height: Get.height * 0.14,
                           fit: BoxFit.cover,
@@ -520,24 +431,24 @@ class _HomeScreenState extends State<HomeScreen> {
                         Positioned(
                           top: 6,
                           right: 6,
-                          child: GestureDetector(
-                            onTap: () {
-                              homeController.like(data);   // ← only on tap
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                color: Colors.white70,
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                data.isFavorite ? Icons.favorite : Icons.favorite_border,
-                                color: data.isFavorite ? Colors.red : Colors.black54,
-                              ),
-                            ),
-                          ),
-                        ),
+                          child:
+                          GestureDetector(
+                              onTap: () {
 
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  color: Colors.white70,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.favorite ,
+                                  color:  Colors.black54,
+                                ),
+                              ),
+                          ),
+                        )
                     ],
                   ),
                   Expanded(
@@ -549,7 +460,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Expanded(
                             child: AppText(
-                              data.productName,
+                              data.productName.toString(),
                               fontSize: Get.height * 0.014,
                               fontWeight: FontWeight.w600,
                               color: AppColor.textBlack,
@@ -567,17 +478,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                   fontWeight: FontWeight.bold,
                                   overflow: TextOverflow.ellipsis,
                                 ),
-                                 Spacer(),
+                                SizedBox(width: 10,),
                                 AppImage.svg(
                                   AppIcons.star,
                                   height: Get.height * 0.020,
                                   color: Colors.yellow,
                                 ),
-                                AppText(
-                                  data.review == 0 ? 'No Reviews' : '${data.review} Reviews',
-                                  fontSize: Get.height * 0.013,
-                                  color: AppColor.textBlack,
-                                  overflow: TextOverflow.ellipsis,
+
+                                Flexible(
+                                  child: AppText(
+                                    data.rating == null ? 'No rating' : '${data.rating} No Reviews',
+                                    fontSize: Get.height * 0.013,
+                                    color: AppColor.textBlack,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
                               ],
                             ),
@@ -585,7 +499,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           SizedBox(height: Get.height * 0.005),
                           Expanded(
                             child: AppText(
-                              data.description,
+                              data.description.toString(),
                               fontSize: Get.height * 0.013,
                               fontWeight: FontWeight.w500,
                               color: Colors.grey[700],
@@ -606,7 +520,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 
-  Widget commonJustForYou(Function() onTap) {
+  Widget commonJustForYou(Function(dynamic product) onTap) {
     return ListView.builder(
       scrollDirection: Axis.vertical,
       itemCount: homeController.justForYouProduct.length,
@@ -616,7 +530,7 @@ class _HomeScreenState extends State<HomeScreen> {
         final just = homeController.justForYouProduct[index];
 
         return GestureDetector(
-          onTap: onTap,
+          onTap: (()=> onTap(just)),
           child: Container(
             margin: EdgeInsets.only(top: Get.height * 0.020),
             decoration: BoxDecoration(
@@ -663,35 +577,35 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(height: Get.height * 0.008),
 
                         /// 🔥 Attributes (Perfect Working)
-                        SizedBox(
-                          height: Get.height * 0.03,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: just.attributes.length,
-                            itemBuilder: (context, attrIndex) {
-                              final attr = just.attributes[attrIndex];
-                              return Row(
-                                children: attr.value.map((v) {
-                                  return Container(
-                                    margin: EdgeInsets.only(right: 8),
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.black),
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: AppText(
-                                      v.toString(),
-                                      fontSize: Get.height * 0.010,
-                                    ),
-                                  );
-                                }).toList(),
-                              );
-                            },
-                          ),
-                        ),
+                        // SizedBox(
+                        //   height: Get.height * 0.03,
+                        //   child: ListView.builder(
+                        //     scrollDirection: Axis.horizontal,
+                        //     itemCount: just.attributes.length,
+                        //     itemBuilder: (context, attrIndex) {
+                        //       final attr = just.attributes[attrIndex];
+                        //       return Row(
+                        //         children: attr.value.map((v) {
+                        //           return Container(
+                        //             margin: EdgeInsets.only(right: 8),
+                        //             padding: EdgeInsets.symmetric(
+                        //               horizontal: 8,
+                        //               vertical: 4,
+                        //             ),
+                        //             decoration: BoxDecoration(
+                        //               border: Border.all(color: Colors.black),
+                        //               borderRadius: BorderRadius.circular(5),
+                        //             ),
+                        //             child: AppText(
+                        //               v.toString(),
+                        //               fontSize: Get.height * 0.010,
+                        //             ),
+                        //           );
+                        //         }).toList(),
+                        //       );
+                        //     },
+                        //   ),
+                        // ),
 
                         SizedBox(height: Get.height * 0.008),
 

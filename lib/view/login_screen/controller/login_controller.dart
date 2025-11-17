@@ -24,6 +24,9 @@ import '../model/login_model.dart';
 class LoginController extends GetxController {
   TextEditingController emailController = TextEditingController();
   RxBool isLoading = false.obs;
+  late final userEmail = box.read('userEmail');
+  late final userImage = box.read('editImage');
+  late final username = box.read('editFirstName');
   final box = GetStorage();
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -93,50 +96,53 @@ class LoginController extends GetxController {
   }
 
   ///  Google Login
-  Future<void> googleLogin() async {
+  Future<String?> googleLogin() async {
     try {
       isLoading.value = true;
 
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
-        isLoading.value = false; // hide loader
-        AppLogs.log("Google sign-in canceled");
-        return;
+        isLoading.value = false;
+        return null;
       }
 
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
-      AppLogs.log("Google googleAuth: $googleAuth");
 
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      AppLogs.log("Google credential: $credential");
       UserCredential userCredential = await _auth.signInWithCredential(
         credential,
       );
 
       final user = userCredential.user;
-      AppLogs.log("Google user: $user");
+
       if (user != null) {
-        AppLogs.log("Google login success: ${user.email}");
+        Get.offAll(() => NavigationMenu(), transition: Transition.rightToLeft);
         box.write('userEmail', user.email);
-        box.write('userName', user.displayName);
-        box.write('userPhoto', user.photoURL);
-        Get.to(() => NavigationMenu(), transition: Transition.rightToLeft);
+        box.write("editImage", user.photoURL);
+        box.write("editFirstName", user.displayName);
+        box.write("editLastName", editLastName);
+        box.write("editEmail", editEmail);
+        box.write("dob", editDateOfBirth);
+        box.write("genderSelect", genderSelect);
+        box.write("location", editLocation);
+        box.write("uniqueID", uniqueID);
+         return user.email;
       }
     } catch (e) {
-      AppLogs.log("Google login error: $e");
       Get.snackbar("Error", "Google login failed");
     } finally {
       isLoading.value = false;
     }
+    return null;
   }
 
   /// Uer email get
-  late final userEmail = box.read('userEmail');
+  // late final userEmail = box.read('userEmail');
 
   /// Uer Logout
   Future<void> logout() async {
@@ -147,6 +153,28 @@ class LoginController extends GetxController {
   }
 
   /// Api login Methods
+
+
+
+
+  void googleLoginAndApiCall() async {
+    String? email = await googleLogin();   // Google login thi email mali
+
+    if (email == null) return;
+
+    getLoginData(
+      image: userImage,
+      firstName: username,
+      lastName: "",
+      email: email,        // ⭐️ Google email API ma okay
+      password: "",
+      loginType: 2,
+      fcmToken: "123",
+      identity: "google",
+    );
+  }
+
+
 
   LoginModel? userLogin;
 
@@ -236,7 +264,7 @@ class LoginController extends GetxController {
       'image': image,
       'firstName': firstName,
       'lastName': lastName,
-      'email': email,
+      'email': userEmail,
       'password': password,
       'loginType': loginType,
       'fcmToken': fcmToken,
