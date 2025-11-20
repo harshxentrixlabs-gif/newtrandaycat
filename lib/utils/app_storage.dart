@@ -2,12 +2,11 @@ import 'package:get_storage/get_storage.dart';
 
 /// A singleton class to manage app storage using GetStorage
 class AppStorage {
+
   static final AppStorage _instance = AppStorage._internal();
   factory AppStorage() => _instance;
   AppStorage._internal();
-
   final _box = GetStorage();
-
   /// Call this before runApp()
   static Future<void> init() async {
     await GetStorage.init();

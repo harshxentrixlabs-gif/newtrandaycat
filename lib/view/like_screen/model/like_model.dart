@@ -1,77 +1,89 @@
 class FavoriteResponse {
-  bool? status;
-  String? message;
-  List<FavoriteProduct> favorite;
+  final bool status;
+  final String message;
+  final List<FavoriteItem> favorite;
 
   FavoriteResponse({
-    this.status,
-    this.message,
+    required this.status,
+    required this.message,
     required this.favorite,
   });
 
   factory FavoriteResponse.fromJson(Map<String, dynamic> json) {
     return FavoriteResponse(
-      status: json['status'],
-      message: json['message'],
-      favorite: (json['favorite'] as List)
-          .map((e) => FavoriteProduct.fromJson(e))
+      status: json["status"] ?? false,
+      message: json["message"] ?? '',
+      favorite: (json["favorite"] as List<dynamic>? ?? [])
+          .map((e) => FavoriteItem.fromJson(e))
           .toList(),
     );
   }
 }
 
-class FavoriteProduct {
-  String? id;
-  String? userId;
-  String? productId;
-  String? categoryId;
-  List<ProductDetail> product;
+class FavoriteItem {
+  final String id;
+  final String userId;
+  final String productId;
+  final String categoryId;
+  final List<ProductMini> product;
 
-  FavoriteProduct({
-    this.id,
-    this.userId,
-    this.productId,
-    this.categoryId,
+  FavoriteItem({
+    required this.id,
+    required this.userId,
+    required this.productId,
+    required this.categoryId,
     required this.product,
   });
 
-  factory FavoriteProduct.fromJson(Map<String, dynamic> json) {
-    return FavoriteProduct(
-      id: json['_id'],
-      userId: json['userId'],
-      productId: json['productId'],
-      categoryId: json['categoryId'],
-      product: (json['product'] as List)
-          .map((e) => ProductDetail.fromJson(e))
+  factory FavoriteItem.fromJson(Map<String, dynamic> json) {
+    return FavoriteItem(
+      id: json["_id"] ?? "",
+      userId: json["userId"] ?? "",
+      productId: json["productId"] ?? "",
+      categoryId: json["categoryId"] ?? "",
+      product: (json["product"] as List<dynamic>? ?? [])
+          .map((e) => ProductMini.fromJson(e))
           .toList(),
     );
   }
 }
-class ProductDetail {
-  String? id;
-  int? price;
-  String? productName;
-  String? mainImage;
-  String? category;
-  String? subCategory;
 
-  ProductDetail({
-    this.id,
-    this.price,
-    this.productName,
-    this.mainImage,
-    this.category,
-    this.subCategory,
+
+class ProductMini {
+  final String id;
+  final String productName;
+  final num price;
+  final bool enableAuction;
+  final String? auctionEndDate;
+  final String mainImage;
+  final String category;
+  final String subCategory;
+  final String description;
+
+  ProductMini({
+    required this.id,
+    required this.productName,
+    required this.price,
+    required this.enableAuction,
+    required this.auctionEndDate,
+    required this.mainImage,
+    required this.category,
+    required this.subCategory,
+    required this.description
   });
 
-  factory ProductDetail.fromJson(Map<String, dynamic> json) {
-    return ProductDetail(
-      id: json['_id'],
-      price: json['price'],
-      productName: json['productName'],
-      mainImage: json['mainImage'],
-      category: json['category'],
-      subCategory: json['subCategory'],
+  factory ProductMini.fromJson(Map<String, dynamic> json) {
+    return ProductMini(
+      id: json["_id"] ?? "",
+      productName: json["productName"] ?? "",
+      price: json["price"] ?? 0,
+      enableAuction: json["enableAuction"] ?? false,
+      auctionEndDate: json["auctionEndDate"],
+      mainImage: json["mainImage"] ?? "",
+      category: json["category"] ?? "",
+      subCategory: json["subCategory"] ?? "",
+      description: json["description"] ?? "",
     );
   }
 }
+

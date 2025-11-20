@@ -26,6 +26,7 @@ class _CartsScreenState extends State<CartsScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    cartsController.getCartList();
     AppLogs.log("Carts Screen");
   }
 
@@ -80,9 +81,12 @@ class _CartsScreenState extends State<CartsScreen> {
                     ],
                   ),
                   SizedBox(height: Get.height * 0.010),
-                  CommonButton(title: AppString.checkOut,onTap: (){
-                    AppLogs.log("CheckOut >>");
-                  },),
+                  CommonButton(
+                    title: AppString.checkOut,
+                    onTap: () {
+                      AppLogs.log("CheckOut >>");
+                    },
+                  ),
                 ],
               ),
             ),
@@ -91,10 +95,11 @@ class _CartsScreenState extends State<CartsScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: Get.width * 0.020),
+          padding: EdgeInsets.symmetric(horizontal: Get.width * 0.020,vertical: 10),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              commonCarts(),
+               commonCarts(),
               SizedBox(height: Get.height * 0.20),
             ],
           ),
@@ -104,140 +109,184 @@ class _CartsScreenState extends State<CartsScreen> {
   }
 
   Widget commonCarts() {
-    return ListView.builder(
-      scrollDirection: Axis.vertical,
-      itemCount: 40,
-      shrinkWrap: true,
-      physics: ClampingScrollPhysics(),
-      itemBuilder: (BuildContext context, int index) {
-        return GestureDetector(
-          onTap: () {
-            AppLogs.log('Tapped Live selling item $index');
-          },
-          child: Container(
-            margin: EdgeInsets.only(top: Get.height * 0.020),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.08),
-                  blurRadius: 6,
-                  offset: Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                    child: AppImage.network(
-                      width: Get.width * 0.25,
-                      height: Get.height * 0.10,
-                      'https://thrivenextgen.com/wp-content/uploads/AdobeStock_162765779_45-scaled.webp',
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  SizedBox(width: Get.width * 0.030),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        AppText(
-                          "Hello",
-                          fontWeight: FontWeight.bold,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        SizedBox(height: Get.height * 0.008),
-                        Row(
-                          children: [
-                            AppText("Color :"),
-                            AppText(" White", fontWeight: FontWeight.bold,color: AppColor.primary,fontSize: Get.height * 0.014,),
-                          ],
-                        ),
-                        // SizedBox(height: Get.height * 0.008,),
-                        Row(
-                          children: [
-                            AppText(
-                              '\$3000',
-                              fontSize: Get.height * 0.014,
-                              color: AppColor.primary,
-                              fontWeight: FontWeight.bold,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Spacer(),
-                            Container(
-                              height: Get.height * 0.04,
-                              width: Get.width * 0.20,
-                              decoration: BoxDecoration(
-                                color: AppColor.primary,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  InkWell(
-                                    onTap: () => cartsController.decrement(),
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Container(
-                                      padding: EdgeInsets.all(6),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Icon(
-                                        Icons.remove,
-                                        size: Get.height * 0.015,
-                                        color: AppColor.primary,
-                                      ),
-                                    ),
-                                  ),
-
-                                  Obx(
-                                    () => AppText(
-                                      "${cartsController.count.value}",
-                                      fontSize: Get.height * 0.014,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-
-                                  InkWell(
-                                    onTap: () => cartsController.increment(),
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Container(
-                                      padding: EdgeInsets.all(6),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Icon(
-                                        Icons.add,
-                                        size: Get.height * 0.015,
-                                        color: AppColor.primary,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+    return Obx(() {
+      if (cartsController.isLoading.value) {
+        return SizedBox(
+          height: Get.height * 0.70,
+          child: Center(
+            child: CircularProgressIndicator()
+          ),
+        );
+      }
+      if (cartsController.cartList.isEmpty) {
+        return SizedBox(
+          height: Get.height * 0.70,
+          child: Center(
+            child: AppText(
+              "No data",
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
             ),
           ),
         );
-      },
-    );
+      }
+
+      // ------------------ CART LIST -------------------
+      return ListView.builder(
+        itemCount: cartsController.cartList.length,
+        shrinkWrap: true,
+        physics: ClampingScrollPhysics(),
+        itemBuilder: (BuildContext context, int index) {
+          final data = cartsController.cartList[index];
+          final product = data.productId;
+
+          return GestureDetector(
+            onTap: () => AppLogs.log('Tapped item $index'),
+            child: Container(
+              margin: EdgeInsets.only(top: Get.height * 0.020),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.08),
+                    blurRadius: 6,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: AppImage.network(
+                        product.mainImage,
+                        width: Get.width * 0.25,
+                        height: Get.height * 0.10,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+
+                    SizedBox(width: Get.width * 0.030),
+
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AppText(
+                            product.productName,
+                            fontWeight: FontWeight.bold,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+
+                          SizedBox(height: Get.height * 0.008),
+
+                          Row(
+                            children: [
+                              AppText("Color : "),
+                              AppText(
+                                "White",
+                                fontWeight: FontWeight.bold,
+                                color: AppColor.primary,
+                              )
+                            ],
+                          ),
+
+                          SizedBox(height: Get.height * 0.010),
+
+                          Row(
+                            children: [
+                              AppText(
+                                '\$3000',
+                                fontWeight: FontWeight.bold,
+                                color: AppColor.primary,
+                              ),
+                              Spacer(),
+
+                              Container(
+                                height: Get.height * 0.04,
+                                width: Get.width * 0.20,
+                                decoration: BoxDecoration(
+                                  color: AppColor.primary,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        if (cartsController.count.value == 0) {
+                                          cartsController.deleteCart();
+                                        } else {
+                                          cartsController.decrement();
+                                        }
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.all(6),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: Obx(() {
+                                          return cartsController.isDeleting.value
+                                              ? SizedBox(
+                                            height: 15,
+                                            width: 15,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              color: AppColor.primary,
+                                            ),
+                                          )
+                                              : Icon(
+                                            Icons.remove,
+                                            size: Get.height * 0.015,
+                                            color: AppColor.primary,
+                                          );
+                                        }),
+                                      ),
+                                    ),
+
+                                    Obx(
+                                          () => AppText(
+                                        "${cartsController.count.value}",
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+
+                                    InkWell(
+                                      onTap: () => cartsController.increment(),
+                                      child: Container(
+                                        padding: EdgeInsets.all(6),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: Icon(
+                                          Icons.add,
+                                          size: Get.height * 0.015,
+                                          color: AppColor.primary,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    });
   }
+
 }

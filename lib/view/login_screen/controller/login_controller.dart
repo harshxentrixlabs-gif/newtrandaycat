@@ -16,6 +16,7 @@ import 'package:trendycart/view/home_screen/home_screen.dart';
 import '../../../service/api_config.dart';
 import '../../../utils/app_color.dart';
 import '../../../utils/app_icons.dart';
+import '../../../utils/app_storage.dart';
 import '../../../utils/common/app_text.dart';
 import '../../../utils/globle_veriables.dart';
 import '../../navigation_menu/navigation_menu.dart';
@@ -122,6 +123,7 @@ class LoginController extends GetxController {
 
       if (user != null) {
         Get.offAll(() => NavigationMenu(), transition: Transition.rightToLeft);
+        // AppStorage().save("user_data", user);
         box.write('userEmail', user.email);
         box.write("editImage", user.photoURL);
         box.write("editFirstName", user.displayName);

@@ -9,7 +9,7 @@ class ApiConfig {
   static const String login = "$apiUrl/auth/login";
 
 
-  static const BASE_URL = "https://trendybackend.codestoreapp.com/";
+  static const BASE_URL = "https://trendybackend.codestoreapp.com";
 
   static const userLogin = "$baseUrl/user/login";
   static const liveSeller = "$baseUrl/liveSeller/liveSellerList";
@@ -17,10 +17,19 @@ class ApiConfig {
   static const justForYouProducts = "$baseUrl/product/justForYouProducts";
   static const newCollection = "$baseUrl/product/geAllNewCollection";
   static const myOrder = "$baseUrl/order/orderDetailsForUser";
-  static const favorite = "$baseUrl/favorite/favoriteProduct";
+  static const favoriteProduct = "$baseUrl/favorite/favoriteProduct";
   static const bank = "$baseUrl/bank/getBanks";
   static const popularProduct = "$baseUrl/product/featuredProducts";
   static const productDetails = "$baseUrl/product/detail";
+  static const getAddress = "$baseUrl/address/getAllAddress";
+  static const sendAddress = "$baseUrl/address/create";
+  static const deleteAddress = "$baseUrl/address/delete";
+  static const selectOrNotAddress = "$baseUrl/address/selectOrNot";
+  static const favoriteUnfavorite = "$baseUrl/favorite/favoriteUnfavorite";
+  static const addToCart = "$baseUrl/cart/addToCart";
+  static const getCart = "$baseUrl/cart/getCartProduct";
+  static const deleteCart = "$baseUrl/cart/deleteCart";
+
 
 
 

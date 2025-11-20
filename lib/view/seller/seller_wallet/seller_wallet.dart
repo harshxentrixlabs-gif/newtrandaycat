@@ -70,7 +70,6 @@ class _SellerWalletState extends State<SellerWallet> {
             SizedBox(height: Get.height * 0.015,),
             CommonTextField(controller: textEditingController, hintText: AppString.enterWithdrawAmount),
             SizedBox(height: Get.height * 0.015,),
-            CommonDropdown(hint: AppString.selectPaymentGateway, items: [], selectedValue: select.obs),
             Spacer(),
             CommonButton(title: AppString.withdraw)
           ],

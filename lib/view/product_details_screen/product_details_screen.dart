@@ -69,7 +69,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               child: SizedBox(height: 45,child: OutlineWhiteButton(text: "By Now", onTap: () {})),
             ),
             SizedBox(width: 10,),
-            Expanded(child: SizedBox(height: 45,child: CommonButton(title: "Add To Cart")))
+            Expanded(child: SizedBox(height: 45,child: CommonButton(title: "Add To Cart",onTap: (){productController.addProduct(productId: data.id ?? "");
+            },),))
           ],
         ),
       ),

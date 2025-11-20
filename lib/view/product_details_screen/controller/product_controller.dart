@@ -37,14 +37,40 @@ class ProductController extends GetxController{
 
         AppLogs.log("✅ Popular List: ${product.length} items");
       } else {
-        throw Exception('Status code is not 200');
+        throw Exception('[productDetailsMethods]Status code is not 200');
       }
     } catch (e) {
-      AppLogs.log("❌ Error: $e");
+      AppLogs.log("[productDetailsMethods] ❌ Error: $e");
     } finally {
-      AppLogs.log("➡️ Fetch Popular Products Finally");
+      AppLogs.log("[productDetailsMethods] ➡️ Fetch Popular Products Finally");
     }
   }
+
+
+
+  Future<void> addProduct({required String productId}) async {
+    try {
+      final api = AppApi.getInstance();
+
+      final response = await api.post(
+        ApiConfig.addToCart,
+        data: {
+          "userId": "691aaefdf4b6f3b0fa2d1060",
+          "productId": productId,
+          "attributesArray": [],
+          "productQuantity": 1234,
+        },
+      );
+
+      AppLogs.log("[addProduct] Add to cart success: $response");
+    } catch (e) {
+      AppLogs.log("[addProduct] Error: $e`");
+
+    }
+  }
+
+
+
 
 
 }

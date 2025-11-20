@@ -1,137 +1,113 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:trendycart/app_string/app_string.dart';
-import 'package:trendycart/utils/common/app_appbar.dart';
-import 'package:trendycart/utils/common/app_button_v1.dart';
-import 'package:trendycart/utils/common/app_text.dart';
-import 'package:trendycart/utils/common/app_textfield.dart';
-import 'package:trendycart/view/add_my_address/controller/add_my_adress_controller.dart';
 
+import '../../app_string/app_string.dart';
+import '../../utils/common/app_appbar.dart';
+import '../../utils/common/app_button_v1.dart';
 import '../../utils/common/app_dropdown.dart';
+import '../../utils/common/app_text.dart';
+import '../../utils/common/app_textfield.dart';
+import '../my_address/controllr/address_controller.dart';
+import '../my_address/model/address_model.dart';
+import 'controller/add_my_adress_controller.dart';
 
 class AddMyAddress extends StatefulWidget {
-  const AddMyAddress({super.key});
+  final Address? editData;
+
+  AddMyAddress({super.key, this.editData});
 
   @override
   State<AddMyAddress> createState() => _AddMyAddressState();
 }
 
 class _AddMyAddressState extends State<AddMyAddress> {
-  final AddMyAddressController addMyAddressController = Get.put(
-    AddMyAddressController(),
-  );
-  final _formKey = GlobalKey<FormState>();
+  final controller = Get.put(AddAddressController());
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    controller.init(widget.editData);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
-      appBar: AppAppBar(title: AppString.addMyAddress),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: Get.width * 0.050,
-            vertical: Get.height * 0.020,
+      appBar: AppAppBar(title: widget.editData == null ? AppString.addMyAddress :"Edite Address"),
+      body: Obx(() {
+        return Padding(
+          padding: const EdgeInsets.all(16),
+          child: ListView(
+            children: [
+              AppText("Address"),
+              CommonTextField(
+                controller: controller.addressController,
+                hintText: "Enter your address",
+                maxLines: 3,
+              ),
+
+              const SizedBox(height: 15),
+
+              AppText("Country"),
+              CommonDropdown(
+                hint: "Select Country",
+                items: controller.countryNames,
+                selectedValue: controller.selectedCountry.value,
+                onChanged: (v) => controller.updateStates(v!),
+              ),
+
+              const SizedBox(height: 15),
+
+              AppText("State"),
+              CommonDropdown(
+                hint: "Select State",
+                items: controller.stateNames,
+                selectedValue: controller.selectedState.value,
+                onChanged: (v) => controller.updateCities(v!),
+              ),
+
+              const SizedBox(height: 15),
+
+              AppText("City"),
+              CommonDropdown(
+                hint: "Select City",
+                items: controller.cityNames,
+                selectedValue: controller.selectedCity.value,
+                onChanged: (v) => controller.selectedCity.value = v!,
+              ),
+
+              const SizedBox(height: 20),
+
+              AppText("Zip Code"),
+              CommonTextField(
+                controller: controller.zipController,
+                hintText: "Enter zip code",
+              ),
+
+              const SizedBox(height: 20),
+
+              AppText("Address Name"),
+              CommonTextField(
+                controller: controller.addressNameController,
+                hintText: "Home / Office / Company",
+              ),
+
+              const SizedBox(height: 30),
+
+              CommonButton(
+                title: controller.isLoading.value
+                    ? "Saving..."
+                    : widget.editData == null ? "Submit" :"Update Address",
+                onTap: controller.isLoading.value
+                    ? null
+                    : () => controller.saveAddress(),
+              )
+            ],
           ),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AppText(AppString.address),
-                SizedBox(height: Get.height * 0.010),
-                CommonTextField(
-                  controller: addMyAddressController.addressEditingController,
-                  hintText: AppString.enterYourAddress,
-                  maxLines: 3,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return AppString.pleaseEnterYourAddress;
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: Get.height * 0.020),
-                AppText(AppString.country),
-                SizedBox(height: Get.height * 0.004),
-                Obx(
-                  () => CommonDropdown(
-                    hint: AppString.selectCountry,
-                    items: ['India', 'USA', 'UK', 'Canada'],
-                    selectedValue:
-                        addMyAddressController.selectedCountry.value.obs,
-                  ),
-                ),
-                SizedBox(height: Get.height * 0.020),
-                AppText(AppString.state),
-                SizedBox(height: Get.height * 0.004),
-                Obx(
-                  () => CommonDropdown(
-                    hint: AppString.selectState,
-                    items: ['Gujarat', 'Maharashtra', 'Delhi', 'Karnataka'],
-                    selectedValue:
-                        addMyAddressController.selectedState.value.obs,
-                  ),
-                ),
-                SizedBox(height: Get.height * 0.020),
-                AppText(AppString.city),
-                SizedBox(height: Get.height * 0.004),
-                Obx(
-                  () => CommonDropdown(
-                    hint: AppString.selectCity,
-                    items: ['Ahmedabad', 'Mumbai', 'Delhi', 'Bangalore'],
-                    selectedValue:
-                        addMyAddressController.selectedCity.value.obs,
-                  ),
-                ),
-                SizedBox(height: Get.height * 0.020),
-                AppText(AppString.zipCode),
-                SizedBox(height: Get.height * 0.010),
-                CommonTextField(
-                  controller: addMyAddressController.zipCodeEditingController,
-                  hintText: AppString.enterZipCode,
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return AppString.pleaseEnterZipCode;
-                    } else if (value.length < 5) {
-                      return AppString.invalidZipCode;
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: Get.height * 0.020),
-                AppText(AppString.addressName),
-                SizedBox(height: Get.height * 0.010),
-                CommonTextField(
-                  controller:
-                      addMyAddressController.addressNameEditingController,
-                  hintText: AppString.homeOfficeCompany,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return AppString.pleaseEnterYourAddress;
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: Get.height * 0.050),
-                CommonButton(
-                  title: AppString.saveAddress,
-                  onTap: () {
-                    if (_formKey.currentState!.validate()) {
-                      if (addMyAddressController
-                              .selectedCountry
-                              .value
-                              .isEmpty ||
-                          addMyAddressController.selectedState.value.isEmpty ||
-                          addMyAddressController.selectedCity.value.isEmpty) {}
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }

@@ -44,6 +44,7 @@ class AppIcons{
   static const String live = '$_basePathIcon/live-fill-svgrepo-com.svg';
   static const String bank = '$_basePathIcon/bank-svgrepo-com.svg';
   static const String withdraw = '$_basePathIcon/withdraw-1-svgrepo-com.svg';
+  static const String edit = '$_basePathIcon/edit-svgrepo-com.svg';
 
 
 }

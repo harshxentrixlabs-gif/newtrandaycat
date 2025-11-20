@@ -1,3 +1,5 @@
+import 'dart:developer' as AppLog;
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -5,6 +7,7 @@ import 'package:trendycart/app_string/app_string.dart';
 import 'package:trendycart/utils/app_color.dart';
 import 'package:trendycart/utils/app_icons.dart';
 import 'package:trendycart/utils/app_print.dart';
+import 'package:trendycart/utils/app_storage.dart';
 import 'package:trendycart/utils/common/app_image.dart';
 import 'package:trendycart/utils/common/app_text.dart';
 import 'package:get/get.dart';
@@ -23,7 +26,6 @@ import 'package:trendycart/view/shorts_screen/shorts_screen.dart';
 import '../navigation_menu/controller/navigation_controller.dart';
 import '../splash_screen/controller/splash_screen.dart';
 
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -37,18 +39,16 @@ class _HomeScreenState extends State<HomeScreen> {
   bool select = false;
 
   final box = GetStorage();
-
   late String userName = box.read('userName') ?? "Guest User";
   late String userEmail = box.read('userEmail') ?? "";
-  late String userPhoto = box.read('userPhoto') ??
-      "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-
+  late String userPhoto = box.read('userPhoto') ?? "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+  late String a;
 
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
-    homeController.liveSellerList;
+      super.initState();
+        AppStorage().read("user_data");
     homeController.fetchJustForYou();
     homeController.liveSellerResponseMethods();
     homeController.popularProductMethods();
@@ -56,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
     homeController.fetchProduct();
     AppLogs.log("Home Screen");
   }
+
   NavigationController navigationController = Get.find();
 
   @override
@@ -73,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 InkWell(
                   onTap: () {
-                    Get.to(()=>SearchScreen(),);
+                    Get.to(() => SearchScreen());
                   },
                   child: Container(
                     height: Get.height * 0.040,
@@ -90,8 +91,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(width: Get.width * 0.040),
                 InkWell(
                   onTap: () {
-                    Get.to(()=>NotificationScreen(),
-                      transition: Transition.rightToLeft
+                    Get.to(
+                      () => NotificationScreen(),
+                      transition: Transition.rightToLeft,
                     );
                   },
                   child: Container(
@@ -109,9 +111,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-        ], onTap: () {
+        ],
+        onTap: () {
           navigationController.changeIndex(4);
-      },
+        },
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -122,29 +125,38 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  AppImage.svg(AppIcons.star),
-                  SizedBox(width: Get.width * 0.025),
-                  AppText(AppString.liveSelling, fontWeight: FontWeight.w600),
-                ],
+              if (homeController.liveSellerResponse.isNotEmpty)
+                Row(
+                  children: [
+                    AppImage.svg(AppIcons.star),
+                    SizedBox(width: Get.width * 0.025),
+                    AppText(AppString.liveSelling, fontWeight: FontWeight.w600),
+                  ],
+                ),
+              if (homeController.liveSellerResponse.isNotEmpty)
+                SizedBox(height: Get.height * 0.015),
+              if (homeController.liveSellerResponse.isNotEmpty)
+                Obx(() => commonLiveSelling(() {})),
+              if (homeController.liveSellerResponse.isNotEmpty)
+                SizedBox(height: Get.height * 0.015),
+              // if(homeController.reelsResponse.isNotEmpty)
+              commonViewAllAndTitle(
+                title: AppString.shorts,
+                images: AppIcons.flash,
+                onTap: () {
+                  AppLogs.log("Shorts");
+                  navigationController.changeIndex(1);
+                },
               ),
+              // if(homeController.reelsResponse.isNotEmpty)
+              SizedBox(height: Get.height * 0.015),
 
-              SizedBox(height: Get.height * 0.015),
-            Obx(()=> commonLiveSelling((){
-
-              }),
-            ),
-              SizedBox(height: Get.height * 0.015),
               // if(homeController.reelsResponse.isNotEmpty)
-              commonViewAllAndTitle(title: AppString.shorts, images: AppIcons.flash, onTap: () {AppLogs.log("Shorts"); navigationController.changeIndex(1); }),
-              // if(homeController.reelsResponse.isNotEmpty)
-              SizedBox(height: Get.height * 0.015),
-              // if(homeController.reelsResponse.isNotEmpty)
-             Obx(()=> commonShorts((){
-                navigationController.changeIndex(1);
-              }),
-             ),
+              Obx(
+                () => commonShorts(() {
+                  navigationController.changeIndex(1);
+                }),
+              ),
 
               // SizedBox(height: Get.height * 0.015),
               // commonViewAllAndTitle(title: AppString.liveAuction, images: AppIcons.auction,
@@ -163,53 +175,68 @@ class _HomeScreenState extends State<HomeScreen> {
               //   );
               // }),
               SizedBox(height: Get.height * 0.020),
-              commonViewAllAndTitle(title: AppString.newCategories, images: AppIcons.menu,
-                  onTap: () {
-                AppLogs.log("New Categories");
-                Get.to(()=>NewCategories(),
-                    transition: Transition.rightToLeft
-                );
-              }),
+              commonViewAllAndTitle(
+                title: AppString.newCategories,
+                images: AppIcons.menu,
+                onTap: () {
+                  AppLogs.log("New Categories");
+                  Get.to(
+                    () => NewCategories(),
+                    transition: Transition.rightToLeft,
+                  );
+                },
+              ),
               SizedBox(height: Get.height * 0.020),
-             commonNewCategoriesListName((){
+              Obx(() => commonNewCategoriesListName(() {})),
 
-              }),
               SizedBox(height: Get.height * 0.015),
-            Obx(()=>  commonNewCategoriesAndPopular(
-              title: "New",
-              onTap: (productData) {
-                Get.to(() => ProductDetailsScreen(productData: productData));
-              },
-            )
-            ),
+              Obx(
+                () => commonNewCategoriesAndPopular(
+                  title: "New",
+                  onTap: (productData) {
+                    Get.to(
+                      () => ProductDetailsScreen(productData: productData),
+                    );
+                  },
+                ),
+              ),
               SizedBox(height: Get.height * 0.015),
-              commonViewAllAndTitle(title: AppString.popularProducts, onTap: () {
-                AppLogs.log("Popular Products");
-                AppLogs.log("Popular Products");
-                Get.to(()=>PopularProduct(),
-                    transition: Transition.rightToLeft
-                );
-                }, images:'',),
+              commonViewAllAndTitle(
+                title: AppString.popularProducts,
+                onTap: () {
+                  AppLogs.log("Popular Products");
+                  AppLogs.log("Popular Products");
+                  Get.to(
+                    () => PopularProduct(),
+                    transition: Transition.rightToLeft,
+                  );
+                },
+                images: '',
+              ),
               SizedBox(height: Get.height * 0.015),
-             Obx(()=>  commonNewCategoriesAndPopular(
-               title: "Popular Products",
-               onTap: (productData) {
-                 Get.to(() => ProductDetailsScreen(productData: productData));
-               },
-             )
-             ),
+              Obx(
+                () => commonNewCategoriesAndPopular(
+                  title: "Popular Products",
+                  onTap: (productData) {
+                    Get.to(
+                      () => ProductDetailsScreen(productData: productData),
+                    );
+                  },
+                ),
+              ),
               SizedBox(height: Get.height * 0.015),
               AppText(AppString.justForYou, fontWeight: FontWeight.w600),
-            Obx(() => commonJustForYou((just) {
-            Get.to(() => ProductDetailsScreen(productData: just));
-          }))
+              Obx(
+                () => commonJustForYou((just) {
+                  Get.to(() => ProductDetailsScreen(productData: just));
+                }),
+              ),
             ],
           ),
         ),
       ),
     );
   }
-
 
   Widget commonViewAllAndTitle({
     required String title,
@@ -223,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(width: Get.width * 0.015),
         ],
         AppText(title, fontWeight: FontWeight.w600),
-         Spacer(),
+        Spacer(),
         GestureDetector(
           onTap: onTap,
           child: AppText(
@@ -236,32 +263,37 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
   Widget commonLiveSelling(Function() onTap) {
     return SizedBox(
       height: 80,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount:homeController.liveSellerResponse.length,
+        itemCount: homeController.liveSellerResponse.length,
         itemBuilder: (BuildContext context, int index) {
-         final data = homeController.liveSellerResponse[index];
-           AppLogs.log("data $data");
+          final data = homeController.liveSellerResponse[index];
+          AppLogs.log("data $data");
           return Padding(
             padding: EdgeInsets.all(8.0),
             child: DottedBorder(
-              options: CircularDottedBorderOptions(strokeWidth: 1,color: AppColor.primary),
+              options: CircularDottedBorderOptions(
+                strokeWidth: 1,
+                color: AppColor.primary,
+              ),
               child: GestureDetector(
-                onTap:() {
-                  Get.to(()=>LiveScreen(video: data.video, name: data.firstName, view: data.view.toString(),));
+                onTap: () {
+                  Get.to(
+                    () => LiveScreen(
+                      video: data.video,
+                      name: data.firstName,
+                      view: data.view.toString(),
+                    ),
+                  );
                 },
                 child: ClipOval(
                   child: SizedBox(
                     width: 60,
                     height: 60,
-                    child: AppImage.network(
-                      data.image,
-                      fit: BoxFit.cover,
-                    ),
+                    child: AppImage.network(data.image, fit: BoxFit.cover),
                   ),
                 ),
               ),
@@ -271,7 +303,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
 
   Widget commonShorts(Function()? Function) {
     return SizedBox(
@@ -283,9 +314,7 @@ class _HomeScreenState extends State<HomeScreen> {
           final reel = homeController.reel[index];
           AppLogs.log("reel get  $reel");
           return Padding(
-            padding: EdgeInsets.only(
-              right: Get.width * 0.05,
-            ),
+            padding: EdgeInsets.only(right: Get.width * 0.05),
             child: GestureDetector(
               onTap: Function,
               child: ClipRRect(
@@ -297,7 +326,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: Get.width * 0.35,
                       height: Get.height * 0.3,
                       child: AppImage.network(
-                       reel.thumbnail,
+                        reel.thumbnail,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -324,88 +353,105 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget commonNewCategoriesListName(Function() onTap) {
     return SizedBox(
       height: Get.height * 0.05,
-      child:  ListView.builder(
+      child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: homeController.titleList.length,
+        itemCount: homeController.data.length,
         padding: EdgeInsets.only(right: 10),
-        itemBuilder: (BuildContext context, int index) {
-
-          final title = homeController.titleList[index];
-
+        itemBuilder: (context, index) {
+          final title = homeController.data[index];
           return Padding(
             padding: EdgeInsets.only(right: Get.width * 0.035),
-            child: GestureDetector(
-              onTap: () {
-                homeController.selectedIndex.value = index;
-                onTap(); // optional
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Get.width * 0.04,
-                  vertical: Get.height * 0.01,
-                ),
-                decoration: BoxDecoration(
-                  color: homeController.selectedIndex.value == index
-                      ? AppColor.primary
-                      : Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    if (homeController.selectedIndex.value == index)
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.15),
-                        blurRadius: 8,
-                        offset: Offset(0, 3),
-                      ),
-                  ],
-                ),
-                child: Center(
-                  child: AppText(
-                    title,
-                    fontSize: Get.height * 0.014,
+            child: Obx(
+              () => InkWell(
+                borderRadius: BorderRadius.circular(10),
+                onTap: () {
+                  homeController.selectedIndex.value = index;
+                  onTap();
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Get.width * 0.04,
+                    vertical: Get.height * 0.01,
+                  ),
+                  decoration: BoxDecoration(
                     color: homeController.selectedIndex.value == index
-                        ? Colors.white
-                        : AppColor.textBlack.withOpacity(0.9),
-                    fontWeight: homeController.selectedIndex.value == index
-                        ? FontWeight.bold
-                        : FontWeight.w500,
+                        ? AppColor.primary
+                        : Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      if (homeController.selectedIndex.value == index)
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.15),
+                          blurRadius: 8,
+                          offset: Offset(0, 3),
+                        ),
+                    ],
+                  ),
+                  child: Center(
+                    child: AppText(
+                      title.categoryName ?? "",
+                      fontSize: Get.height * 0.014,
+                      color: homeController.selectedIndex.value == index
+                          ? Colors.white
+                          : AppColor.textBlack.withOpacity(0.9),
+                      fontWeight: homeController.selectedIndex.value == index
+                          ? FontWeight.bold
+                          : FontWeight.w500,
+                    ),
                   ),
                 ),
               ),
             ),
           );
         },
-      ));
+      ),
+    );
   }
-
-
 
   Widget commonNewCategoriesAndPopular({
     String? title,
     required Function(dynamic data) onTap,
   }) {
     bool showLike = title != 'Popular Products';
+    AppLogs.log("title $title");
+    final List<dynamic> listData = title == 'Popular Products'
+        ? homeController.justForYouProduct
+        : homeController.newCollectionProduct;
+    AppLogs.log("title list $title");
     return SizedBox(
-      height: Get.height * 0.24,
+      height: title == 'Popular Products' ? Get.height * 0.22 : Get.height * 0.24,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: homeController.data.length,
-        padding:  EdgeInsets.only(right: 10),
-        itemBuilder: (BuildContext context, int index) {
-          final data = homeController.data[index];
-          AppLogs.log("data NewCollection $data");
+        itemCount: homeController.newCollectionProduct.length,
+        itemBuilder: (context, index) {
+          final data = homeController.newCollectionProduct[index];
+          AppLogs.log("data list $data");
+          final image = data.mainImage ?? "";
+          AppLogs.log("image  $image");
+          final name = data.productName ?? "";
+          AppLogs.log("name  $name");
+          final price = data.price ?? 0;
+          AppLogs.log("price  $price");
+          final desc = data.description ?? "";
+          AppLogs.log("desc  $desc");
+          final isFav = data.isFavorite;
+          AppLogs.log("isFav  $isFav");
           return GestureDetector(
-            onTap: () => onTap(data),
+            onTap: () {
+              AppLog.log("Product Clicked: $name | Price: $price");
+              onTap(data);
+            },
             child: Container(
               width: Get.width * 0.38,
-              margin:  EdgeInsets.only(right: 14,bottom: 4),
+              margin: EdgeInsets.only(right: 14, bottom: 4),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.08),
+                    color: Colors.black.withOpacity(0.08),
                     blurRadius: 8,
-                    offset:  Offset(0, 3),
+                    offset: Offset(0, 3),
                   ),
                 ],
               ),
@@ -415,93 +461,83 @@ class _HomeScreenState extends State<HomeScreen> {
                   Stack(
                     children: [
                       ClipRRect(
-                        borderRadius:  BorderRadius.only(
-                          topLeft: Radius.circular(16),
-                          topRight: Radius.circular(16),
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(16),
                         ),
                         child: AppImage.network(
-                          data.mainImage.toString(),
+                          image,
                           width: double.infinity,
                           height: Get.height * 0.14,
                           fit: BoxFit.cover,
                         ),
                       ),
-
                       if (showLike)
                         Positioned(
                           top: 6,
                           right: 6,
-                          child:
-                          GestureDetector(
-                              onTap: () {
+                          child: GestureDetector(
+                            onTap: () {
+                              AppLog.log("Favorite Toggled: $name");
+                               homeController.toggleFavorite(index);
 
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(5),
-                                decoration: BoxDecoration(
-                                  color: Colors.white70,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.favorite ,
-                                  color:  Colors.black54,
-                                ),
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                color: Colors.white70,
+                                shape: BoxShape.circle,
                               ),
+                              child: Icon(
+                                isFav ? Icons.favorite : Icons.favorite_border,
+                                color: isFav ? Colors.red : Colors.black54,
+                              ),
+                            ),
                           ),
-                        )
+                        ),
                     ],
                   ),
                   Expanded(
                     child: Padding(
-                      padding:
-                       EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            child: AppText(
-                              data.productName.toString(),
-                              fontSize: Get.height * 0.014,
-                              fontWeight: FontWeight.w600,
-                              color: AppColor.textBlack,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                          AppText(
+                            name,
+                            fontSize: Get.height * 0.014,
+                            fontWeight: FontWeight.w600,
+                            color: AppColor.textBlack,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                           SizedBox(height: Get.height * 0.005),
-                          Expanded(
-                            child: Row(
-                              children: [
-                                AppText(
-                                  '\$${data.price ?? 0}',
-                                  fontSize: Get.height * 0.016,
-                                  color: AppColor.primary,
-                                  fontWeight: FontWeight.bold,
+                          SizedBox(height: 10,),
+                          Row(
+                            children: [
+                              AppText(
+                                "₹$price",
+                                fontSize: Get.height * 0.016,
+                                color: AppColor.primary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              SizedBox(width: 10),
+                              AppImage.svg(
+                                AppIcons.star,
+                                height: Get.height * 0.020,
+                                color: Colors.yellow,
+                              ),
+                              Expanded(
+                                child: AppText(
+                                  "No Review",
                                   overflow: TextOverflow.ellipsis,
+                                  fontSize: Get.height * 0.014,
                                 ),
-                                SizedBox(width: 10,),
-                                AppImage.svg(
-                                  AppIcons.star,
-                                  height: Get.height * 0.020,
-                                  color: Colors.yellow,
-                                ),
-
-                                Flexible(
-                                  child: AppText(
-                                    data.rating == null ? 'No rating' : '${data.rating} No Reviews',
-                                    fontSize: Get.height * 0.013,
-                                    color: AppColor.textBlack,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                          SizedBox(height: Get.height * 0.005),
+                          SizedBox(height: 8),
                           Expanded(
                             child: AppText(
-                              data.description.toString(),
+                              desc,
                               fontSize: Get.height * 0.013,
-                              fontWeight: FontWeight.w500,
                               color: Colors.grey[700],
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -519,7 +555,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
   Widget commonJustForYou(Function(dynamic product) onTap) {
     return ListView.builder(
       scrollDirection: Axis.vertical,
@@ -530,7 +565,7 @@ class _HomeScreenState extends State<HomeScreen> {
         final just = homeController.justForYouProduct[index];
 
         return GestureDetector(
-          onTap: (()=> onTap(just)),
+          onTap: (() => onTap(just)),
           child: Container(
             margin: EdgeInsets.only(top: Get.height * 0.020),
             decoration: BoxDecoration(
@@ -559,7 +594,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       fit: BoxFit.cover,
                     ),
                   ),
-
                   SizedBox(width: Get.width * 0.030),
 
                   /// Product Details
@@ -573,39 +607,38 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: FontWeight.bold,
                           overflow: TextOverflow.ellipsis,
                         ),
-
                         SizedBox(height: Get.height * 0.008),
 
                         /// 🔥 Attributes (Perfect Working)
-                        // SizedBox(
-                        //   height: Get.height * 0.03,
-                        //   child: ListView.builder(
-                        //     scrollDirection: Axis.horizontal,
-                        //     itemCount: just.attributes.length,
-                        //     itemBuilder: (context, attrIndex) {
-                        //       final attr = just.attributes[attrIndex];
-                        //       return Row(
-                        //         children: attr.value.map((v) {
-                        //           return Container(
-                        //             margin: EdgeInsets.only(right: 8),
-                        //             padding: EdgeInsets.symmetric(
-                        //               horizontal: 8,
-                        //               vertical: 4,
-                        //             ),
-                        //             decoration: BoxDecoration(
-                        //               border: Border.all(color: Colors.black),
-                        //               borderRadius: BorderRadius.circular(5),
-                        //             ),
-                        //             child: AppText(
-                        //               v.toString(),
-                        //               fontSize: Get.height * 0.010,
-                        //             ),
-                        //           );
-                        //         }).toList(),
-                        //       );
-                        //     },
-                        //   ),
-                        // ),
+                        SizedBox(
+                          height: Get.height * 0.03,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: just.attributes.length,
+                            itemBuilder: (context, attrIndex) {
+                              final attr = just.attributes[attrIndex];
+                              return Row(
+                                children: attr.values.map((v) {
+                                  return Container(
+                                    margin: const EdgeInsets.only(right: 8),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.black),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: AppText(
+                                      v.toString(),
+                                      fontSize: Get.height * 0.010,
+                                    ),
+                                  );
+                                }).toList(),
+                              );
+                            },
+                          ),
+                        ),
 
                         SizedBox(height: Get.height * 0.008),
 
@@ -617,7 +650,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: FontWeight.bold,
                           overflow: TextOverflow.ellipsis,
                         ),
-
                         SizedBox(height: Get.height * 0.008),
 
                         /// Reviews
@@ -649,6 +681,4 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
-
-
 }

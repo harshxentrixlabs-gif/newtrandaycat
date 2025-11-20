@@ -200,6 +200,9 @@ class JustForYouProduct {
   final List<Attribute> attributes;
   final List<dynamic> rating;
 
+  /// ⭐ ADD THIS
+  bool isFavorite;
+
   JustForYouProduct({
     this.id = '',
     this.productName = '',
@@ -212,6 +215,9 @@ class JustForYouProduct {
     this.description = '',
     this.attributes = const [],
     this.rating = const [],
+
+    /// ⭐ ADD THIS
+    this.isFavorite = false,
   });
 
   factory JustForYouProduct.fromJson(Map<String, dynamic> json) {
@@ -226,14 +232,17 @@ class JustForYouProduct {
       description: (json['description'] ?? "").toString(),
       mainImage: (json['mainImage'] ?? "").toString(),
 
-      // SAFE LIST HANDLING
       attributes: (json['attributes'] as List<dynamic>? ?? [])
           .map((e) => Attribute.fromJson(e))
           .toList(),
 
       rating: json['rating'] as List<dynamic>? ?? [],
+
+      /// ⭐ 100% NULL SAFE
+      isFavorite: (json['isFavorite'] ?? false) == true,
     );
   }
+
 
   Map<String, dynamic> toJson() {
     return {
@@ -248,10 +257,44 @@ class JustForYouProduct {
       'mainImage': mainImage,
       'attributes': attributes.map((e) => e.toJson()).toList(),
       'rating': rating,
+
+      /// ⭐ ADD THIS
+      'isFavorite': isFavorite,
     };
   }
 }
 
+
+
+class Attribute {
+  final String id;
+  final String name;
+  final List<String> values;
+
+  Attribute({
+    required this.id,
+    required this.name,
+    required this.values,
+  });
+
+  factory Attribute.fromJson(Map<String, dynamic> json) {
+    final rawValues = json['values'];
+
+    return Attribute(
+      id: json['_id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+      values: rawValues is List
+          ? rawValues.map((e) => e.toString()).toList()
+          : <String>[],  // <-- NULL SAFE
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    '_id': id,
+    'name': name,
+    'values': values,
+  };
+}
 
 
 
@@ -322,30 +365,33 @@ class Product {
     required this.isFavorite,
   });
 
-  factory Product.fromJson(Map<String, dynamic> json) => Product(
-    id: json['_id'] as String,
-    productCode: json['productCode'] as String? ?? '',
-    price: json['price'] ?? 0,
-    shippingCharges: json['shippingCharges'] ?? 0,
-    images: (json['images'] as List<dynamic>?)
-        ?.map((e) => e.toString())
-        .toList() ??
-        [],
-    review: (json['review'] is int) ? json['review'] as int : (json['review'] as num?)?.toInt() ?? 0,
-    sold: (json['sold'] is int) ? json['sold'] as int : (json['sold'] as num?)?.toInt() ?? 0,
-    isOutOfStock: json['isOutOfStock'] as bool? ?? false,
-    isNewCollection: json['isNewCollection'] as bool? ?? false,
-    attributes: (json['attributes'] as List<dynamic>?)
-        ?.map((e) => Attribute.fromJson(e as Map<String, dynamic>))
-        .toList() ??
-        [],
-    productName: json['productName'] as String? ?? '',
-    description: json['description'] as String? ?? '',
-    category: json['category'] as String? ?? '',
-    seller: json['seller'] as String? ?? '',
-    mainImage: json['mainImage'] as String? ?? '',
-    isFavorite: json['isFavorite'] as bool? ?? false,
-  );
+  factory Product.fromJson(Map<String, dynamic> json) {
+
+    return Product(
+      id: json['_id'] as String,
+      productCode: json['productCode'] as String? ?? '',
+      price: json['price'] ?? 0,
+      shippingCharges: json['shippingCharges'] ?? 0,
+      images: (json['images'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList() ??
+          [],
+      review: (json['review'] is int) ? json['review'] as int : (json['review'] as num?)?.toInt() ?? 0,
+      sold: (json['sold'] is int) ? json['sold'] as int : (json['sold'] as num?)?.toInt() ?? 0,
+      isOutOfStock: json['isOutOfStock'] as bool? ?? false,
+      isNewCollection: json['isNewCollection'] as bool? ?? false,
+      attributes: (json['attributes'] as List<dynamic>?)
+          ?.map((e) => Attribute.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+          [],
+      productName: json['productName'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      category: json['category'] as String? ?? '',
+      seller: json['seller'] as  String? ?? '',
+      mainImage: json['mainImage'] as String? ?? '',
+      isFavorite: json['isFavorite'] as bool? ?? false,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
     '_id': id,
@@ -407,35 +453,6 @@ class Product {
   String toString() => jsonEncode(toJson());
 }
 
-class Attribute {
-  final String id;
-  final String name;
-  final List<String> value;
-
-  Attribute({
-    required this.id,
-    required this.name,
-    required this.value,
-  });
-
-  factory Attribute.fromJson(Map<String, dynamic> json) => Attribute(
-    id: json['_id'] as String? ?? '',
-    name: json['name'] as String? ?? '',
-    value: (json['value'] as List<dynamic>?)
-        ?.map((e) => e.toString())
-        .toList() ??
-        [],
-  );
-
-  Map<String, dynamic> toJson() => {
-    '_id': id,
-    'name': name,
-    'value': value,
-  };
-
-  @override
-  String toString() => jsonEncode(toJson());
-}
 
 
 class LiveSellerResponse {

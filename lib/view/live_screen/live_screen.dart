@@ -34,7 +34,6 @@ class _LiveScreenState extends State<LiveScreen> {
       Uri.parse(widget.video),
     )
       ..initialize().then((_) {
-        setState(() {});
         _controller.play();
       });
   }

@@ -6,6 +6,7 @@ import 'package:trendycart/utils/app_print.dart';
 import 'package:trendycart/utils/common/app_image.dart';
 
 import '../carts_screen/carts_screen.dart';
+import '../home_screen/controller/home_controller.dart';
 import '../home_screen/home_screen.dart';
 import '../like_screen/like_screen.dart';
 import '../profile_screen/profile_screen.dart';
@@ -21,7 +22,7 @@ class NavigationMenu extends StatefulWidget {
 
 class _NavigationMenuState extends State<NavigationMenu> {
   final NavigationController controller = Get.put(NavigationController());
-
+  // final HomeController homeController = Get.find();
   final List<Widget> pages = const [
     HomeScreen(),
     ShortsScreen(),
@@ -40,10 +41,10 @@ class _NavigationMenuState extends State<NavigationMenu> {
   @override
   Widget build(BuildContext context) {
     return Obx(
-          () => WillPopScope(
+      () => WillPopScope(
         onWillPop: controller.onWillPop,
         child: Scaffold(
-          backgroundColor:Colors.white,
+          backgroundColor: Colors.white,
           body: pages[controller.currentIndex.value],
           bottomNavigationBar: Container(
             decoration: BoxDecoration(
@@ -70,11 +71,13 @@ class _NavigationMenuState extends State<NavigationMenu> {
                   showSelectedLabels: false,
                   showUnselectedLabels: false,
                   items: [
-                    _bottomItem(AppIcons.home, 0),
-                    _bottomItem(AppIcons.flash, 1),
-                    _bottomItem(AppIcons.cart, 2),
-                    _bottomItem(AppIcons.heart, 3),
-                    _bottomItem(AppIcons.profile, 4),
+                    _bottomItem(AppIcons.home, 0, () {
+                      // homeController.fetchProduct();
+                    }),
+                    _bottomItem(AppIcons.flash, 1, () {}),
+                    _bottomItem(AppIcons.cart, 2, () {}),
+                    _bottomItem(AppIcons.heart, 3, () {}),
+                    _bottomItem(AppIcons.profile, 4, () {}),
                   ],
                 ),
               ),
@@ -85,13 +88,17 @@ class _NavigationMenuState extends State<NavigationMenu> {
     );
   }
 
-  BottomNavigationBarItem _bottomItem(String icon, int index) {
+  BottomNavigationBarItem _bottomItem(
+    String icon,
+    int index,
+    Function() onTap,
+  ) {
     final isSelected = controller.currentIndex.value == index;
     return BottomNavigationBarItem(
       backgroundColor: Colors.transparent,
       label: '',
       icon: Container(
-        padding:  EdgeInsets.all(10),
+        padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: isSelected
               ? AppColor.primary.withValues(alpha: 0.2)
