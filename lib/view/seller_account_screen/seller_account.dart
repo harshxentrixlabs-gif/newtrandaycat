@@ -33,6 +33,7 @@ class _SellerAccountState extends State<SellerAccount> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.background,
       appBar: AppAppBar(
         title: AppString.sellerAccount,
         actions: [

@@ -18,6 +18,7 @@ class _LiveAuctionState extends State<LiveAuction> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.background,
       appBar: AppAppBar(title: AppString.liveAuction),
       body: SingleChildScrollView(
         child: Padding(

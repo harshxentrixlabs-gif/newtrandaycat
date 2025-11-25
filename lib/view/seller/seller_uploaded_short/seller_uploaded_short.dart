@@ -4,6 +4,7 @@ import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:trendycart/app_string/app_string.dart';
 import 'package:trendycart/utils/common/app_appbar.dart';
 
+import '../../../utils/app_color.dart';
 import '../../add_my_address/add_my_address.dart';
 
 class SellerUploadedShort extends StatefulWidget {
@@ -17,6 +18,7 @@ class _SellerUploadedShortState extends State<SellerUploadedShort> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.background,
       appBar: AppAppBar(title: AppString.shorts,actions: [
         Padding(
           padding: EdgeInsets.only(right:  20.0,top: 15,left: 15,),

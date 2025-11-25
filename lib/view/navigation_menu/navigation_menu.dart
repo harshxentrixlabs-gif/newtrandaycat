@@ -4,6 +4,7 @@ import 'package:trendycart/utils/app_color.dart';
 import 'package:trendycart/utils/app_icons.dart';
 import 'package:trendycart/utils/app_print.dart';
 import 'package:trendycart/utils/common/app_image.dart';
+import 'package:trendycart/utils/common/app_text.dart';
 
 import '../carts_screen/carts_screen.dart';
 import '../home_screen/controller/home_controller.dart';
@@ -22,7 +23,8 @@ class NavigationMenu extends StatefulWidget {
 
 class _NavigationMenuState extends State<NavigationMenu> {
   final NavigationController controller = Get.put(NavigationController());
-  // final HomeController homeController = Get.find();
+  final HomeController homeController = Get.put(HomeController());
+
   final List<Widget> pages = const [
     HomeScreen(),
     ShortsScreen(),
@@ -33,81 +35,148 @@ class _NavigationMenuState extends State<NavigationMenu> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     AppLogs.log("Navigation");
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Obx(
-      () => WillPopScope(
-        onWillPop: controller.onWillPop,
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          body: pages[controller.currentIndex.value],
-          bottomNavigationBar: Container(
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withValues(alpha: 0.1),
-                  offset: Offset(0, 5),
-                ),
+  Widget navItem({
+    required String icon,
+    required String label,
+    required bool isSelected,
+  }) {
+    return SizedBox(
+      height: 55,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 30,
+            width: 30,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                if (isSelected)
+                  Container(
+                    height: 30,
+                    width: 30,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColor.primary,
+                    ),
+                    child: Center(
+                      child: AppImage.svg(
+                        icon,
+                        color: Colors.white,
+                        height: controller.currentIndex.value == 3 ? 14 : 18,  // 🔥 smaller icon when selected
+                        width: 18,
+                      ),
+                    ),
+                  )
+                else
+                  AppImage.svg(
+                    icon,
+                    color: Colors.grey,
+                    height: controller.currentIndex.value == 3 ? 18 :  22,
+                    width: 22,
+                  ),
               ],
             ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: Get.width * 0.04,
-                vertical: Get.height * 0.03,
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(30),
-                child: BottomNavigationBar(
-                  backgroundColor: Colors.white,
-                  elevation: 5,
-                  type: BottomNavigationBarType.fixed,
-                  currentIndex: controller.currentIndex.value,
-                  onTap: controller.changeIndex,
-                  showSelectedLabels: false,
-                  showUnselectedLabels: false,
-                  items: [
-                    _bottomItem(AppIcons.home, 0, () {
-                      // homeController.fetchProduct();
-                    }),
-                    _bottomItem(AppIcons.flash, 1, () {}),
-                    _bottomItem(AppIcons.cart, 2, () {}),
-                    _bottomItem(AppIcons.heart, 3, () {}),
-                    _bottomItem(AppIcons.profile, 4, () {}),
-                  ],
-                ),
-              ),
+          ),
+          SizedBox(height: 4),
+          Expanded(
+            child: AppText(
+              label,
+              fontSize: 12,
+              color: isSelected ? Colors.black : Colors.grey,
             ),
           ),
-        ),
+        ],
       ),
     );
   }
 
-  BottomNavigationBarItem _bottomItem(
-    String icon,
-    int index,
-    Function() onTap,
-  ) {
-    final isSelected = controller.currentIndex.value == index;
-    return BottomNavigationBarItem(
-      backgroundColor: Colors.transparent,
-      label: '',
-      icon: Container(
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? AppColor.primary.withValues(alpha: 0.2)
-              : Colors.transparent,
-          shape: BoxShape.circle,
-        ),
-        child: AppImage.svg(
-          icon,
-          color: isSelected ? AppColor.primary : Colors.grey,
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(
+          () => WillPopScope(
+        onWillPop: controller.onWillPop,
+        child: Scaffold(
+          backgroundColor: controller.currentIndex.value == 1 ? Colors.transparent : Colors.white,
+          body: pages[controller.currentIndex.value],
+          bottomNavigationBar: Container(
+            decoration:  BoxDecoration(
+              color: controller.currentIndex.value == 1 ?  Colors.white.withValues(alpha: 0.12) : Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30),
+                topRight: Radius.circular(30),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  offset: Offset(0, -3),
+                  blurRadius: 6,
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(30),
+                topRight: Radius.circular(30),
+              ),
+              child: BottomNavigationBar(
+                backgroundColor:controller.currentIndex.value == 1 ? Colors.white.withValues(alpha: 0.12) : Colors.white,
+                elevation: 0,
+                type: BottomNavigationBarType.fixed,
+                currentIndex: controller.currentIndex.value,
+                onTap: controller.changeIndex,
+                showSelectedLabels: false,
+                showUnselectedLabels: false,
+                items: [
+                  BottomNavigationBarItem(
+                    icon: navItem(
+                      icon: AppIcons.home,
+                      label: "Home",
+                      isSelected: controller.currentIndex.value == 0,
+                    ),
+                    label: "",
+                  ),
+                  BottomNavigationBarItem(
+                    icon: navItem(
+                      icon: AppIcons.reels,
+                      label: "Reels",
+                      isSelected: controller.currentIndex.value == 1,
+                    ),
+                    label: "",
+                  ),
+                  BottomNavigationBarItem(
+                    icon: navItem(
+                      icon: AppIcons.cart,
+                      label: "Cart",
+                      isSelected: controller.currentIndex.value == 2,
+                    ),
+                    label: "",
+                  ),
+                  BottomNavigationBarItem(
+                    icon: navItem(
+                      icon: AppIcons.heart,
+                      label: "Wishlist",
+                      isSelected: controller.currentIndex.value == 3,
+                    ),
+                    label: "",
+                  ),
+                  BottomNavigationBarItem(
+                    icon: navItem(
+                      icon: AppIcons.profile,
+                      label: "Profile",
+                      isSelected: controller.currentIndex.value == 4,
+                    ),
+                    label: "",
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );

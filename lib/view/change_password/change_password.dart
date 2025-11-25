@@ -7,6 +7,7 @@ import 'package:trendycart/utils/common/app_text.dart';
 import 'package:trendycart/view/change_password/controller/change_controller.dart';
 
 import '../../app_string/app_string.dart';
+import '../../utils/app_color.dart';
 import '../../utils/common/app_textfield.dart';
 
 class ChangePassword extends StatefulWidget {
@@ -23,6 +24,7 @@ class _ChangePasswordState extends State<ChangePassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.background,
       appBar: AppAppBar(title: AppString.changePassword),
       body: Padding(
         padding: EdgeInsets.symmetric(

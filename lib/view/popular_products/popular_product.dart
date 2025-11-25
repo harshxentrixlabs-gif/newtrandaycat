@@ -29,12 +29,12 @@ class _PopularProductState extends State<PopularProduct> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    homeController.popularProductMethods();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.background,
       appBar: AppAppBar(title: AppString.popularProducts),
       body: Padding(
         padding:  EdgeInsets.symmetric(horizontal: Get.width * 0.050,vertical: Get.height * 0.010),

@@ -13,7 +13,6 @@ class AppToast {
         int durationSeconds = 2,
       }) {
     Fluttertoast.showToast(
-
       msg: message,
       toastLength: durationSeconds == 2 ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG,
       gravity: gravity,

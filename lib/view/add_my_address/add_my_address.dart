@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:trendycart/utils/app_color.dart';
 
 import '../../app_string/app_string.dart';
 import '../../utils/common/app_appbar.dart';
@@ -32,9 +33,8 @@ class _AddMyAddressState extends State<AddMyAddress> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
+      backgroundColor: AppColor.background,
       appBar: AppAppBar(title: widget.editData == null ? AppString.addMyAddress :"Edite Address"),
       body: Obx(() {
         return Padding(

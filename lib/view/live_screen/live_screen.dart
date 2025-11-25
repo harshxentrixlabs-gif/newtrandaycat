@@ -47,9 +47,9 @@ class _LiveScreenState extends State<LiveScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.background,
       body: Stack(
         children: [
-
           _controller.value.isInitialized
               ? VideoPlayer(_controller)
               :  Center(

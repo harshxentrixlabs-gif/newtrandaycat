@@ -1,147 +1,60 @@
-
 import 'package:get/get.dart';
 import 'package:trendycart/utils/app_print.dart';
 
 import '../../../service/api_config.dart';
 import '../../../service/api_service.dart' hide ApiResponse;
 
+import '../category_model/category_model.dart';
 import '../model/home_model.dart';
 
 class HomeController extends GetxController {
-
   RxBool isLoading = false.obs;
-
-
   RxInt selectedIndex = 0.obs;
 
-  List<String> titleList = ["Hoodies"];
-
   RxList<LiveSeller> liveSellerResponse = <LiveSeller>[].obs;
-
-  Future<void> liveSellerResponseMethods() async {
-    try {
-      isLoading.value = true;
-      final api = AppApi.getInstance();
-      final response = await api.get(
-        "${ApiConfig
-            .liveSeller}?start=1&limit=20&userId=6916fbbbf4b6f3b0fa2d0df7",
-      );
-
-      AppLogs.log('STATUS CODE: ${response.statusCode} \nRESPONSE: ${response
-          .success}');
-
-      if (response.statusCode == 200) {
-        final jsonResponse = response.data;
-        AppLogs.log("JSON Response: $jsonResponse");
-
-        final productResponse = LiveSellerResponse.fromJson(jsonResponse);
-        final List<LiveSeller> productList = productResponse.liveSeller;
-
-        // ✅ Correct list assignment
-        liveSellerResponse.value = productList;
-
-        AppLogs.log("✅ liveSellerResponse: ${liveSellerResponse.length} items");
-      } else {
-        throw Exception('Status code is not 200');
-      }
-    } catch (e) {
-      AppLogs.log("❌ Error: $e");
-    } finally {
-      isLoading.value = false;
-      AppLogs.log("➡️ Fetch Just For You Products Finally");
-    }
-  }
-
-
-  RxList<Product> product = <Product>[].obs;
-
-  Future<void> productMethods() async {
-    isLoading.value = true;
-    try {
-      final api = AppApi.getInstance();
-
-      final response = await api.get(
-        "${ApiConfig
-            .reelUser}?start=1&limit=20&userId=691aaefdf4b6f3b0fa2d1060",
-      );
-
-      AppLogs.log('STATUS CODE: ${response.statusCode} \nRESPONSE: ${response
-          .success}');
-
-      if (response.statusCode == 200) {
-        final jsonResponse = response.data;
-        AppLogs.log("JSON Response: $jsonResponse");
-
-        // Get the reels list from API
-        final reelsList = jsonResponse["reels"] as List;
-
-        // Extract products
-        List<Product> productList = [];
-
-        for (var reel in reelsList) {
-          if (reel["productId"] != null && reel["productId"].isNotEmpty) {
-            for (var p in reel["productId"]) {
-              productList.add(Product.fromJson(p));
-            }
-          }
-        }
-
-        // Assign to RxList
-        product.assignAll(productList);
-
-        AppLogs.log("✅ Product Loaded: ${product.length} items");
-      } else {
-        throw Exception('Status code is not 200');
-      }
-    } catch (e) {
-      AppLogs.log("❌ Error: $e");
-    } finally {
-      isLoading.value = false;
-      AppLogs.log("➡️ Fetch Just For You Products Finally");
-    }
-  }
-
-
-  RxList<Reel> reel = <Reel>[].obs;
-
-  Future<void> reelsMethods() async {
-    isLoading.value = true;
-    try {
-      final api = AppApi.getInstance();
-
-      final response = await api.get(
-        "${ApiConfig
-            .reelUser}?start=1&limit=20&userId=691aaefdf4b6f3b0fa2d1060",
-      );
-
-      AppLogs.log('STATUS CODE: ${response.statusCode}');
-
-      if (response.statusCode == 200) {
-        final jsonResponse = response.data; // Already a Map
-        AppLogs.log("JSON Response: $jsonResponse");
-
-        // Correct Key = "reels"
-        final List<dynamic> reelList = jsonResponse["reels"] ?? [];
-
-        // Convert List to Model
-        final List<Reel> reelModelList =
-        reelList.map((e) => Reel.fromJson(e)).toList();
-
-        // Update RxList
-        reel.assignAll(reelModelList);
-
-        AppLogs.log("✅ Reel List Loaded: ${reel.length} items");
-      } else {
-        throw Exception("Status code != 200");
-      }
-    } catch (e) {
-      isLoading.value = false;
-      AppLogs.log("❌ Error: $e");
-    }
-  }
-
-
   RxList<Data> data = <Data>[].obs;
+
+  RxList<Category> categoryList = <Category>[].obs;
+  RxList<JustForYouProduct> justForYouProduct = <JustForYouProduct>[].obs;
+  RxList<RelatedProduct> relatedProductList = <RelatedProduct>[].obs;
+
+
+  @override
+  void onInit() {
+    super.onInit();
+    AppLogs.log("🔷 onInit Started");
+    getCategory();
+    fetchJustForYou();
+    AppLogs.log("🔶 onInit Ended");
+  }
+
+
+  void loadDefaultCategoryProducts() {
+    AppLogs.log("🔷 loadDefaultCategoryProducts STARTED");
+
+    if (categoryList.isEmpty) {
+      AppLogs.log("❌ Category list empty. Skipping default load.");
+      return;
+    }
+
+    selectedIndex.value = 0;
+
+    final defaultCategoryId = categoryList[0].id;
+    final defaultProductId = justForYouProduct.isNotEmpty ? justForYouProduct[0].id : "";
+
+    AppLogs.log("🔥 Auto Load Fashion Category");
+    AppLogs.log("CategoryId: $defaultCategoryId | ProductId: $defaultProductId");
+
+    relatedProduct(
+      categoryId: defaultCategoryId,
+      productId: defaultProductId,
+    );
+
+    AppLogs.log("🔶 loadDefaultCategoryProducts ENDED");
+  }
+
+
+
 
   Future<void> popularProductMethods() async {
     isLoading.value = true;
@@ -179,109 +92,152 @@ class HomeController extends GetxController {
   }
 
 
-  RxList<JustForYouProduct> justForYouProduct = <JustForYouProduct>[].obs;
 
-  Future<void> fetchJustForYou() async {
+  Future<void> getCategory() async {
+    AppLogs.log("🔷 getCategory STARTED");
+
     isLoading.value = true;
+
     try {
       final api = AppApi.getInstance();
+      final response = await api.get(ApiConfig.getCategory);
 
+      AppLogs.log("[getCategory] Status: ${response.statusCode}");
+
+      if (response.statusCode == 200) {
+        final categoryResponse = CategoryResponse.fromJson(response.data);
+        categoryList.value = categoryResponse.category;
+
+        AppLogs.log("[getCategory] Loaded: ${categoryList.length} items");
+        loadDefaultCategoryProducts();
+      } else {
+        throw Exception("Category API failed");
+      }
+    } catch (e) {
+      AppLogs.log("[getCategory] Error 👉 $e");
+    } finally {
+      isLoading.value = false;
+      AppLogs.log("🔶 getCategory ENDED");
+    }
+  }
+
+
+  Future<void> relatedProduct({
+    required String categoryId,
+    required String productId,
+  }) async {
+    AppLogs.log("🔷 relatedProduct STARTED");
+
+    isLoading.value = true;
+
+    try {
+      final api = AppApi.getInstance();
+      final response = await api.get(
+        "${ApiConfig.getRelatedProductsByCategory}"
+            "?userId=691aaefdf4b6f3b0fa2d1060"
+            "&productId=$productId"
+            "&categoryId=$categoryId",
+      );
+
+      AppLogs.log("categoryId = $categoryId");
+      AppLogs.log("productId = $productId");
+      AppLogs.log("[relatedProduct] Status: ${response.statusCode}");
+
+      if (response.statusCode == 200) {
+        final productResponse =
+        RelatedProductsResponse.fromJson(response.data);
+
+        relatedProductList.value = productResponse.relatedProducts;
+
+        AppLogs.log("Related Products Loaded: ${relatedProductList.length}");
+      } else {
+        throw Exception("Related Product API failed");
+      }
+    } catch (e) {
+      AppLogs.log("[relatedProduct] Error: $e");
+    } finally {
+      isLoading.value = false;
+      AppLogs.log("🔶 relatedProduct ENDED");
+    }
+  }
+
+
+  Future<void> fetchJustForYou() async {
+    AppLogs.log("🔷 fetchJustForYou STARTED");
+
+    try {
+      final api = AppApi.getInstance();
       final response = await api.get(
         "${ApiConfig.justForYouProducts}?userId=691471fbf4b6f3b0fa2d0151",
       );
 
-      AppLogs.log('STATUS CODE: ${response.statusCode} \nRESPONSE: ${response.success}');
-
       if (response.statusCode == 200) {
-        final jsonResponse = response.data;
-        AppLogs.log("JSON Response: $jsonResponse");
+        final productResponse =
+        JustForYouProductResponse.fromJson(response.data);
 
-        final productResponse = JustForYouProductResponse.fromJson(
-            jsonResponse);
-        final List<JustForYouProduct> productList = productResponse.justForYouProducts;
+        justForYouProduct.value = productResponse.justForYouProducts;
 
-        // ✅ Correct list assignment
-        justForYouProduct.value = productList;
-
-        AppLogs.log("✅ Product List: ${justForYouProduct.length} items");
-      } else {
-        throw Exception('Status code is not 200');
+        AppLogs.log("Just For You Loaded: ${justForYouProduct.length} items");
       }
     } catch (e) {
-      AppLogs.log("❌ Error: $e");
-    } finally {
-      isLoading.value = false;
-      AppLogs.log("➡️ Fetch Just For You Products Finally");
+      AppLogs.log("❌ Just For You Error: $e");
     }
+
+    AppLogs.log("🔶 fetchJustForYou ENDED");
   }
 
 
-  RxList<Product> newCollectionProduct = <Product>[].obs;
-  Future<void> fetchProduct() async {
-    isLoading.value = true;
+  Future<void> liveSellerResponseMethods() async {
+    AppLogs.log("🔷 liveSellerResponse STARTED");
+
     try {
       final api = AppApi.getInstance();
-
       final response = await api.get(
-        "${ApiConfig.newCollection}?userId=691aaefdf4b6f3b0fa2d1060",
+        "${ApiConfig.liveSeller}?start=1&limit=20&userId=6916fbbbf4b6f3b0fa2d0df7",
       );
-
-      AppLogs.log('[ fetchProduct ] STATUS CODE: ${response.statusCode} \nRESPONSE: ${response.success}');
 
       if (response.statusCode == 200) {
-        final jsonResponse = response.data;
-        AppLogs.log("JSON Response: $jsonResponse");
-
-        /// Parse API → ApiResponse model
-        final apiResponse = ApiResponse.fromJson(jsonResponse);
-
-        /// Assign list
-        newCollectionProduct.value = apiResponse.products;
+        liveSellerResponse.value =
+            LiveSellerResponse.fromJson(response.data).liveSeller;
 
         AppLogs.log(
-            "✅ Product List Loaded: ${newCollectionProduct.length} items");
-        update();
-      } else {
-        throw Exception('Status code is not 200');
+            "Live Seller Loaded: ${liveSellerResponse.length} items");
       }
     } catch (e) {
-      AppLogs.log("❌ Error: $e");
-    } finally {
-      isLoading.value = false;
-      AppLogs.log("➡️ Fetch Products Finally");
+      AppLogs.log("Live Seller Error: $e");
     }
+
+    AppLogs.log("🔶 liveSellerResponse ENDED");
   }
 
 
-  /// ⭐ Toggle Favorite
   void toggleFavorite(int index) async {
-    final product = newCollectionProduct[index];
-    AppLogs.log("$product");
-    final newStatus = !product.isFavorite;
-    AppLogs.log("newStatus $newStatus");
+    AppLogs.log("🔷 toggleFavorite STARTED");
 
-    // API call first
-    bool success = await updateFavoriteOnServer(
-      product.id,
-      newStatus,
-      product.id,
-      product.category,
-    );
+    final product = relatedProductList[index];
+    final newStatus = !product.isFavorite;
+
+    bool success =
+    await updateFavoriteOnServer(product.id, newStatus);
+
     if (success) {
-      newCollectionProduct[index] = product.copyWith(
-        isFavorite: newStatus,
-      );
-      AppLogs.log("${newCollectionProduct[index]}");
+      relatedProductList[index] =
+          product.copyWith(isFavorite: newStatus);
       update();
+
+      AppLogs.log("Favorite Updated Locally");
     }
+
+    AppLogs.log("🔶 toggleFavorite ENDED");
   }
 
 
-
-
-  /// ⭐ Send favorite/unfavorite to backend
   Future<bool> updateFavoriteOnServer(
-      String id, bool isFav, String productId, String categoryId) async {
+      String? productId,
+      bool isFav,
+      ) async {
+    AppLogs.log("🔷 updateFavoriteOnServer STARTED");
+
     try {
       final api = AppApi.getInstance();
 
@@ -290,17 +246,19 @@ class HomeController extends GetxController {
         data: {
           "userId": "691aaefdf4b6f3b0fa2d1060",
           "productId": productId,
-          "categoryId": categoryId,
+          "categoryId": "691c3a0db028fbecda9c050e",
           "isFavorite": isFav,
         },
       );
 
-      return true; // server ok
+      AppLogs.log("Favorite API Success");
+
+      AppLogs.log("🔶 updateFavoriteOnServer ENDED");
+
+      return true;
     } catch (e) {
-      AppLogs.log("Fav update error: $e");
-      return false; // failed
+      AppLogs.log("Favorite update error: $e");
+      return false;
     }
   }
-
-
 }

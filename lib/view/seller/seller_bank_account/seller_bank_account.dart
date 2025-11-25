@@ -15,6 +15,7 @@ class SellerBankAccount extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.background,
       appBar: AppAppBar(title: "Bank List"),
 
       body: Obx(() {

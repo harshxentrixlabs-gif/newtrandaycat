@@ -29,16 +29,14 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-
-
   LoginModel? userLogin;
-
 
   final box = GetStorage();
 
   late String userName = box.read('userName') ?? "Guest User";
   late String userEmail = box.read('userEmail') ?? "";
-  late String userPhoto = box.read('userPhoto') ??
+  late String userPhoto =
+      box.read('userPhoto') ??
       "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
   @override
@@ -46,132 +44,190 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: AppColor.background,
       body: SingleChildScrollView(
-        child: Padding(
-          padding:  EdgeInsets.symmetric(horizontal: Get.width * 0.040,vertical: Get.height * 0.04),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+        child: Column(
+          children: [
+          Stack(
+          clipBehavior: Clip.none,
+          children: [
+            SizedBox(
+              width: double.infinity,
+              height: Get.height * 0.16,
+              child: AppImage.svg(
+                AppIcons.backImages,
+                fit: BoxFit.fill,
+              ),
+            ),
+            Positioned(
+              top: Get.height * 0.10,
+              left: 0,
+              right: 0,
+              child: Column(
                 children: [
-                 InkWell(
-                   onTap: (){
-                     AppLogs.log("go to setting");
-                     Get.to(()=>SettingScreen(),
-                     transition:Transition.rightToLeft
-                     );
-                   },
-                   child: Container(
-                     decoration: BoxDecoration(
-                       color: AppColor.primary.withValues(alpha: 0.30),
-                       shape: BoxShape.circle
-                     ),
-                       child: AppImage.svg(AppIcons.setting,height: Get.height * 0.035)),
-                 )
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(width: 2, color: Colors.white),
+                        ),
+                        child: CircleAvatar(
+                          radius: Get.height * 0.050,
+                          backgroundImage: NetworkImage(userPhoto),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 8,
+                        right: -5,
+                        child: Container(
+                          height: 30,
+                          width: 30,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColor.primary,
+                            border: Border.all(width: 1, color: Colors.white),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: AppImage.svg(AppIcons.editProfile,height: 5,width: 5),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
-              Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(width: 1, color: Colors.black),
-                      ),
-                      child: Stack(
-                        children: [
-                          CircleAvatar(
-                            radius: 50,
-                            backgroundImage: NetworkImage(userPhoto),
-                          ),
-                          Positioned(
-                              left: Get.width * 0.18,
-                              right: Get.width *  0.000,
-                              bottom: Get.height * 0.00,
-                              top: Get.height * 0.06,
-                              child: Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: AppColor.primary,
-                                    border: Border.all(width: 1, color: Colors.black),
-                                  ),
-                                  child: Center(child: Icon(Icons.edit,size: Get.height * 0.012,color: Colors.white,)))),
-                        ],
-                      ),
+            ),
+          ],
+        ),
+            SizedBox(height: Get.height * 0.060),
+            AppText(
+              userName,
+              fontSize: Get.height * 0.015,
+              fontWeight: FontWeight.bold,
+            ),
+            SizedBox(height: Get.height * 0.005),
+            AppText(
+              userEmail,
+              fontSize: Get.height * 0.014,
+              color: Colors.grey,
+            ),
+            Padding(
+              padding:  EdgeInsets.symmetric(horizontal: Get.width * 0.03),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: Get.height * 0.020),
+                  AppText(AppString.personalInfo,fontWeight: FontWeight.bold,fontSize: 16,),
+                  SizedBox(height: Get.height * 0.030),
+                  Padding(
+                    padding:  EdgeInsets.symmetric(horizontal: Get.width * 0.06),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CommonPersonalInfomation(images: AppIcons.myOrderIcon, title: AppString.myOrder, onTap: () { AppLogs.log("go to My Order");
+                        Get.to(() => MyOrder(), transition: Transition.rightToLeft); }),
+
+                        CommonPersonalInfomation(images: AppIcons.myAddressIcon, title: AppString.myAddress, onTap: () {  AppLogs.log("My Address");
+                        Get.to(() => MyAddress(), transition: Transition.rightToLeft); }),
+
+                        CommonPersonalInfomation(images: AppIcons.myBidIcon, title: AppString.myBid, onTap: () {  AppLogs.log("My  Bid");
+                        Get.to(
+                              () => MyBidScreen(),
+                          transition: Transition.rightToLeft,
+                        ); })
+                      ],
                     ),
-                    SizedBox(height: Get.height * 0.015),
-                    AppText(
-                      userName,
-                      fontSize:  Get.height * 0.020, fontWeight: FontWeight.bold,
-                    ),
-                    AppText(
-                      userEmail,
-                      fontSize: Get.height * 0.014, color: Colors.grey,
-                    ),
-                  ],
-                ),
+                  ),
+                  SizedBox(height: Get.height * 0.030),
+                  AppText(AppString.sellerAccount,fontWeight: FontWeight.bold,fontSize: 16,),
+                  SizedBox(height: Get.height * 0.015),
+                  ProfileContainerCommon(
+                    images: AppIcons.seller,
+                    title: AppString.becomeSeller,
+                    onTap: () {
+                      AppLogs.log("Become Seller");
+                      Get.to(
+                            () => BecomeSeller(),
+                        transition: Transition.rightToLeft,
+                      );
+                    },
+                  ),
+                  SizedBox(height: Get.height * 0.020),
+                  AppText(AppString.security,fontWeight: FontWeight.bold,fontSize: 16,),
+                  SizedBox(height: Get.height * 0.015),
+                  ProfileContainerCommon(
+                    images: AppIcons.changePassword,
+                    title: AppString.changePassword,
+                    onTap: () {
+                      AppLogs.log("Change Password");
+                      Get.to(
+                            () => ChangePassword(),
+                        transition: Transition.rightToLeft,
+                      );
+                    },
+                  ),
+                  SizedBox(height: Get.height * 0.015),
+                  ProfileContainerCommon(
+                    images: AppIcons.forgotPassword,
+                    title: AppString.forgotPassword,
+                    onTap: () {
+                      AppLogs.log("Forgot Password");
+                      Get.to(
+                            () => ForgotPassword(),
+                        transition: Transition.rightToLeft,
+                      );
+                    },
+                  ),
+                  SizedBox(height: Get.height * 0.015),
+                  ProfileContainerCommon(
+                    images: AppIcons.setting,
+                    title: AppString.setting,
+                    onTap: () {
+                      AppLogs.log("setting");
+                      Get.to(
+                            () => SettingScreen(),
+                        transition: Transition.rightToLeft,
+                      );
+                    },
+                  ),
+                ],
               ),
-              SizedBox(height: Get.height * 0.015),
-              AppText(AppString.personalInfo),
-              SizedBox(height: Get.height * 0.015),
-              ProfileContainerCommon(images: AppIcons.cart, title: AppString.myOrder, onTap: () {
-                AppLogs.log("go to My Order");
-                Get.to(()=>MyOrder(),
-                  transition: Transition.rightToLeft
-                );
-              },),
-              SizedBox(height: Get.height * 0.015),
-              ProfileContainerCommon(images: AppIcons.homeAddress, title: AppString.myAddress, onTap: () {
-                AppLogs.log("My Address");
-                Get.to(()=>MyAddress(),
-                    transition: Transition.rightToLeft
-                );
-              },),
-              SizedBox(height: Get.height * 0.015),
-              ProfileContainerCommon(images: AppIcons.bidding, title: AppString.myBid, onTap: () {
-                AppLogs.log("My  Bid");
-                Get.to(()=>MyBidScreen(),
-                    transition: Transition.rightToLeft
-                );
-              },),
-              SizedBox(height: Get.height * 0.020),
-              AppText(AppString.sellerAccount),
-              SizedBox(height: Get.height * 0.015),
-              ProfileContainerCommon(images: AppIcons.seller, title: AppString.becomeSeller, onTap: () {
-                AppLogs.log("Become Seller");
-                Get.to(()=>BecomeSeller(),
-                    transition: Transition.rightToLeft
-                );
-              },),
-              SizedBox(height: 10,),
-              // if(userLogin?.user?.isSeller == true)
-              ProfileContainerCommon(images: AppIcons.seller, title: "Zen cart", onTap: () {
-                AppLogs.log("Become Seller");
-                Get.to(()=>SellerAccount(),
-                    transition: Transition.rightToLeft
-                );
-              },),
-              SizedBox(height: Get.height * 0.020),
-              AppText(AppString.security),
-              SizedBox(height: Get.height * 0.015),
-              ProfileContainerCommon(images: AppIcons.changePassword, title: AppString.changePassword, onTap: () {
-                AppLogs.log("Change Password");
-                Get.to(()=>ChangePassword(),
-                    transition: Transition.rightToLeft
-                );
-              },),
-              SizedBox(height: Get.height * 0.015),
-              ProfileContainerCommon(images: AppIcons.forgotPassword, title: AppString.forgotPassword, onTap: () {
-                AppLogs.log("Forgot Password");
-                Get.to(()=>ForgotPassword(),
-                    transition: Transition.rightToLeft
-                );
-              },),
-            ],
-          ),
+            ),
+
+          ],
         ),
       ),
     );
   }
+
+  Widget CommonPersonalInfomation({required String images,required String title,required Function() onTap}){
+    return   Column(
+      children: [
+        GestureDetector(
+          onTap: onTap,
+          child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.8),
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withValues(alpha: 0.2),
+                    spreadRadius: 0,
+                    blurRadius: 8,
+                    offset: Offset(0, 0),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: AppImage.svg(images,height: 35),
+              )),
+        ),
+        SizedBox(height: 15,),
+        AppText(title,fontSize: 14,fontWeight: FontWeight.w500,)
+      ],
+    );
+  }
+
 }

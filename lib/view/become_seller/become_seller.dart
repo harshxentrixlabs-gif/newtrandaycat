@@ -26,6 +26,7 @@ class _BecomeSellerState extends State<BecomeSeller> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.background,
       appBar: AppAppBar(title: AppString.sellerAccount),
       body: Padding(
         padding: EdgeInsets.symmetric(

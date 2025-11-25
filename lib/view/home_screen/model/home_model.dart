@@ -285,7 +285,7 @@ class Attribute {
       name: json['name']?.toString() ?? '',
       values: rawValues is List
           ? rawValues.map((e) => e.toString()).toList()
-          : <String>[],  // <-- NULL SAFE
+          : <String>[],  // <-- NULL SAFEF
     );
   }
 
@@ -594,7 +594,7 @@ class Reel {
   final int like;
   final bool isFake;
   final String createdAt;
-  final bool isLike;
+  bool isLike;   // ✅ Make it non-final so it can change
 
   Reel({
     required this.id,
@@ -609,7 +609,7 @@ class Reel {
     required this.like,
     required this.isFake,
     required this.createdAt,
-    required this.isLike,
+    this.isLike = false,   // ✅ default value here
   });
 
   factory Reel.fromJson(Map<String, dynamic> json) {
@@ -629,10 +629,11 @@ class Reel {
       like: json["like"] ?? 0,
       isFake: json["isFake"] ?? false,
       createdAt: json["createdAt"] ?? "",
-      isLike: json["isLike"] ?? false,
+      isLike: json["isLike"] ?? false,   // ✅ API value if available
     );
   }
 }
+
 
 /// Seller Model
 class Seller {
@@ -750,5 +751,86 @@ class Data {
   }
 }
 
+
+
+class RelatedProductsResponse {
+  bool? status;
+  String? message;
+  List<RelatedProduct> relatedProducts;
+
+  RelatedProductsResponse({
+    this.status,
+    this.message,
+    required this.relatedProducts,
+  });
+
+  factory RelatedProductsResponse.fromJson(Map<String, dynamic> json) {
+    return RelatedProductsResponse(
+      status: json["status"],
+      message: json["message"],
+      relatedProducts: json["relatedProducts"] == null
+          ? []
+          : List<RelatedProduct>.from(
+          json["relatedProducts"].map((x) => RelatedProduct.fromJson(x))),
+    );
+  }
+}
+
+class RelatedProduct {
+  String? id;
+  String? productName;
+  String? productCode;
+  String? description;
+  String? mainImage;
+  int? price;
+  String? category;
+  bool isFavorite;
+
+  RelatedProduct({
+    this.id,
+    this.productName,
+    this.productCode,
+    this.description,
+    this.mainImage,
+    this.price,
+    this.category,
+    this.isFavorite = false,
+  });
+
+  factory RelatedProduct.fromJson(Map<String, dynamic> json) {
+    return RelatedProduct(
+      id: json["_id"]?.toString(),
+      productName: json["productName"]?.toString(),
+      productCode: json["productCode"]?.toString(),
+      description: json["description"] is String
+          ? json["description"]
+          : (json["description"]?["text"] ?? ""),
+      mainImage: json["mainImage"] is String
+          ? json["mainImage"]
+          : (json["mainImage"]?["url"] ?? ""),
+      price: json["price"] is int
+          ? json["price"]
+          : int.tryParse(json["price"]?.toString() ?? "0"),
+      category: json["category"]?.toString(),
+      isFavorite: json["isFavorite"] ?? false,
+    );
+  }
+
+  /// ⭐ MUST HAVE for state updates
+  RelatedProduct copyWith({
+    bool? isFavorite,
+  }) {
+    return RelatedProduct(
+      id: id,
+      productName: productName,
+      productCode: productCode,
+      description: description,
+      mainImage: mainImage,
+      price: price,
+      category: category,
+      isFavorite: isFavorite ?? this.isFavorite,
+    );
+  }
+}
 
 

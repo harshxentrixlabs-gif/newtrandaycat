@@ -31,6 +31,7 @@ class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.background,
       appBar: AppAppBar(title: AppString.setting),
       body: Padding(
         padding: EdgeInsets.symmetric(

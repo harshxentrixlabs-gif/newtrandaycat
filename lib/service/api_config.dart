@@ -29,6 +29,10 @@ class ApiConfig {
   static const addToCart = "$baseUrl/cart/addToCart";
   static const getCart = "$baseUrl/cart/getCartProduct";
   static const deleteCart = "$baseUrl/cart/deleteCart";
+  static const getCategory = "$baseUrl/category";
+  static const reelLikeOrDislikeOfReel = "$baseUrl/reel/likeOrDislikeOfReel";
+  static const getRelatedProductsByCategory = "$baseUrl/product/getRelatedProductsByCategory";
+  static const removeTOCart = "$baseUrl/cart/removeProduct";
 
 
 

@@ -17,6 +17,7 @@ class _HelpSupportState extends State<HelpSupport> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.background,
       appBar: AppAppBar(title: AppString.helpAndSupport),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),

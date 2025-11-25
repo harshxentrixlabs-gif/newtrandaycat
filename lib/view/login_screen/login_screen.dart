@@ -36,12 +36,12 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     AppLogs.log("Login Screen");
-    loginController.clearText();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: AppColor.background,
       body: Obx(()=>   Stack(
         children: [
           Column(
@@ -137,15 +137,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         CommonButton(
                           onTap: () {
                             AppLogs.log(AppString.demoLogin);
-                            loginController.showDialog(
-                              onTap: () {
-                                loginController.googleLoginAndApiCall();
-                                // Get.offAll(
-                                //   () => NavigationMenu(),
-                                //   transition: Transition.rightToLeft,
-                                // );
-                              },
-                            );
+                            // loginController.showDialog(
+                            //   onTap: () {
+                            //     loginController.googleLoginAndApiCall();
+                            //     // Get.offAll(
+                            //     //   () => NavigationMenu(),
+                            //     //   transition: Transition.rightToLeft,
+                            //     // );
+                            //   },
+                            // );
                           },
                           title: AppString.demoLogin,
                           image: AppIcons.rocket,
@@ -171,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               child:loginController.isLoading.value ? Center(child: AppLoaderWidget()) : CommonButton(
                                 onTap: () {
                                   AppLogs.log("Google Login");
-                                  loginController.googleLogin();
+                                  loginController.googleLoginAndApiCall();
                                 },
                                 title: AppString.googleLogin,
                                 image: AppIcons.google,
@@ -211,7 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           title: AppString.sellerDemoAccount,
                           onTap: () {
                             AppLogs.log("Seller Demo Account");
-                            loginController.showDialog(onTap: () {});
+                            // loginController.showDialog(onTap: () {});
                           },
                         ),
                       ],

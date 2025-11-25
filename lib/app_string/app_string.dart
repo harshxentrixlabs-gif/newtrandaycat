@@ -58,7 +58,7 @@ class AppString{
   static String get newCategories => "newCategories".tr;
   static String get popularProducts => "popularProducts".tr;
   static String get justForYou => "justForYou".tr;
-  static String get viewAll => "viewAll".tr;
+  static String get seeAll => "seeAll".tr;
   static String get carts => "carts".tr;
   static String get amount => "amount".tr;
   static String get checkOut => "checkOut".tr;

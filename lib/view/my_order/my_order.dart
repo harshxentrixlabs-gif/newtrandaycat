@@ -31,6 +31,7 @@ class _MyOrderState extends State<MyOrder> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.background,
       appBar: AppAppBar(title: AppString.myOrder),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

@@ -28,6 +28,7 @@ class _SellerWalletState extends State<SellerWallet> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.background,
       appBar: AppAppBar(
         title: AppString.myWallet,
         actions: [

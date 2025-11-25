@@ -17,6 +17,7 @@ class _SellerMyOrderState extends State<SellerMyOrder> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.background,
       appBar: AppAppBar(title: AppString.myOrder),
       body: Padding(
         padding: EdgeInsets.symmetric(

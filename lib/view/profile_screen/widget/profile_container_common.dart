@@ -18,26 +18,29 @@ class ProfileContainerCommon extends StatelessWidget {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-            color:  AppColor.primary.withValues(alpha: 0.25),
-            borderRadius: BorderRadius.all(Radius.circular(10))
+          color: Colors.white.withValues(alpha: 0.8),
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withValues(alpha: 0.2),
+              spreadRadius: 0,
+              blurRadius: 8,
+              offset: Offset(0, 0),
+            ),
+          ],
         ),
         child: Padding(
           padding:  EdgeInsets.all(8.0),
           child: Row(
             children: [
-              Container(
-                  decoration: BoxDecoration(
-                      color: AppColor.primary,
-                      borderRadius: BorderRadius.all(Radius.circular(10))
-                  ),
-                  child: Padding(
-                    padding:  EdgeInsets.all(8.0),
-                    child: AppImage.svg(images,height: 25,color: Colors.white),
-                  )),
+              Padding(
+                padding:  EdgeInsets.all(8.0),
+                child: AppImage.svg(images,height: 25,),
+              ),
               SizedBox(width: Get.width * 0.020,),
-              AppText(title,color: AppColor.textBlack,fontWeight: FontWeight.bold,),
+              AppText(title,color: AppColor.textBlack,fontWeight: FontWeight.w500,),
               Spacer(),
-              Icon(Icons.arrow_forward_ios_outlined,color: Colors.black,)
+              Icon(Icons.arrow_forward_ios_outlined,color: Colors.black,size: 20,)
             ],
           ),
         ),

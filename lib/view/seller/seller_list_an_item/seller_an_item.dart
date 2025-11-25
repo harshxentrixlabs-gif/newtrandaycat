@@ -24,6 +24,7 @@ class _SellerAnItemState extends State<SellerAnItem> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.background,
       appBar: AppAppBar(title: AppString.listingSummary),
       body: SingleChildScrollView(
         child: Padding(

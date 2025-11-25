@@ -34,6 +34,7 @@ class _MyAddressState extends State<MyAddress> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.background,
       appBar: AppAppBar(
         title: AppString.myAddress,
         actions: [

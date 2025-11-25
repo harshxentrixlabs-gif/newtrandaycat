@@ -51,6 +51,7 @@ class _OtpScreenState extends State<OtpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.background,
       appBar: AppAppBar(title: AppString.verifyDetails),
       body: Padding(
         padding: EdgeInsets.symmetric(

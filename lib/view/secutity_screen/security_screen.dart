@@ -16,6 +16,7 @@ class _SecurityScreenState extends State<SecurityScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.background,
       appBar: AppAppBar(title: AppString.legalAndPolicies),
       body: SingleChildScrollView(
         padding:  EdgeInsets.all(16),

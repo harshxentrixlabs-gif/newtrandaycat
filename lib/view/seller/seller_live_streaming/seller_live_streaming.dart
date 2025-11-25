@@ -21,6 +21,7 @@ class _SellerLiveStreamingState extends State<SellerLiveStreaming> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.background,
       appBar: AppAppBar(title: AppString.selectProduct),
       bottomSheet: Padding(
         padding:  EdgeInsets.all(15.0),

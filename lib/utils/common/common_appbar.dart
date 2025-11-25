@@ -1,23 +1,20 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:trendycart/utils/common/app_image.dart';
 import 'app_text.dart';
 
 class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CommonAppBar({
     super.key,
     required this.name,
-    required this.subName,
-    required this.images,
+
     this.actions,
-    this.bottom, required this.onTap,
+    this.bottom, required this.onTap, required this.image,
   });
 
   final String name;
-  final String subName;
-  final String images;
+  final String image;
   final Function() onTap;
   final List<Widget>? actions;
   final PreferredSizeWidget? bottom;
@@ -33,31 +30,16 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
         onTap: onTap,
         child: Row(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(width: 1, color: Colors.black),
-              ),
-              child: Padding(
-                padding:  EdgeInsets.all(2.0),
-                child: Container(
-                  width: Get.width * 0.09,
-                  height: 40,
-                  clipBehavior: Clip.antiAlias,
-                  decoration:  BoxDecoration(shape: BoxShape.circle),
-                  child: Image.network(
-                    images,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ),
             SizedBox(width: Get.width * 0.020),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AppText(name, fontSize: Get.height * 0.015, fontWeight: FontWeight.bold),
-                AppText(subName, fontSize: Get.height * 0.012, color: Colors.grey),
+                Row(
+                  children: [
+                    AppText(name, fontSize: Get.height * 0.022, fontWeight: FontWeight.bold),
+                    AppImage.svg(image)
+                  ],
+                ),
               ],
             ),
           ],

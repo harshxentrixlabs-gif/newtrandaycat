@@ -1,10 +1,12 @@
+import '../../home_screen/model/home_model.dart';
+
 class CartModel {
-  final String id;
-  final int totalItems;
-  final int totalShippingCharges;
-  final int subTotal;
-  final List<CartItem> items;
-  final String userId;
+  String id;
+  int totalItems;
+  int totalShippingCharges;
+  int subTotal;
+  List<CartItem> items;
+  String userId;
 
   CartModel({
     required this.id,
@@ -17,17 +19,48 @@ class CartModel {
 
   factory CartModel.fromJson(Map<String, dynamic> json) {
     return CartModel(
-      id: json['_id'] ?? "",
-      totalItems: json['totalItems'] ?? 0,
-      totalShippingCharges: json['totalShippingCharges'] ?? 0,
-      subTotal: json['subTotal'] ?? 0,
-      items: (json['items'] as List? ?? [])
-          .map((e) => CartItem.fromJson(e))
-          .toList(),
-      userId: json['userId'] ?? "",
+      id: json['_id']?.toString() ?? "",
+      totalItems: int.tryParse(json['totalItems']?.toString() ?? "0") ?? 0,
+      totalShippingCharges:
+      int.tryParse(json['totalShippingCharges']?.toString() ?? "0") ?? 0,
+      subTotal: int.tryParse(json['subTotal']?.toString() ?? "0") ?? 0,
+
+      // SAFE LIST / MAP HANDLING
+      items: _parseItems(json['items']),
+
+      userId: json['userId']?.toString() ?? "",
+    );
+  }
+
+  static List<CartItem> _parseItems(dynamic data) {
+    if (data is List) {
+      return data.map((e) => CartItem.fromJson(e)).toList();
+    } else if (data is Map) {
+      return data.values.map((e) => CartItem.fromJson(e)).toList();
+    }
+    return [];
+  }
+
+  CartModel copyWith({
+    String? id,
+    int? totalItems,
+    int? totalShippingCharges,
+    int? subTotal,
+    List<CartItem>? items,
+    String? userId,
+  }) {
+    return CartModel(
+      id: id ?? this.id,
+      totalItems: totalItems ?? this.totalItems,
+      totalShippingCharges:
+      totalShippingCharges ?? this.totalShippingCharges,
+      subTotal: subTotal ?? this.subTotal,
+      items: items ?? this.items,
+      userId: userId ?? this.userId,
     );
   }
 }
+
 
 class CartItem {
   final Product productId;
@@ -36,7 +69,7 @@ class CartItem {
   final int purchasedTimeShippingCharges;
   final String productCode;
   final int productQuantity;
-  final List<dynamic> attributesArray;
+  final List attributesArray;
   final String id;
 
   CartItem({
@@ -53,16 +86,59 @@ class CartItem {
   factory CartItem.fromJson(Map<String, dynamic> json) {
     return CartItem(
       productId: Product.fromJson(json['productId'] ?? {}),
-      sellerId: json['sellerId'] ?? "",
-      purchasedTimeProductPrice: json['purchasedTimeProductPrice'] ?? 0,
-      purchasedTimeShippingCharges: json['purchasedTimeShippingCharges'] ?? 0,
-      productCode: json['productCode'] ?? "",
-      productQuantity: json['productQuantity'] ?? 0,
-      attributesArray: json['attributesArray'] ?? [],
-      id: json['_id'] ?? "",
+
+      sellerId: json['sellerId']?.toString() ?? "",
+
+      purchasedTimeProductPrice:
+      int.tryParse(json['purchasedTimeProductPrice']?.toString() ?? "0") ??
+          0,
+
+      purchasedTimeShippingCharges: int.tryParse(
+          json['purchasedTimeShippingCharges']?.toString() ?? "0") ??
+          0,
+
+      productCode: json['productCode']?.toString() ?? "",
+
+      productQuantity:
+      int.tryParse(json['productQuantity']?.toString() ?? "1") ?? 1,
+
+      attributesArray: _parseAttributes(json['attributesArray']),
+
+      id: json['_id']?.toString() ?? "",
+    );
+  }
+
+  static List _parseAttributes(dynamic data) {
+    if (data is List) return data;
+    if (data is Map) return data.values.toList();
+    return [];
+  }
+
+  CartItem copyWith({
+    Product? productId,
+    String? sellerId,
+    int? purchasedTimeProductPrice,
+    int? purchasedTimeShippingCharges,
+    String? productCode,
+    int? productQuantity,
+    List? attributesArray,
+    String? id,
+  }) {
+    return CartItem(
+      productId: productId ?? this.productId,
+      sellerId: sellerId ?? this.sellerId,
+      purchasedTimeProductPrice:
+      purchasedTimeProductPrice ?? this.purchasedTimeProductPrice,
+      purchasedTimeShippingCharges:
+      purchasedTimeShippingCharges ?? this.purchasedTimeShippingCharges,
+      productCode: productCode ?? this.productCode,
+      productQuantity: productQuantity ?? this.productQuantity,
+      attributesArray: attributesArray ?? this.attributesArray,
+      id: id ?? this.id,
     );
   }
 }
+
 
 class Product {
   final String id;
@@ -83,15 +159,22 @@ class Product {
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      id: json['_id'] ?? "",
-      productName: json['productName'] ?? "",
-      enableAuction: json['enableAuction'] ?? false,
+      id: json['_id']?.toString() ?? "",
+      productName: json['productName']?.toString() ?? "",
+      enableAuction: json['enableAuction'] == true,
       auctionEndDate: json['auctionEndDate'],
-      mainImage: json['mainImage'] ?? "",
-      attributes: (json['attributes'] as List? ?? [])
-          .map((e) => AttributeModel.fromJson(e))
-          .toList(),
+      mainImage: json['mainImage']?.toString() ?? "",
+      attributes: _parseAttributes(json['attributes']),
     );
+  }
+
+  static List<AttributeModel> _parseAttributes(dynamic data) {
+    if (data is List) {
+      return data.map((e) => AttributeModel.fromJson(e)).toList();
+    } else if (data is Map) {
+      return data.values.map((e) => AttributeModel.fromJson(e)).toList();
+    }
+    return [];
   }
 }
 
@@ -110,12 +193,44 @@ class AttributeModel {
 
   factory AttributeModel.fromJson(Map<String, dynamic> json) {
     return AttributeModel(
-      id: json['_id'] ?? "",
-      name: json['name'] ?? "",
-      values: (json['values'] as List? ?? [])
-          .map((e) => e.toString())
-          .toList(),
-      image: json['image'] ?? "",
+      id: json['_id']?.toString() ?? "",
+      name: json['name']?.toString() ?? "",
+      values: _parseValues(json['values']),
+      image: json['image']?.toString() ?? "",
     );
   }
+
+  static List<String> _parseValues(dynamic data) {
+    if (data is List) {
+      return data.map((e) => e.toString()).toList();
+    } else if (data is Map) {
+      return data.values.map((e) => e.toString()).toList();
+    }
+    return [];
+  }
+}
+
+
+class GetAllCartProductsModel {
+  bool? status;
+  String? message;
+  Data? data;
+
+  GetAllCartProductsModel({
+    this.status,
+    this.message,
+    this.data,
+  });
+
+  factory GetAllCartProductsModel.fromJson(Map<String, dynamic> json) => GetAllCartProductsModel(
+    status: json["status"],
+    message: json["message"],
+    data: json["data"] == null ? null : Data.fromJson(json["data"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "status": status,
+    "message": message,
+    "data": data?.toJson(),
+  };
 }

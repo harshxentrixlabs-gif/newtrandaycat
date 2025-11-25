@@ -24,6 +24,7 @@ class _MyBidScreenState extends State<MyBidScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.background,
       appBar: AppAppBar(title: AppString.auctionBid),
       body: Padding(
         padding:  EdgeInsets.symmetric(horizontal: Get.width * 0.030,vertical: Get.height * 0.020),

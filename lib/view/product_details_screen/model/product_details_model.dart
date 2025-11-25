@@ -1,23 +1,23 @@
 class ProductModel {
-  bool status;
-  String message;
-  List<Product> product;
+  bool? success;
+  String? message;
+  List<Product>? product;
 
-  ProductModel({
-    required this.status,
-    required this.message,
-    required this.product,
-  });
+  ProductModel({this.success, this.message, this.product});
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
-      status: json['status'],
-      message: json['message'],
-      product:
-      (json['product'] as List).map((e) => Product.fromJson(e)).toList(),
+      success: json["success"],
+      message: json["message"],
+      product: json["product"] is List
+          ? (json["product"] as List)
+          .map((e) => Product.fromJson(e))
+          .toList()
+          : [], // IMPORTANT → Safe fallback
     );
   }
 }
+
 
 class Product {
   String id;

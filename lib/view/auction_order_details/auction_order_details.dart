@@ -19,6 +19,7 @@ class _AuctionOrderDetailsState extends State<AuctionOrderDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.background,
       appBar: AppAppBar(title: AppString.auctionOrderDetails),
       body: Padding(
         padding: EdgeInsets.symmetric(

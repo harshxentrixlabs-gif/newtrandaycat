@@ -34,6 +34,7 @@ class _MobileScreenState extends State<MobileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.background,
       appBar: AppAppBar(title: ''),
       body: Padding(
         padding: EdgeInsets.symmetric(

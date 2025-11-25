@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -28,51 +27,64 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      iconTheme: IconThemeData(color: Colors.black),
-      toolbarTextStyle: TextStyle(color: Colors.black),
+      iconTheme: const IconThemeData(color: Colors.black),
+      toolbarTextStyle: const TextStyle(color: Colors.black),
       automaticallyImplyLeading: false,
       bottom: bottom,
-      leading: showBack
-          ? Padding(
-            padding: const EdgeInsets.only(left: 10,),
-            child: Container(
-              decoration: BoxDecoration(
-                color: AppColor.primary.withValues(alpha: 0.5),
-                shape: BoxShape.circle
-              ),
-              child: IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.black),
-                      onPressed: () => Get.back(),
-                    ),
-            ),
-          )
-          : null,leadingWidth: 50,
-      title: AppText(
-        title,
-        // style: const TextStyle(
-          color: AppColor.textBlack,
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-        // ),
-      ),
-      centerTitle: centerTitle,
-      actions: actions,
-      // flexibleSpace: Container(
-      //   decoration: const BoxDecoration(
-      //     image: DecorationImage(
-      //       image: AssetImage(AppImages.appBarBg),
-      //       fit: BoxFit.cover,
-      //     ),
-      //   ),
-      // ),
-      backgroundColor: Colors.transparent,
+       backgroundColor: Colors.transparent,
       surfaceTintColor: Colors.transparent,
       elevation: 0,
+
+      /// -----------------------------------
+      /// 🔙 Leading Back Icon (Perfect Center)
+      /// -----------------------------------
+      leading: showBack
+          ? Padding(
+        padding: const EdgeInsets.only(left: 10),
+        child: Center(
+          child: Container(
+            height: 40,
+            width: 40,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.black),
+            ),
+            child: Center(
+              child: IconButton(
+                padding: EdgeInsets.zero,
+                icon: const Icon(
+                  Icons.arrow_back_ios_rounded,
+                  color: Colors.black,
+                  size: 18,
+                ),
+                onPressed: () => Get.back(),
+              ),
+            ),
+          ),
+        ),
+      )
+          : null,
+      leadingWidth: 50,
+
+      /// ----------------------------
+      /// 🔤 Title
+      /// ----------------------------
+      title: AppText(
+        title,
+        color: AppColor.textBlack,
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+      ),
+
+      centerTitle: centerTitle,
+
+      /// ----------------------------
+      /// 📌 Actions (Right Icons)
+      /// ----------------------------
+      actions: actions,
     );
   }
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
-
-

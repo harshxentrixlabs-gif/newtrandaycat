@@ -16,6 +16,7 @@ class _SellerMyAddressState extends State<SellerMyAddress> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.background,
       appBar: AppAppBar(title: AppString.myAddress),
       body: Padding(
         padding:  EdgeInsets.symmetric(horizontal: Get.width * 0.050,vertical: Get.height * 0.020),

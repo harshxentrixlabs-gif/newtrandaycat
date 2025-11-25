@@ -1,186 +1,89 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart' as http show get, post;
-import 'package:trendycart/app_string/app_string.dart';
-import 'package:trendycart/utils/app_print.dart';
-import 'package:trendycart/utils/common/app_button_v1.dart';
-import 'package:trendycart/view/home_screen/home_screen.dart';
-
+import 'package:http/http.dart' as http;
 import '../../../service/api_config.dart';
-import '../../../utils/app_color.dart';
-import '../../../utils/app_icons.dart';
 import '../../../utils/app_storage.dart';
-import '../../../utils/common/app_text.dart';
-import '../../../utils/globle_veriables.dart';
 import '../../navigation_menu/navigation_menu.dart';
 import '../model/login_model.dart';
 
 class LoginController extends GetxController {
   TextEditingController emailController = TextEditingController();
   RxBool isLoading = false.obs;
-  late final userEmail = box.read('userEmail');
-  late final userImage = box.read('editImage');
-  late final username = box.read('editFirstName');
   final box = GetStorage();
+
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  void clearText() {
-    emailController.clear();
-  }
+  LoginModel? userLogin;
 
-  /// Show Dialog Box
-  void showDialog({required Function() onTap}) {
-    Get.dialog(
-      Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-        backgroundColor: Colors.white,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: AppColor.primary,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(50),
-                  topRight: Radius.circular(50),
-                ),
-              ),
-              padding: EdgeInsets.symmetric(vertical: 30),
-              child: Center(
-                child: SvgPicture.asset(
-                  AppIcons.success,
-                  color: Colors.white,
-                  height: 80,
-                  width: 80,
-                ),
-              ),
-            ),
-            SizedBox(height: 15),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 30),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  AppText(
-                    AppString.youHveLoggedInSuccessfully,
-                    color: AppColor.textBlack,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 10),
-                  AppText(
-                    AppString.accessTOYou,
-                    color: Colors.grey,
-                    fontSize: 12,
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 20),
-                  CommonButton(onTap: onTap, title: AppString.continueButton),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-      barrierDismissible: false,
-    );
-  }
-
-  ///  Google Login
-  Future<String?> googleLogin() async {
+  // ----------------------------------------------------------------------
+  // ⭐ GOOGLE LOGIN + API CALL (FINAL CLEAN VERSION)
+  // ----------------------------------------------------------------------
+  void googleLoginAndApiCall() async {
     try {
-      isLoading.value = true;
+      isLoading(true);
 
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
-        isLoading.value = false;
-        return null;
+        isLoading(false);
+        return;
       }
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final googleAuth = await googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      UserCredential userCredential = await _auth.signInWithCredential(
-        credential,
-      );
+      UserCredential userCredential =
+      await _auth.signInWithCredential(credential);
 
       final user = userCredential.user;
 
-      if (user != null) {
-        Get.offAll(() => NavigationMenu(), transition: Transition.rightToLeft);
-        // AppStorage().save("user_data", user);
-        box.write('userEmail', user.email);
-        box.write("editImage", user.photoURL);
-        box.write("editFirstName", user.displayName);
-        box.write("editLastName", editLastName);
-        box.write("editEmail", editEmail);
-        box.write("dob", editDateOfBirth);
-        box.write("genderSelect", genderSelect);
-        box.write("location", editLocation);
-        box.write("uniqueID", uniqueID);
-         return user.email;
-      }
+      // Extract Google User Data
+      String email = user?.email ?? "";
+      String name = user?.displayName ?? "";
+      String image = user?.photoURL ?? "";
+
+      // Save Google Data Locally
+      box.write('userEmail', email);
+      box.write('userName', name);
+      box.write('userPhoto', image);
+
+      // Split Name
+      List<String> fullName = name.split(" ");
+      String first = fullName.isNotEmpty ? fullName.first : "";
+      String last  = fullName.length > 1 ? fullName.last : "";
+
+      // Call API
+      getLoginData(
+        firstName: first,
+        lastName: last,
+        image: image,
+        email: email,
+        password: "",
+        loginType: 2,
+        fcmToken: "123",
+        identity: "google",
+      );
     } catch (e) {
-      Get.snackbar("Error", "Google login failed");
+      log("Google Login Error: $e");
+      Get.snackbar("Error", "Google Login Failed");
     } finally {
-      isLoading.value = false;
+      isLoading(false);
     }
-    return null;
   }
 
-  /// Uer email get
-  // late final userEmail = box.read('userEmail');
-
-  /// Uer Logout
-  Future<void> logout() async {
-    await _auth.signOut();
-    await _googleSignIn.signOut();
-    GetStorage().erase();
-    AppLogs.log("User logged out");
-  }
-
-  /// Api login Methods
-
-
-
-
-  void googleLoginAndApiCall() async {
-    String? email = await googleLogin();   // Google login thi email mali
-
-    if (email == null) return;
-
-    getLoginData(
-      image: userImage,
-      firstName: username,
-      lastName: "",
-      email: email,        // ⭐️ Google email API ma okay
-      password: "",
-      loginType: 2,
-      fcmToken: "123",
-      identity: "google",
-    );
-  }
-
-
-
-  LoginModel? userLogin;
-
-  getLoginData({
+  // ----------------------------------------------------------------------
+  // ⭐ CALL API
+  // ----------------------------------------------------------------------
+  Future<void> getLoginData({
     String? image,
     required String firstName,
     required String lastName,
@@ -191,8 +94,8 @@ class LoginController extends GetxController {
     required String identity,
   }) async {
     try {
-      // SellerDataController sellerDataController = Get.put(SellerDataController());
       isLoading(true);
+
       var data = await login(
         image: image,
         firstName: firstName,
@@ -203,41 +106,28 @@ class LoginController extends GetxController {
         fcmToken: fcmToken,
         identity: identity,
       );
+
       userLogin = data;
+
       if (userLogin!.status == true) {
-        userId = userLogin!.user!.id.toString();
-        box.write("userId", userId);
-        log("user Id $userId");
-        //-------------------------------------------
-        editImage = userLogin!.user!.image.toString();
-        editFirstName = userLogin!.user!.firstName.toString();
-        editLastName = userLogin!.user!.lastName.toString();
-        editEmail = userLogin!.user!.email.toString();
-        editDateOfBirth = userLogin!.user!.dob.toString();
-        genderSelect = userLogin!.user!.gender.toString();
-        editLocation = userLogin!.user!.location.toString();
-        uniqueID = userLogin!.user!.uniqueId.toString();
-        if (userLogin!.user!.isSeller == true) {
-          // becomeSeller = true;
-          // sellerDataController.getSellerAllData();
-        }
-        //-------------------------------------------
-        box.write("editImage", editImage);
-        box.write("editFirstName", editFirstName);
-        box.write("editLastName", editLastName);
-        box.write("editEmail", editEmail);
-        box.write("dob", editDateOfBirth);
-        box.write("genderSelect", genderSelect);
-        box.write("location", editLocation);
-        box.write("uniqueID", uniqueID);
-        update();
-        isLoading(false);
+        // Save Full User Data After API success
+        box.write('userId', userLogin!.user?.id ?? "");
+        box.write('userEmail', userLogin!.user?.email ?? "");
+        box.write('userName', userLogin!.user?.firstName ?? "");
+        box.write('userImage', userLogin!.user?.image ?? "");
+
+        Get.offAll(() => NavigationMenu());
+      } else {
+        Get.snackbar("Login Failed", userLogin!.message ?? "Something went wrong");
       }
     } finally {
       isLoading(false);
     }
   }
 
+  // ----------------------------------------------------------------------
+  // ⭐ API METHOD
+  // ----------------------------------------------------------------------
   Future<LoginModel> login({
     String? image,
     required String firstName,
@@ -248,25 +138,18 @@ class LoginController extends GetxController {
     required String fcmToken,
     required String identity,
   }) async {
-    log("image :: $image");
-    log("firstName :: $firstName");
-    log("lastName :: $lastName");
-    log("email :: $email");
-    log("password :: $password");
-    log("loginType :: $loginType");
-    log("fcmToken :: $fcmToken");
-    log("identity :: $identity");
     final url = Uri.parse(ApiConfig.userLogin);
-    log("url ::: $url");
+
     final headers = {
       'key': ApiConfig.SECRET_KEY,
       "Content-Type": "application/json; charset=UTF-8",
     };
+
     final body = jsonEncode({
       'image': image,
       'firstName': firstName,
       'lastName': lastName,
-      'email': userEmail,
+      'email': email,
       'password': password,
       'loginType': loginType,
       'fcmToken': fcmToken,
@@ -274,18 +157,23 @@ class LoginController extends GetxController {
     });
 
     final response = await http.post(url, headers: headers, body: body);
-    log(
-      "Login Api Status code :- ${response.statusCode} \n Body response :- ${response.body}",
-    );
-    // 691471fbf4b6f3b0fa2d0151
+
+    log("API RESPONSE: ${response.body}");
+
     if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(response.body);
-      if (jsonResponse["status"] == true) {
-        box.write("isLogin", true);
-      }
-      return LoginModel.fromJson(jsonResponse);
+      return LoginModel.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception('Login Failed');
+      throw Exception("Login Failed");
     }
+  }
+
+  // ----------------------------------------------------------------------
+  // ⭐ LOGOUT
+  // ----------------------------------------------------------------------
+  Future<void> logout() async {
+    await _auth.signOut();
+    await _googleSignIn.signOut();
+
+    AppStorage().clear();
   }
 }
