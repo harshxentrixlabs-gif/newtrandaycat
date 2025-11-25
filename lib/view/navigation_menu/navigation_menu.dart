@@ -83,6 +83,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
             ),
           ),
           SizedBox(height: 4),
+
           Expanded(
             child: AppText(
               label,
