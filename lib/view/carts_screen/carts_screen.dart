@@ -248,6 +248,7 @@ class _CartsScreenState extends State<CartsScreen> {
                                 onTap: isUpdating ? null : () {
                                   cartsController.increment(index);
                                 },
+
                                 child: Container(
                                   padding: EdgeInsets.all(4),
                                   decoration: BoxDecoration(
