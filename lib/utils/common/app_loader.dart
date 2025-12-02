@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '../../utils/app_color.dart';
 
 class AppLoaderWidget extends StatelessWidget {
   final double size;
   final double strokeWidth;
+  final AlwaysStoppedAnimation<Color>? valueColor;
 
   const AppLoaderWidget({
     Key? key,
     this.size = 40,
     this.strokeWidth = 3,
+     this.valueColor, // ✅ Proper required variable
   }) : super(key: key);
 
   @override
@@ -20,7 +21,7 @@ class AppLoaderWidget extends StatelessWidget {
         height: size,
         child: CircularProgressIndicator(
           strokeWidth: strokeWidth,
-          valueColor: AlwaysStoppedAnimation<Color>(AppColor.primary),
+          valueColor: valueColor, // ← required variable used here
         ),
       ),
     );

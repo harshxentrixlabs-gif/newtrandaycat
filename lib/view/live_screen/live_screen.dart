@@ -5,6 +5,7 @@ import 'package:trendycart/utils/app_icons.dart';
 import 'package:trendycart/utils/common/app_text.dart';
 import 'package:video_player/video_player.dart';
 import '../../utils/common/app_image.dart';
+import '../../utils/common/app_loader.dart';
 
 class LiveScreen extends StatefulWidget {
   const LiveScreen({
@@ -53,9 +54,7 @@ class _LiveScreenState extends State<LiveScreen> {
           _controller.value.isInitialized
               ? VideoPlayer(_controller)
               :  Center(
-            child: CircularProgressIndicator(
-              color: Colors.white,
-            ),
+            child: AppLoaderWidget(),
           ),
 
           // CLOSE BUTTON

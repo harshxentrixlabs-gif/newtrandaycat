@@ -567,7 +567,7 @@ class AppImage {
 //               width: 150,
 //               height: 150,
 //               fit: BoxFit.cover,
-//               placeholder: const Center(child: CircularProgressIndicator()),
+//               placeholder: const Center(child: AppLoaderWidget()),
 //               errorWidget: const Icon(Icons.error, size: 50),
 //             ),
 //

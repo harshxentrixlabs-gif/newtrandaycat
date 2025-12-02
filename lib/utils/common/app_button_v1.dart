@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../app_color.dart';
+import '../common_font.dart';
+import 'app_loader.dart';
 import 'app_text.dart';
 
 class CommonButton extends StatelessWidget {
@@ -17,7 +19,7 @@ class CommonButton extends StatelessWidget {
     required this.title,
     this.onTap,
     this.isLoading = false,
-    this.radius = 20,
+    this.radius = 100,
     this.color,
     this.textColor,
     this.image,
@@ -39,7 +41,7 @@ class CommonButton extends StatelessWidget {
             ? SizedBox(
                 height: 22,
                 width: 22,
-                child: CircularProgressIndicator(
+                child: AppLoaderWidget(
                   strokeWidth: 2,
                   valueColor: AlwaysStoppedAnimation<Color>(
                     textColor ?? AppColor.textWhite,
@@ -56,7 +58,7 @@ class CommonButton extends StatelessWidget {
                     child: AppText(
                       title,
                       color: textColor ?? AppColor.textWhite,
-                      fontWeight: FontWeight.bold,
+                     fontFamily: AppFont.bold,
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -123,7 +125,7 @@ class CommonBlackButton extends StatelessWidget {
               ? SizedBox(
             height: 22,
             width: 22,
-            child: CircularProgressIndicator(
+            child: AppLoaderWidget(
               strokeWidth: 2,
               valueColor: AlwaysStoppedAnimation<Color>(
                 textColor ?? AppColor.textWhite,
@@ -139,7 +141,7 @@ class CommonBlackButton extends StatelessWidget {
               AppText(
                 title,
                 color: textColor ?? AppColor.textWhite,
-                fontWeight: FontWeight.bold,
+                fontFamily: AppFont.semiBold,
                 textAlign: TextAlign.center,
               ),
               SizedBox(width: 10,),

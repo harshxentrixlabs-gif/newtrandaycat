@@ -9,10 +9,13 @@ import 'package:trendycart/utils/commons.dart';
 import 'package:trendycart/view/mobile_screen/controller/mobile_controller.dart';
 import 'package:trendycart/view/otp_screen/otp_screen.dart';
 
+import '../../utils/app_icons.dart';
 import '../../utils/app_print.dart';
 import '../../utils/common/app_appbar.dart';
 import '../../utils/common/app_bottom_sheet.dart';
+import '../../utils/common/app_image.dart';
 import '../../utils/common/app_text.dart';
+import '../../utils/common_font.dart';
 
 class MobileScreen extends StatefulWidget {
   const MobileScreen({super.key});
@@ -35,78 +38,108 @@ class _MobileScreenState extends State<MobileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.background,
-      appBar: AppAppBar(title: ''),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: Get.width * 0.050,
-          vertical: Get.height * 0.030,
-        ),
+      body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Column(
-                children: [
-                  AppText(
-                    AppString.logInWithMobile,
-                    fontSize: Get.width * 0.040,
-                    fontWeight: FontWeight.bold,
+            Stack(
+              children: [
+                SizedBox(
+                  height: Get.height * 0.33,
+                  width: double.infinity,
+                  child: Image.asset(
+                    AppIcons.login,
+                    fit: BoxFit.cover,
                   ),
-                  SizedBox(height: Get.height * 0.010),
-                  AppText(
-                    AppString.enterYourMobileNumberToReceiveaVerificationCode,
-                    fontSize: Get.width * 0.025,
+                ),
+                Positioned(
+                  bottom: -Get.height * 0.00,
+                  left: Get.width * 0.05,
+                  right: Get.width * 0.05,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          AppText("Trendycart",fontFamily:AppFont.bold,fontSize: Get.height * 0.03,),
+                          AppImage.svg(AppIcons.loginIcons)
+                        ],
+                      ),
+                      AppText(
+                        AppString.logInWithMobile,
+                        fontSize: Get.width * 0.060,
+                        fontFamily: AppFont.bold,
+                      ),
+                      SizedBox(height: Get.height * 0.010),
+                      AppText(
+                        AppString.enterYourMobileNumberToReceiveaVerificationCode,
+                        fontSize: Get.height * 0.014,
+                        color: Colors.grey,
+                        fontFamily: AppFont.bold,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: Get.width * 0.050,
+                vertical: Get.height * 0.030,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppText(AppString.contactNumber,fontFamily: AppFont.bold,),
+                  SizedBox(height: Get.height * 0.020),
+                  CommonTextField(
+                    controller: mobileController.mobileNUmberController,
+                    hintText: AppString.enterYourMobileNumber,
+                    keyboardType: TextInputType.number,
+                    prefixIcon: InkWell(
+                      onTap: () {
+                        showCountryPicker(
+                          context: context,
+                          showPhoneCode: true,
+                          onSelect: (Country country) {
+                            mobileController.countryCode.value = '+${country.phoneCode}';
+                            mobileController.countryFlag.value = country.flagEmoji;
+                          },
+                        );
+                      },
+                      child: Obx(
+                            () => Container(
+                          padding: EdgeInsets.symmetric(horizontal: Get.width * 0.030),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              AppText(
+                                mobileController.countryFlag.value,
+                                fontSize: Get.height * 0.015,
+                              ),
+                              SizedBox(width: Get.width * 0.015),
+                              AppText(
+                                mobileController.countryCode.value,
+                                color: AppColor.textBlack,
+                                fontSize: Get.height * 0.015,
+                              ),
+                              Icon(Icons.arrow_drop_down_rounded, color: Colors.black),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: Get.height * 0.050),
+                  CommonButton(
+                    title: AppString.sendOTP,
+                    onTap: () {
+                      AppLogs.log("Next otp screen");
+                      Get.to(() => OtpScreen(), transition: Transition.rightToLeft);
+                    },
                   ),
                 ],
               ),
             ),
-            SizedBox(height: Get.height * 0.050),
-            AppText(AppString.contactNumber),
-            SizedBox(height: Get.height * 0.020),
-            CommonTextField(
-              controller: mobileController.mobileNUmberController,
-              hintText: AppString.enterYourMobileNumber,
-              keyboardType: TextInputType.number,
-              prefixIcon: InkWell(
-                onTap: () {
-                  showCountryPicker(
-                    context: context,
-                    showPhoneCode: true,
-                    onSelect: (Country country) {
-                      mobileController.countryCode.value = '+${country.phoneCode}';
-                      mobileController.countryFlag.value = country.flagEmoji;
-                    },
-                  );
-                },
-                child: Obx(() => Container(
-                  padding: EdgeInsets.symmetric(horizontal: Get.width * 0.030),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      AppText(
-                        mobileController.countryFlag.value,
-                        fontSize: Get.height * 0.015,
-                      ),
-                      SizedBox(width: Get.width * 0.015),
-                      AppText(
-                        mobileController.countryCode.value,
-                        color: AppColor.textBlack,
-                        fontSize: Get.height * 0.015,
-                      ),
-                      Icon(Icons.arrow_drop_down_rounded, color: Colors.black),
-                    ],
-                  ),
-                )),
-              ),
-
-            ),
-            Spacer(),
-            CommonButton(title: AppString.sendOTP,onTap: (){
-              AppLogs.log("Next otp screen");
-              Get.to(() => OtpScreen(),
-                transition: Transition.rightToLeft,
-              );
-            },),
           ],
         ),
       ),

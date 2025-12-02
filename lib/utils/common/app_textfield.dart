@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:trendycart/utils/common_font.dart';
 
 import '../app_color.dart';
 import 'app_text.dart';
@@ -51,42 +52,60 @@ class CommonTextField extends StatelessWidget {
           ),
           SizedBox(height: 4,)
         ],
-        TextFormField(
-
-          controller: controller,
-          keyboardType: keyboardType,
-          obscureText: obscureText,
-          maxLines: maxLines,
-          minLines: minLines,
-          readOnly: readOnly,
-          onTap: onTap,
-          cursorColor: Colors.black,
-          inputFormatters: keyboardType == TextInputType.number
-              ? [FilteringTextInputFormatter.digitsOnly]
-              : [],
-
-          style: const TextStyle(
-            color: AppColor.textBlack,
-            fontSize: 14,
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.8),
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withValues(alpha: 0.2),
+                spreadRadius: 0,
+                blurRadius: 8,
+                offset: Offset(0, 0),
+              ),
+            ],
           ),
-          validator: validator,
-          decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: const TextStyle(color: AppColor.textSecondary,fontSize: 13),
-            suffixIcon: suffixIcon,
-            prefixIcon: prefixIcon,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 20),
-            filled: true,
-            fillColor: AppColor.background,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
+          child: TextFormField(
+            controller: controller,
+            keyboardType: keyboardType,
+            obscureText: obscureText,
+            maxLines: maxLines,
+            minLines: minLines,
+            readOnly: readOnly,
+            onTap: onTap,
+            cursorColor: Colors.black,
+            inputFormatters: keyboardType == TextInputType.number
+                ? [FilteringTextInputFormatter.digitsOnly]
+                : [],
 
+            style: const TextStyle(
+              color: AppColor.textBlack,
+              fontSize: 14,
             ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
+            validator: validator,
+            decoration: InputDecoration(
+              hintText: hintText,
+              hintStyle:  TextStyle(color: AppColor.textSecondary,fontSize: 13,fontFamily: AppFont.semiBold),
+              suffixIcon: suffixIcon,
+              prefixIcon: prefixIcon,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 20),
+              filled: true,
+              fillColor: AppColor.background,
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                borderSide: BorderSide.none
+              ),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                  borderSide: BorderSide.none
+
+
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+                  borderSide: BorderSide.none
+                      
+              ),
             ),
           ),
         ),

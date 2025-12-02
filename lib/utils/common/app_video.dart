@@ -361,7 +361,7 @@
 //             ),
 //           ),
 //           Center(
-//             child: CircularProgressIndicator(
+//             child: AppLoaderWidget(
 //               color: Colors.white,
 //               strokeWidth: 3,
 //             ),
@@ -384,7 +384,7 @@
 //             ),
 //           ),
 //           Center(
-//             child: CircularProgressIndicator(
+//             child: AppLoaderWidget(
 //               color: Colors.white,
 //               strokeWidth: 3,
 //             ),

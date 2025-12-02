@@ -9,7 +9,10 @@ import 'package:trendycart/view/login_screen/login_screen.dart';
 import 'package:trendycart/view/sign_up_screen/controller/sign_up_controller.dart';
 
 import '../../utils/app_color.dart';
+import '../../utils/app_icons.dart';
 import '../../utils/common/app_appbar.dart';
+import '../../utils/common/app_image.dart';
+import '../../utils/common_font.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -38,7 +41,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       body: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: Get.width * 0.050,
-          vertical: Get.height * 0.050,
+          vertical: Get.height * 0.030,
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -50,12 +53,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     AppText(
                       AppString.completeYourAccount,
                       fontSize: Get.width * 0.040,
-                      fontWeight: FontWeight.bold,
+                        fontFamily: AppFont.bold,
                     ),
                     SizedBox(height: Get.height * 0.010),
                     AppText(
                       AppString.fillInYourDetailsToCreateYourAccount,
                       fontSize: Get.width * 0.025,
+                      fontFamily: AppFont.regular,
                     ),
                   ],
                 ),
@@ -70,26 +74,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
 
 
-  Widget commonContinue({required Function() onTap, required String title}) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        height: Get.height * 0.055,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: AppColor.primary,
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
-        ),
-        child: Center(
-          child: AppText(
-            title,
-            color: AppColor.textWhite,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget commonForm(){
     return Form(
@@ -97,8 +81,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: Get.height * 0.050),
-          AppText(AppString.firstName),
+          SizedBox(height: Get.height * 0.030),
+          AppText(AppString.firstName,fontFamily: AppFont.semiBold,),
           SizedBox(height: Get.height * 0.010),
           CommonTextField(
             controller: signUpController.nameController,
@@ -111,7 +95,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             },
           ),
           SizedBox(height: Get.height * 0.030),
-          AppText(AppString.email),
+          AppText(AppString.email,fontFamily: AppFont.semiBold),
           SizedBox(height: Get.height * 0.010),
           CommonTextField(
             controller: signUpController.emailController,
@@ -126,7 +110,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             },
           ),
           SizedBox(height: Get.height * 0.030),
-          AppText(AppString.password),
+          AppText(AppString.password,fontFamily: AppFont.semiBold),
           SizedBox(height: Get.height * 0.010),
           Obx(() => CommonTextField(
             controller: signUpController.passwordController,
@@ -151,7 +135,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
           ),
           SizedBox(height: Get.height * 0.030),
-          AppText(AppString.confirmPassword),
+          AppText(AppString.confirmPassword,fontFamily: AppFont.semiBold),
           SizedBox(height: Get.height * 0.010),
           Obx(() => CommonTextField(
             controller: signUpController.confirmPasswordController,
@@ -177,17 +161,67 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
           SizedBox(height: Get.height * 0.030),
           CommonButton(onTap: () {
-            if (_formKey.currentState!.validate()) {
-              appPrint(" Continue login...");
-            } else {
-              appPrint(" Validation failed");
-            }
+            Get.dialog(
+              Dialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                backgroundColor: Colors.white,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(height: 15),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 15,
+                      ),
+                      child: Column(
+                        children: [
+                          AppImage.svg(AppIcons.successSignUp),
+                          SizedBox(height: 10),
+                          AppText(
+                            "You have logged in successfully",
+                            color: AppColor.textBlack,
+                            fontSize: 20,
+                            fontFamily: AppFont.bold,
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 10),
+                          AppText(
+                            "Access to your secure account has been granted. Your data is protected with end to-end encryption",
+                            color: Colors.grey,
+                            fontSize: 16,
+                            fontFamily: AppFont.semiBold,
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 15),
+                          CommonBlackButton(
+                            onTap: () {
+                              Get.back();
+                            },
+                            title: "Continue",
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              barrierDismissible: false,
+            );
+            // if (_formKey.currentState!.validate()) {
+            //   appPrint(" Continue login...");
+            //
+            // } else {
+            //   appPrint(" Validation failed");
+            // }
           }, title: AppString.signUp),
           SizedBox(height: Get.height * 0.030),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              AppText(AppString.alreadyHaveAnAccount),
+              AppText(AppString.alreadyHaveAnAccount,fontFamily: AppFont.medium),
               SizedBox(width: Get.width * 0.020),
               Flexible(
                 child: InkWell(
@@ -196,13 +230,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       transition: Transition.rightToLeft,
                       duration:  Duration(milliseconds: 400),
                     );
-
                   },
                   child: AppText(
                     "Sign In",
                     overflow: TextOverflow.ellipsis,
                     color: AppColor.textBlack,
-                    fontWeight: FontWeight.bold,
+                    fontFamily: AppFont.semiBold,
                   ),
                 ),
               ),

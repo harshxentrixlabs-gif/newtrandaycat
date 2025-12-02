@@ -1,13 +1,13 @@
 {
-  "hiWelcomeBack": "Hi,WelcomeB ack",
+  "hiWelcomeBack": "Hi,Welcome Back",
   "singleIntoAccessYourAccount": "Single In to Access Your Account",
   "demoLogin": "Demo Login",
-  "email": "Email",
+  "email": "Email Address",
   "enterYourEmailAddress": "Enter your email address",
   "continueWithEmail": "Continue With Email",
   "orContinueWith": "Or Continue With",
   "googleLogin": "Google Login",
-  "doNotHaveAccount": "Google LoginDon't have account?",
+  "doNotHaveAccount": "Don't have account?",
   "signUp": "Sign Up",
   "sellerDemoAccount": "Seller Demo Account",
   "fillInYourDetailsToCreateYourAccount": "Fill in your details to create your account.",
@@ -25,12 +25,12 @@
   "youHveLoggedInSuccessfully": "You have logged in successfully",
   "accessTOYou": "You have logged in successfully",
   "continueButton": "Continue",
-  "makeItFashionable": "MAKE IT FASHIONABLE",
-  "shopTheModernEssentials": "SHOP THE MODERN ESSENTIALS",
-  "newClothsNewPassion": "NEW CLOTHS NEW PASSION",
-  "withnewFashionStyle": "With new fashion style",
-  "withMostModernFashionStyle": "With most modern fashion style",
-  "withFreshFashionTastes": "With fresh fashion tastes",
+  "makeItFashionable": "Find the best  fashion style for you",
+  "shopTheModernEssentials": "Define Yourself in Your unique way",
+  "newClothsNewPassion": "Start discover your unique fashion style",
+  "withnewFashionStyle": "Get exclusive limited apparel that only you have! Made by famous brands.",
+  "withMostModernFashionStyle": "Get exclusive limited apparel that only you have! Made by famous brands.",
+  "withFreshFashionTastes": "Get exclusive limited apparel that only you have! Made by famous brands.",
   "sendOTP": "Send OTP",
   "demoOtp": "Demo Otp",
   "notes": "Note : Since This is a demo APK,OTP auto-fill is enabled. In the regular app,the full verification process will be properly implemented.",
@@ -174,7 +174,8 @@
   "forgotPassword": "Forgot Password",
   "enterYourFirstName": "Enter your first name",
   "completeYourAccount": "Complete Your Account",
-  "mobileLogin": "Mobile Login"
+  "mobileLogin": "Mobile Login",
+  "contactNumber": "Contact Number"
 
 }
 

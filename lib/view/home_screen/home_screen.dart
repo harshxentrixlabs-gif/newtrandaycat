@@ -1,5 +1,6 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:trendycart/app_string/app_string.dart';
 import 'package:trendycart/utils/app_color.dart';
@@ -17,7 +18,9 @@ import 'package:trendycart/view/notification_screen/notification_screen.dart';
 import 'package:trendycart/view/popular_products/popular_product.dart';
 import 'package:trendycart/view/product_details_screen/product_details_screen.dart';
 import 'package:trendycart/view/search_screen/search_screen.dart';
-import '../navigation_menu/controller/navigation_controller.dart';
+import '../../main.dart';
+import '../../utils/common_font.dart';
+import '../bottom_bar/controller/bottom_controller.dart';
 import '../shorts_screen/controller/shorts_controller.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -43,187 +46,198 @@ class _HomeScreenState extends State<HomeScreen> {
     AppLogs.log("Home Screen");
   }
 
+
   NavigationController navigationController = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColor.background,
-      appBar: CommonAppBar(
-        name: "",
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: Get.width * 0.07),
-            child: Row(
-              children: [
-                SizedBox(width: Get.width * 0.040),
-                InkWell(
-                  onTap: () {
-                    Get.to(
-                      () => NotificationScreen(),
-                      transition: Transition.rightToLeft,
-                    );
-                  },
-                  child: AppImage.svg(AppIcons.notification, height: 26),
-                ),
-              ],
-            ),
-          ),
-        ],
-        onTap: () {
-          navigationController.changeIndex(4);
-        },
-        image: AppIcons.title,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: Get.width * 0.040,
-            vertical: Get.height * 0.010,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-                  GestureDetector(
-                    onTap: () {
-                      Get.to(() => SearchScreen(),);
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.8),
-                        borderRadius: BorderRadius.circular(100),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withValues(alpha: 0.2),
-                            spreadRadius: 0,
-                            blurRadius: 8,
-                            offset: Offset(0, 0),
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Row(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: AppColor.primary,
-                                shape: BoxShape.circle,
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Icon(Icons.search, color: Colors.white),
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            AppText("Search for Products & More"),
-                          ],
-                        ),
-                      ),
-                    ),
-              ),
-              SizedBox(height: Get.height * 0.020),
-              commonViewAllAndTitle(
-                title: AppString.newCategories,
-                images: '',
-                onTap: () {
-                  AppLogs.log("New Category");
-                  Get.to(
-                    () => NewCategories(),
-                    transition: Transition.rightToLeft,
-                  );
-                },
-              ),
-              SizedBox(height: Get.height * 0.020),
-              Obx(
-                () => commonNewCategoriesListName((catId) {
-                  // homeController.getRelatedProductsByCategory(catId);
-                }),
-              ),
-              if (homeController.liveSellerResponse.isNotEmpty)
-                Column(
+    return SafeArea(
+      child: AnnotatedRegion(
+        value:  SystemUiOverlayStyle(
+          statusBarColor: Color(0xffffdabe),
+          statusBarIconBrightness: Brightness.dark,
+        ),
+        child: Scaffold(
+          backgroundColor: AppColor.background,
+          appBar: CommonAppBar(
+            name: "",
+            actions: [
+              Padding(
+                padding: EdgeInsets.only(right: Get.width * 0.07),
+                child: Row(
                   children: [
-                    Row(
-                      children: [
-                        AppImage.svg(AppIcons.liveSelling),
-                        SizedBox(width: Get.width * 0.025),
-                        AppText(
-                          AppString.liveSelling,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ],
+                    SizedBox(width: Get.width * 0.040),
+                    InkWell(
+                      onTap: () {
+                        Get.to(
+                          () => NotificationScreen(),
+                          transition: Transition.rightToLeft,
+                        );
+                      },
+                      child: AppImage.svg(AppIcons.notification, height: 26),
                     ),
-                    SizedBox(height: Get.height * 0.020),
-                    Obx(() => commonLiveSelling(() {})),
-                    SizedBox(height: Get.height * 0.020),
                   ],
                 ),
-              commonViewAllAndTitle(
-                title: AppString.shorts,
-                images: AppIcons.menu,
-                onTap: () {
-                  AppLogs.log("Short");
-                  navigationController.changeIndex(1);
-                },
-              ),
-              SizedBox(height: Get.height * 0.020),
-              Obx(
-                () => commonShorts(() {
-                  navigationController.changeIndex(1);
-                }),
-              ),
-              SizedBox(height: Get.height * 0.020),
-              commonViewAllAndTitle(
-                title: AppString.liveAuction,
-                images: AppIcons.liveAuction,
-                onTap: () {
-                  AppLogs.log("Live Auction");
-                  Get.to(
-                    () => NewCategories(),
-                    transition: Transition.rightToLeft,
-                  );
-                },
-              ),
-              SizedBox(height: Get.height * 0.020),
-              Obx(
-                () => newCollectionList(
-                  onTap: (productData) {
-                    Get.to(
-                      () => ProductDetailsScreen(productData: productData),
-                    );
-                  },
-                ),
-              ),
-              SizedBox(height: Get.height * 0.020),
-              commonViewAllAndTitle(
-                title: AppString.popularProducts,
-                onTap: () {
-                  AppLogs.log("Popular Products");
-                  Get.to(
-                    () => PopularProduct(),
-                    transition: Transition.rightToLeft,
-                  );
-                },
-                images: AppIcons.popular,
-              ),
-              SizedBox(height: Get.height * 0.020),
-              Obx(
-                () => popularProductsList(
-                  onTap: (productData) {
-                    Get.to(
-                      () => ProductDetailsScreen(productData: productData),
-                    );
-                  },
-                ),
-              ),
-              SizedBox(height: Get.height * 0.020),
-              AppText(AppString.justForYou, fontWeight: FontWeight.w600),
-              Obx(
-                () => commonJustForYou((just) {
-                  Get.to(() => ProductDetailsScreen(productData: just),transition: Transition.rightToLeft);
-                }),
               ),
             ],
+            onTap: () {
+              navigationController.changeIndex(4);
+            },
+            image: AppIcons.title,
+          ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: Get.width * 0.040,
+                vertical: Get.height * 0.010,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                      GestureDetector(
+                        onTap: () {
+                          Get.to(() => SearchScreen(),);
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.8),
+                            borderRadius: BorderRadius.circular(100),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withValues(alpha: 0.2),
+                                spreadRadius: 0,
+                                blurRadius: 8,
+                                offset: Offset(0, 0),
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Row(
+                              children: [
+                                Center(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: AppColor.primary,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Icon(Icons.search, color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                Flexible(child: AppText("Search for Products & More",fontFamily: AppFont.medium,)),
+                              ],
+                            ),
+                          ),
+                        ),
+                  ),
+                  SizedBox(height: Get.height * 0.020),
+                  commonViewAllAndTitle(
+                    title: AppString.newCategories,
+                    images: '',
+                    onTap: () {
+                      AppLogs.log("New Category");
+                      Get.to(
+                        () => NewCategories(),
+                        transition: Transition.rightToLeft,
+                      );
+                    },
+                  ),
+                  SizedBox(height: Get.height * 0.020),
+                  Obx(
+                    () => commonNewCategoriesListName((catId) {
+                      // homeController.getRelatedProductsByCategory(catId);
+                    }),
+                  ),
+                  if (homeController.liveSellerResponse.isNotEmpty)
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            AppImage.svg(AppIcons.liveSelling),
+                            SizedBox(width: Get.width * 0.025),
+                            AppText(
+                              AppString.liveSelling,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: Get.height * 0.020),
+                        Obx(() => commonLiveSelling(() {})),
+                        SizedBox(height: Get.height * 0.020),
+                      ],
+                    ),
+                  commonViewAllAndTitle(
+                    title: AppString.shorts,
+                    images: AppIcons.menu,
+                    onTap: () {
+                      AppLogs.log("Short");
+                      navigationController.changeIndex(1);
+                    },
+                  ),
+                  SizedBox(height: Get.height * 0.020),
+                  Obx(
+                    () => commonShorts(() {
+                      navigationController.changeIndex(1);
+                    }),
+                  ),
+                  SizedBox(height: Get.height * 0.020),
+                  commonViewAllAndTitle(
+                    title: AppString.liveAuction,
+                    images: AppIcons.liveAuction,
+                    onTap: () {
+                      AppLogs.log("Live Auction");
+                      Get.to(
+                        () => NewCategories(),
+                        transition: Transition.rightToLeft,
+                      );
+                    },
+                  ),
+                  SizedBox(height: Get.height * 0.020),
+                  Obx(
+                    () => newCollectionList(
+                      onTap: (productData) {
+                        Get.to(
+                          () => ProductDetailsScreen(productData: productData),
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(height: Get.height * 0.020),
+                  commonViewAllAndTitle(
+                    title: AppString.popularProducts,
+                    onTap: () {
+                      AppLogs.log("Popular Products");
+                      Get.to(
+                        () => PopularProduct(),
+                        transition: Transition.rightToLeft,
+                      );
+                    },
+                    images: AppIcons.popular,
+                  ),
+                  SizedBox(height: Get.height * 0.020),
+                  Obx(
+                    () => popularProductsList(
+                      onTap: (productData) {
+                        Get.to(
+                          () => ProductDetailsScreen(productData: productData),
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(height: Get.height * 0.020),
+                  AppText(AppString.justForYou, fontWeight: FontWeight.w600),
+                  Obx(
+                    () => commonJustForYou((just) {
+                      Get.to(() => ProductDetailsScreen(productData: just),transition: Transition.rightToLeft);
+                    }),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -241,13 +255,13 @@ class _HomeScreenState extends State<HomeScreen> {
           AppImage.svg(images, height: Get.height * 0.030),
           SizedBox(width: Get.width * 0.015),
         ],
-        AppText(title, fontWeight: FontWeight.w600, fontSize: 16),
+        Expanded(child: AppText(title, fontFamily: AppFont.bold, fontSize: 16)),
         Spacer(),
         GestureDetector(
           onTap: onTap,
           child: AppText(
             AppString.seeAll,
-            fontWeight: FontWeight.w600,
+            fontFamily: AppFont.semiBold,
             color: Colors.grey,
           ),
         ),
@@ -324,7 +338,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: AppText("85k View", color: AppColor.textWhite),
+                      child: AppText("85k View", color: AppColor.textWhite,fontFamily: AppFont.medium,),
                     ),
                   ],
                 ),
@@ -414,14 +428,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     SizedBox(height: 15),
-                    AppText(
-                      category.name,
-                      fontSize: Get.height * 0.014,
-                      color: AppColor.textBlack,
-                      fontWeight: FontWeight.bold,
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                    Flexible(
+                      child: AppText(
+                        category.name,
+                        fontSize: Get.height * 0.014,
+                        color: AppColor.textBlack,
+                        fontFamily: AppFont.semiBold,
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),
@@ -442,7 +458,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           AppImage.svg(AppIcons.noData),
           SizedBox(height: 15,),
-          AppText("No Data"),
+          AppText("No Data",fontFamily: AppFont.semiBold,color: Colors.grey,),
         ],
       ))
           : ListView.builder(
@@ -490,27 +506,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                             ),
-                            // Positioned(
-                            //   top: 6,
-                            //   right: 6,
-                            //   child: GestureDetector(
-                            //     onTap: () =>
-                            //         homeController.toggleFavorite(index),
-                            //     child: Container(
-                            //       padding: const EdgeInsets.all(5),
-                            //       decoration: const BoxDecoration(
-                            //         color: Colors.white70,
-                            //         shape: BoxShape.circle,
-                            //       ),
-                            //       child: Icon(
-                            //         isFav
-                            //             ? Icons.favorite
-                            //             : Icons.favorite_border,
-                            //         color: isFav ? Colors.red : Colors.black54,
-                            //       ),
-                            //     ),
-                            //   ),
-                            // ),
                           ],
                         ),
                         Expanded(
@@ -525,7 +520,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 AppText(
                                   name,
                                   fontSize: Get.height * 0.014,
-                                  fontWeight: FontWeight.w600,
+                                  fontFamily: AppFont.bold,
                                   color: AppColor.textBlack,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -550,6 +545,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Expanded(
                                         child: AppText(
                                           "No Review",
+                                          fontFamily: AppFont.regular,
                                           overflow: TextOverflow.ellipsis,
                                           fontSize: Get.height * 0.014,
                                         ),
@@ -563,6 +559,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     desc,
                                     fontSize: Get.height * 0.013,
                                     color: Colors.grey[700],
+                                    fontFamily: AppFont.regular,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
@@ -635,7 +632,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           child: Row(
                             children: [
-                              AppText("4.5", fontSize: 12),
+                              AppText("4.5", fontSize: 12,fontFamily: AppFont.bold,),
                               SizedBox(width: 2),
                               AppImage.svg(AppIcons.star, height: 18, color: Colors.yellow)
                             ],
@@ -656,7 +653,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             fontSize: Get.height * 0.014,
-                            fontWeight: FontWeight.w600,
+                            fontFamily: AppFont.bold,
                             color: AppColor.textBlack,
                           ),
                           SizedBox(height: 8),
@@ -668,7 +665,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   "\$ $price",
                                   fontSize: Get.height * 0.016,
                                   color: AppColor.price,
-                                  fontWeight: FontWeight.bold,
+                                  fontFamily: AppFont.bold,
                                 ),
                                 Container(
                                   decoration: BoxDecoration(
@@ -681,7 +678,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       "Buy",
                                       fontSize: Get.height * 0.014,
                                       color: AppColor.textWhite,
-                                      fontWeight: FontWeight.bold,
+                                      fontFamily: AppFont.bold,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
@@ -750,7 +747,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Flexible(
                               child: AppText(
                                 just.productName.toString(),
-                                fontWeight: FontWeight.bold,
+                                fontFamily: AppFont.bold,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
@@ -767,6 +764,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ? 'No Reviews'
                                       : '${just.review} Reviews',
                                   fontSize: Get.height * 0.012,
+                                  fontFamily:AppFont.bold,
                                   color: AppColor.textBlack,
                                 ),
                               ],
@@ -803,6 +801,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                     child: AppText(
                                       v.toString(),
+                                      fontFamily: AppFont.medium,
                                       fontSize: Get.height * 0.010,
                                     ),
                                   );
@@ -819,7 +818,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               '\$ ${just.price}',
                               fontSize: Get.height * 0.014,
                               color: AppColor.price,
-                              fontWeight: FontWeight.bold,
+                              fontFamily: AppFont.bold,
                               overflow: TextOverflow.ellipsis,
                             ),
                             Container(

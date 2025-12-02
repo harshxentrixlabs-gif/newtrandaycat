@@ -10,6 +10,7 @@ import '../../utils/app_color.dart';
 import '../../utils/app_icons.dart';
 import '../../utils/common/app_image.dart';
 import '../../utils/common/app_text.dart';
+import '../../utils/common_font.dart';
 import '../home_screen/controller/home_controller.dart';
 
 class NewCategories extends StatefulWidget {
@@ -117,10 +118,7 @@ class _NewCategoriesState extends State<NewCategories> {
                           color: homeController.selectedIndex.value == index
                               ? Colors.white
                               : AppColor.textBlack ,
-                          fontWeight:
-                          homeController.selectedIndex.value == index
-                              ? FontWeight.bold
-                              : FontWeight.w500,
+                          fontFamily: AppFont.semiBold,
                         ),
                       ],
                     ),
@@ -145,7 +143,7 @@ class _NewCategoriesState extends State<NewCategories> {
                 children: [
           AppImage.svg(AppIcons.noData),
           SizedBox(height: 15,),
-          AppText("No Data"),
+          AppText("No Data",fontFamily:AppFont.semiBold,),
                 ],
               )),
         )
@@ -227,7 +225,7 @@ class _NewCategoriesState extends State<NewCategories> {
                           ),
                           child: Row(
                             children: [
-                              AppText("4.5", fontSize: 12),
+                              AppText("4.5", fontSize: 12, fontFamily: AppFont.bold,),
                               SizedBox(width: 2),
                               AppImage.svg(AppIcons.star, height: 18, color: Colors.yellow)
                             ],
@@ -246,8 +244,8 @@ class _NewCategoriesState extends State<NewCategories> {
                         children: [
                           AppText(
                             name,
+                            fontFamily: AppFont.bold,
                             fontSize: Get.height * 0.014,
-                            fontWeight: FontWeight.w600,
                             color: AppColor.textBlack,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -256,6 +254,7 @@ class _NewCategoriesState extends State<NewCategories> {
                             desc,
                             fontSize: Get.height * 0.013,
                             color: Colors.grey[700],
+                            fontFamily: AppFont.medium,
                             overflow: TextOverflow.ellipsis,
                           ),
                           Expanded(
@@ -266,7 +265,7 @@ class _NewCategoriesState extends State<NewCategories> {
                                   "₹$price",
                                   fontSize: Get.height * 0.016,
                                   color: AppColor.price,
-                                  fontWeight: FontWeight.bold,
+                                  fontFamily: AppFont.bold,
                                 ),
                                 Container(
                                   decoration: BoxDecoration(
@@ -279,7 +278,7 @@ class _NewCategoriesState extends State<NewCategories> {
                                       "Buy",
                                       fontSize: Get.height * 0.014,
                                       color: AppColor.textWhite,
-                                      fontWeight: FontWeight.bold,
+                                      fontFamily: AppFont.bold,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),

@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-
 import '../app_color.dart';
+import '../common_font.dart';
+import 'app_image.dart';
 import 'app_text.dart';
 
 class OutlineWhiteButton extends StatelessWidget {
   final String text;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final Widget? icon;
   final double height;
   final double width;
   final double radius;
   final Color? textColor;
   final Color? borderColor;
+  final String? image;
 
   const OutlineWhiteButton({
     super.key,
@@ -23,6 +25,7 @@ class OutlineWhiteButton extends StatelessWidget {
     this.radius = 100,
     this.textColor,
     this.borderColor,
+    this.image,
   });
 
   @override
@@ -36,34 +39,51 @@ class OutlineWhiteButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColor.textWhite,
           borderRadius: BorderRadius.circular(radius),
+          border: Border.all(color: borderColor ?? Colors.grey),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.2),
+              color: Colors.grey.withOpacity(0.2),
               blurRadius: 8,
               offset: Offset(0, 0),
             ),
           ],
         ),
-        child: Center(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (icon != null) ...[
-                icon!,
-                const SizedBox(width: 8),
-              ],
-              AppText(
-                text,
-                style: TextStyle(
-                  color: textColor ?? AppColor.textBlack,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (image != null) ...[
+              AppImage.svg(image!, height: 22, width: 22),
+              const SizedBox(width: 8),
+            ],
+            if (icon != null) ...[
+              icon!,
+              const SizedBox(width: 8),
+            ],
+
+            MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                textScaleFactor: MediaQuery.of(context)
+                    .textScaleFactor
+                    .clamp(1.0, 1.1),
+              ),
+              child: Center(
+                child: AppText(
+                  text,
+                  maxLines: 1,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: AppFont.semiBold,
+                    color: textColor ?? AppColor.textBlack,
+                  ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
+
+
       ),
     );
   }

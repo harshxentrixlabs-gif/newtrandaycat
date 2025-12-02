@@ -4,6 +4,7 @@ import 'package:trendycart/utils/app_print.dart';
 import 'package:trendycart/utils/common/app_appbar.dart';
 import 'package:trendycart/utils/common/app_button_v1.dart';
 import 'package:trendycart/utils/common/app_text.dart';
+import 'package:trendycart/utils/common_font.dart';
 import 'package:trendycart/view/change_password/controller/change_controller.dart';
 
 import '../../app_string/app_string.dart';
@@ -26,6 +27,22 @@ class _ChangePasswordState extends State<ChangePassword> {
     return Scaffold(
       backgroundColor: AppColor.background,
       appBar: AppAppBar(title: AppString.changePassword),
+      bottomSheet:  Container(
+        color: Colors.white,
+        child: Padding(
+          padding:  EdgeInsets.symmetric(horizontal: 15.0,vertical: 30),
+          child: CommonBlackButton(
+            title: AppString.submit,
+            onTap: () {
+              if (_formKey.currentState!.validate()) {
+                AppLogs.log(" Continue login...");
+              } else {
+                AppLogs.log(" Validation failed");
+              }
+            },
+          ),
+        ),
+      ),
       body: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: Get.width * 0.030,
@@ -39,11 +56,11 @@ class _ChangePasswordState extends State<ChangePassword> {
               children: [
                 AppText(
                   AppString.theNewPasswordMustEDifferentBeFromTheCurrentPassword,
-                  fontSize: Get.height * 0.012,
-                  color: Colors.grey,
+                  fontSize: Get.height * 0.016,
+                  fontFamily: AppFont.semiBold,
                 ),
                 SizedBox(height: Get.height * 0.080),
-                AppText(AppString.oldPassword, fontSize: Get.height * 0.012),
+                AppText(AppString.oldPassword, fontSize: Get.height * 0.012,fontFamily: AppFont.semiBold,),
                 SizedBox(height: Get.height * 0.010),
                 Obx(
                   () => CommonTextField(
@@ -71,7 +88,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                 SizedBox(height: Get.height * 0.050),
                 Divider(color: Colors.black),
                 SizedBox(height: Get.height * 0.020),
-                AppText(AppString.newPassword, fontSize: Get.height * 0.012),
+                AppText(AppString.newPassword, fontSize: Get.height * 0.012,fontFamily: AppFont.semiBold,),
                 SizedBox(height: Get.height * 0.010),
                 Obx(
                   () => CommonTextField(
@@ -97,7 +114,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                   ),
                 ),
                 SizedBox(height: Get.height * 0.020),
-                AppText(AppString.confirmPassword, fontSize: Get.height * 0.012),
+                AppText(AppString.confirmPassword, fontSize: Get.height * 0.012,fontFamily: AppFont.semiBold,),
                 SizedBox(height: Get.height * 0.010),
                 Obx(
                   () => CommonTextField(
@@ -126,12 +143,14 @@ class _ChangePasswordState extends State<ChangePassword> {
                 SizedBox(height: Get.height * 0.010),
                 Row(
                   children: [
-                    Icon(Icons.check, size: 20),
+                    Icon(Icons.check, size: 20,color: Colors.green,),
                     SizedBox(width: Get.width * 0.008),
                     Expanded(
                       child: AppText(
                         "There must be at least 8 characters",
                         fontSize: Get.height * 0.014,
+                        color: Colors.green,
+                        fontFamily: AppFont.semiBold,
                       ),
                     ),
                   ],
@@ -139,26 +158,17 @@ class _ChangePasswordState extends State<ChangePassword> {
                 SizedBox(height: Get.height * 0.008),
                 Row(
                   children: [
-                    Icon(Icons.check, size: 20),
+                    Icon(Icons.check, size: 20,color: Colors.green,),
                     SizedBox(width: Get.width * 0.008),
                     Expanded(
                       child: AppText(
                         "There must be a unique code like @!#",
                         fontSize: Get.height * 0.014,
+                        color: Colors.green,
+                        fontFamily: AppFont.semiBold,
                       ),
                     ),
                   ],
-                ),
-                SizedBox(height: Get.height * 0.040),
-                CommonButton(
-                  title: AppString.submit,
-                  onTap: () {
-                    if (_formKey.currentState!.validate()) {
-                      AppLogs.log(" Continue login...");
-                    } else {
-                      AppLogs.log(" Validation failed");
-                    }
-                  },
                 ),
               ],
             ),

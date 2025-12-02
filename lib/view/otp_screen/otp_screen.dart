@@ -11,6 +11,7 @@ import 'package:trendycart/utils/common/app_text.dart';
 import 'package:trendycart/view/otp_screen/controller/otp_controller.dart';
 
 import '../../utils/common/app_bottom_sheet.dart';
+import '../../utils/common_font.dart';
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({super.key});
@@ -34,6 +35,7 @@ class _OtpScreenState extends State<OtpScreen> {
           children: [
             AppText(
               AppString.notes,
+              fontFamily: AppFont.bold,
             ),
             SizedBox(height: Get.height * 0.020),
             CommonButton(
@@ -66,16 +68,17 @@ class _OtpScreenState extends State<OtpScreen> {
                   AppText(
                     AppString.enterOTP,
                     fontSize: Get.width * 0.040,
-                    fontWeight: FontWeight.bold,
+                      fontFamily: AppFont.bold,
                   ),
                   SizedBox(height: Get.height * 0.010),
                   AppText(
                     AppString.weHaveJustSentYour6DigitCodeVlaYourPhone,
                     fontSize: Get.width * 0.030,
+                    fontFamily: AppFont.regular,
                   ),
                   AppText(
                     "+91",
-                    fontWeight: FontWeight.bold,
+                    fontFamily: AppFont.bold,
                     fontSize: Get.width * 0.030,
                   ),
                 ],
@@ -113,7 +116,7 @@ class _OtpScreenState extends State<OtpScreen> {
 
 
                     },
-                    child: AppText(AppString.resendCode,color: AppColor.textBlack,fontWeight: FontWeight.bold,))
+                    child: AppText(AppString.resendCode,color: AppColor.textBlack,fontFamily: AppFont.bold,))
               ],
             ),
             Spacer(),

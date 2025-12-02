@@ -1,5 +1,7 @@
 import 'dart:developer' as AppLogs;
+import 'dart:ui';
 
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../../service/api_config.dart';
@@ -11,7 +13,7 @@ import '../model/product_details_model.dart';
 
 class ProductController extends GetxController{
   RxInt selectedIndex = 0.obs;
-
+ RxBool isLoading = false.obs;
 
   RxList<Product> product = <Product>[].obs;
 
@@ -52,26 +54,37 @@ class ProductController extends GetxController{
 
 
   Future<void> addProduct({required String productId}) async {
+    if (isLoading.value) return;
+
     try {
+      isLoading.value = true;
       final api = AppApi.getInstance();
+      final body = {
+        "userId": "691aaefdf4b6f3b0fa2d1060",
+        "productId": productId,
+        "attributesArray": [],
+        "productQuantity": 1,
+      };
+
+      AppLogs.log("[addProduct] BODY : $body");
 
       final response = await api.post(
         ApiConfig.addToCart,
-        data: {
-          "userId": "691aaefdf4b6f3b0fa2d1060",
-          "productId": productId,
-          "attributesArray": [],
-          "productQuantity": 1,
-        },
+        data: body,
       );
-      AppToast.success("Product added to cart!");
-      AppLogs.log("[addProduct] Add to cart success: $response");
-    } catch (e) {
-      AppLogs.log("[addProduct] Error: $e`");
 
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        AppToast.success("Product added to cart!");
+      }
+
+      AppLogs.log("[addProduct] SUCCESS: ${response.data}");
+    } catch (e) {
+      AppLogs.log("[addProduct] ERROR: $e");
+    } finally {
+      isLoading.value = false;
+      update();
     }
   }
-
 
 
 

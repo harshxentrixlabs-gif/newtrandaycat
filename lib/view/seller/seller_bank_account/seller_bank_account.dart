@@ -5,6 +5,7 @@ import 'package:trendycart/view/seller/seller_bank_account/controller/bank_contr
 
 import '../../../utils/app_color.dart';
 import '../../../utils/common/app_appbar.dart';
+import '../../../utils/common/app_loader.dart';
 import '../../../utils/common/app_text.dart';
 
 class SellerBankAccount extends StatelessWidget {
@@ -20,7 +21,7 @@ class SellerBankAccount extends StatelessWidget {
 
       body: Obx(() {
         if (controller.isLoading.value) {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: AppLoaderWidget());
         }
 
         if (controller.bankList.isEmpty) {

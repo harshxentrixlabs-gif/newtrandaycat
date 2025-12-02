@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../utils/app_color.dart';
 import '../../../utils/common/app_image.dart';
 import '../../../utils/common/app_text.dart';
+import '../../../utils/common_font.dart';
 
 class ProfileContainerCommon extends StatelessWidget {
   const ProfileContainerCommon({super.key, required this.images, required this.title, required this.onTap});
@@ -38,7 +39,7 @@ class ProfileContainerCommon extends StatelessWidget {
                 child: AppImage.svg(images,height: 25,),
               ),
               SizedBox(width: Get.width * 0.020,),
-              AppText(title,color: AppColor.textBlack,fontWeight: FontWeight.w500,),
+              AppText(title,color: AppColor.textBlack,fontFamily: AppFont.semiBold,),
               Spacer(),
               Icon(Icons.arrow_forward_ios_outlined,color: Colors.black,size: 20,)
             ],

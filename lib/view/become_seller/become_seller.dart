@@ -8,7 +8,9 @@ import 'package:trendycart/utils/common/app_button_v1.dart';
 import 'package:trendycart/utils/common/app_image.dart';
 import 'package:trendycart/utils/common/app_text.dart';
 import 'package:trendycart/utils/common/app_textfield.dart';
+import 'package:trendycart/utils/common_font.dart';
 import 'package:trendycart/view/become_seller/controller/become_controller.dart';
+import 'package:trendycart/view/verify_details/verify_details.dart';
 import '../../app_string/app_string.dart';
 import '../../utils/commons.dart';
 
@@ -28,9 +30,26 @@ class _BecomeSellerState extends State<BecomeSeller> {
     return Scaffold(
       backgroundColor: AppColor.background,
       appBar: AppAppBar(title: AppString.sellerAccount),
+      bottomSheet: Container(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 30,horizontal: 15),
+          child: CommonBlackButton(
+            title: AppString.next,
+            onTap: () {
+              Get.to(()=>VerifyDetails(),transition: Transition.rightToLeft);
+              // if (_formKey.currentState!.validate()) {
+              //   appPrint("Continue login...");
+              // } else {
+              //   appPrint("Validation failed");
+              // }
+            },
+          ),
+        ),
+      ),
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: Get.width * 0.035,
+          horizontal: Get.width * 0.050,
           vertical: Get.height * 0.020,
         ),
         child: SingleChildScrollView(
@@ -39,32 +58,31 @@ class _BecomeSellerState extends State<BecomeSeller> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      AppImage.svg(
-                        AppIcons.seller,
-                        height: Get.height * 0.040,
-                        color: AppColor.primary,
-                      ),
-                      SizedBox(height: Get.height * 0.014),
-                      AppText(
-                        AppString.completeYourSellerAccount,
-                        fontSize: Get.height * 0.022,
-                        fontWeight: FontWeight.bold,
-                        color: AppColor.primary,
-                      ),
-                      SizedBox(height: Get.height * 0.005),
-                      AppText(
-                        AppString.completeYourSellerAccount,
-                        fontSize: Get.height * 0.014,
-                      ),
-                    ],
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppImage.svg(
+                      AppIcons.sellerProfile,
+                      height: Get.height * 0.080,
+                    ),
+                    SizedBox(height: Get.height * 0.014),
+                    AppText(
+                      AppString.completeYourSellerAccount,
+                      fontSize: Get.height * 0.022,
+                      fontFamily: AppFont.medium,
+                      color: AppColor.textBlack,
+                    ),
+                    SizedBox(height: Get.height * 0.005),
+                    AppText(
+                      AppString.completeYourSellerAccount,
+                      fontSize: Get.height * 0.014,
+                      color: Colors.grey,
+                      fontFamily: AppFont.bold,
+                    ),
+                  ],
                 ),
-                SizedBox(height: Get.height * 0.020),
-                AppText(AppString.fullName, fontSize: Get.height * 0.012),
+                SizedBox(height: Get.height * 0.050),
+                AppText(AppString.fullName, fontSize: Get.height * 0.012,fontFamily: AppFont.semiBold,),
                 SizedBox(height: Get.height * 0.010),
                 CommonTextField(
                   controller: becomeController.nameController,
@@ -77,7 +95,7 @@ class _BecomeSellerState extends State<BecomeSeller> {
                   },
                 ),
                 SizedBox(height: Get.height * 0.020),
-                AppText(AppString.contactNumber, fontSize: Get.height * 0.012),
+                AppText(AppString.contactNumber, fontSize: Get.height * 0.012,fontFamily: AppFont.semiBold,),
                 SizedBox(height: Get.height * 0.010),
                 CommonTextField(
                   controller: becomeController.mobileNUmberController,
@@ -131,7 +149,7 @@ class _BecomeSellerState extends State<BecomeSeller> {
                   ),
                 ),
                 SizedBox(height: Get.height * 0.020),
-                AppText(AppString.email, fontSize: Get.height * 0.012),
+                AppText(AppString.email, fontSize: Get.height * 0.012,fontFamily: AppFont.semiBold,),
                 SizedBox(height: Get.height * 0.010),
                 CommonTextField(
                   controller: becomeController.emailController,
@@ -146,56 +164,52 @@ class _BecomeSellerState extends State<BecomeSeller> {
                   },
                 ),
                 SizedBox(height: Get.height * 0.020),
-                AppText("Business Type", fontSize: Get.height * 0.012),
+                AppText("Business Type", fontSize: Get.height * 0.012,fontFamily: AppFont.semiBold,),
                 SizedBox(height: Get.height * 0.010),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Obx(
-                      () => Row(
-                        children: [
-                          AppRadioButton<String>(
-                            value: 'option1',
-                            groupValue: becomeController.selectedOption.value,
-                            onChanged: (value) {
-                              becomeController.selectedOption(value);
-                            },
-                          ),
-                          AppText(
-                            "Individual Seller",
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
+                      () => Flexible(
+                        child: Row(
+                          children: [
+                            AppRadioButton<String>(
+                              value: 'option1',
+                              groupValue: becomeController.selectedOption.value,
+                              onChanged: (value) {
+                                becomeController.selectedOption(value);
+                              },
+                            ),
+                            Flexible(
+                              child: AppText(
+                                "Individual Seller",
+                                fontFamily: AppFont.semiBold,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     Obx(
-                      () => Row(
-                        children: [
-                          AppRadioButton<String>(
-                            value: 'option2',
-                            groupValue: becomeController.selectedOption.value,
-                            onChanged: (value) {
-                              becomeController.selectedOption(value);
-                            },
-                          ),
-                          AppText("Company", overflow: TextOverflow.ellipsis),
-                        ],
+                      () => Flexible(
+                        child: Row(
+                          children: [
+                            AppRadioButton<String>(
+                              value: 'option2',
+                              groupValue: becomeController.selectedOption.value,
+                              onChanged: (value) {
+                                becomeController.selectedOption(value);
+                              },
+                            ),
+                            Flexible(child: AppText("Company", overflow: TextOverflow.ellipsis,fontFamily: AppFont.semiBold,)),
+                          ],
+                        ),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: Get.height * 0.040),
-                CommonButton(
-                  title: AppString.next,
-                  onTap: () {
-                    if (_formKey.currentState!.validate()) {
-                      appPrint("Continue login...");
-                    } else {
-                      appPrint("Validation failed");
-                    }
-                  },
-                ),
-                SizedBox(height: Get.height * 0.020),
+
               ],
             ),
           ),

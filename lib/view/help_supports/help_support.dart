@@ -5,6 +5,7 @@ import 'package:trendycart/utils/common/app_appbar.dart';
 
 import '../../utils/app_color.dart';
 import '../../utils/common/app_text.dart';
+import '../../utils/common_font.dart';
 
 class HelpSupport extends StatefulWidget {
   const HelpSupport({super.key});
@@ -28,7 +29,7 @@ class _HelpSupportState extends State<HelpSupport> {
               title: AppText(
                 "Order & Delivery Info",
                 fontSize: 16,
-                fontWeight: FontWeight.w600,
+                fontFamily: AppFont.bold,
                 color: AppColor.textBlack,
               ),
               children: [
@@ -37,7 +38,7 @@ class _HelpSupportState extends State<HelpSupport> {
                   child: AppText(
                     "Please do not share your password or OTP with anyone...",
                     fontSize: 14,
-                    color: AppColor.textBlack,
+                      fontFamily: AppFont.semiBold
                   ),
                 ),
               ],
@@ -48,7 +49,7 @@ class _HelpSupportState extends State<HelpSupport> {
               title: AppText(
                 "App Usage Tips",
                 fontSize: 16,
-                fontWeight: FontWeight.w600,
+                fontFamily: AppFont.bold,
                 color: AppColor.textBlack,
               ),
               children: [
@@ -57,6 +58,7 @@ class _HelpSupportState extends State<HelpSupport> {
                   child: AppText(
                     "All payments are processed through trusted, encrypted gateways to ensure your financial data remains protected.",
                     fontSize: 14,
+                    fontFamily: AppFont.semiBold,
                     color: AppColor.textBlack,
                   ),
                 ),
@@ -69,7 +71,7 @@ class _HelpSupportState extends State<HelpSupport> {
               title: AppText(
                 "Terms & Delivery Info",
                 fontSize: 16,
-                fontWeight: FontWeight.w600,
+                fontFamily: AppFont.bold,
                 color: AppColor.textBlack,
               ),
               children: [
@@ -79,6 +81,8 @@ class _HelpSupportState extends State<HelpSupport> {
                     "We may update our Security Policy from time to time. Please review this page periodically for the latest version.",
                     fontSize: 14,
                     color: AppColor.textBlack,
+                    fontFamily: AppFont.semiBold,
+
                   ),
                 ),
               ],

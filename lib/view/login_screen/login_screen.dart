@@ -1,13 +1,10 @@
 import 'dart:developer' as AppLogs;
-
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:trendycart/app_string/app_string.dart';
 import 'package:trendycart/utils/app_icons.dart';
 import 'package:trendycart/utils/common/app_image.dart';
 import 'package:trendycart/utils/common/app_text.dart';
-import 'package:trendycart/view/home_screen/home_screen.dart';
 import 'package:trendycart/view/login_screen/controller/login_controller.dart';
 import '../../utils/app_color.dart';
 import '../../utils/app_loader.dart';
@@ -16,9 +13,8 @@ import '../../utils/common/app_loader.dart';
 import '../../utils/common/app_textfield.dart';
 import '../../utils/common/common_line.dart';
 import '../../utils/common/widgets.dart';
-import '../../utils/commons.dart';
+import '../../utils/common_font.dart';
 import '../mobile_screen/mobile_screen.dart';
-import '../navigation_menu/navigation_menu.dart';
 import '../sign_up_screen/sign_up_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -41,202 +37,172 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: AppColor.background,
-      body: Obx(()=>   Stack(
-        children: [
-          Column(
-            children: [
-              Container(
-                height: Get.height * 0.40,
-                width: double.infinity,
-                decoration: BoxDecoration(color: AppColor.primary),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+      backgroundColor: AppColor.background,
+      body: Obx(
+            () => SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                /// *** Header Image + Welcome Text Overlap ***
+                Stack(
+                  clipBehavior: Clip.none,
                   children: [
-                    AppText(
-                      AppString.hiWelcomeBack,
-                      fontSize: Get.height * 0.030,
-                      color: AppColor.textWhite,
-                      fontWeight: FontWeight.bold,
+                    SizedBox(
+                      height: Get.height * 0.33,
+                      width: double.infinity,
+                      child: Image.asset(
+                        AppIcons.login,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                    SizedBox(height: Get.height * 0.010),
-                    AppText(
-                      AppString.singleIntoAccessYourAccount,
-                      fontSize: Get.height * 0.018,
-                      color: AppColor.textWhite,
-                      fontWeight: FontWeight.bold,
+                    Positioned(
+                      bottom: -Get.height * 0.00,
+                      left: Get.width * 0.05,
+                      right: Get.width * 0.05,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                         Row(
+                          children: [
+                             AppText("Trendycart", fontFamily: AppFont.bold,fontSize: Get.height * 0.03,),
+                            AppImage.svg(AppIcons.loginIcons)
+                           ],
+                         ),
+                          AppText(
+                            AppString.hiWelcomeBack,
+                            fontSize: Get.height * 0.030,
+                            fontFamily: AppFont.bold,
+                            color: AppColor.textBlack,
+                          ),
+                          SizedBox(height: Get.height * 0.010),
+                          AppText(
+                            AppString.singleIntoAccessYourAccount,
+                            fontSize: Get.height * 0.014,
+                            color: Colors.grey,
+                              fontFamily: AppFont.medium
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            top: Get.height * 0.30,
-            bottom: 0,
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withValues(alpha: 0.5),
-                    spreadRadius: 5,
-                    blurRadius: 7,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-                color: Colors.white,
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Get.width * 0.030,
-                  vertical: Get.height * 0.030,
-                ),
-                child: SingleChildScrollView(
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AppText(AppString.email),
-                        SizedBox(height: Get.height * 0.010),
-                        CommonTextField(
-                          controller: loginController.emailController,
-                          hintText: AppString.enterYourEmailAddress,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'please Enter Email';
-                            } else if (!GetUtils.isEmail(value)) {
-                              return 'please Enter valid Email';
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(height: Get.height * 0.030),
-                        CommonButton(
-                          title: AppString.continueWithEmail,
-                          color: AppColor.primary,
-                          onTap: () {
+                SizedBox(height: Get.height * 0.02),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Get.width * 0.050),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AppText(AppString.email, fontFamily: AppFont.bold,),
+                      SizedBox(height: Get.height * 0.010,),
+
+                      CommonTextField(
+                        controller: loginController.emailController,
+                        hintText: AppString.enterYourEmailAddress,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter email';
+                          } else if (!GetUtils.isEmail(value)) {
+                            return 'Please enter valid email';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: Get.height * 0.030),
+                      CommonButton(
+                        title: AppString.continueWithEmail,
+                        color: AppColor.primary,
+                        onTap: () {
+                          if (_formKey.currentState!.validate()) {
                             AppLogs.log("Continue login...");
-                            if (_formKey.currentState!.validate()) {
-                              // loginController.loginMethod();
-                              AppLogs.log(" Continue login...");
-                            } else {
-                              AppLogs.log("Validation failed");
-                            }
-                          },
-                        ),
-                        SizedBox(height: Get.height * 0.040),
-                        commonRow(),
-                        SizedBox(height: Get.height * 0.040),
-                        CommonButton(
-                          onTap: () {
-                            AppLogs.log(AppString.demoLogin);
-                            // loginController.showDialog(
-                            //   onTap: () {
-                            //     loginController.googleLoginAndApiCall();
-                            //     // Get.offAll(
-                            //     //   () => NavigationMenu(),
-                            //     //   transition: Transition.rightToLeft,
-                            //     // );
-                            //   },
-                            // );
-                          },
-                          title: AppString.demoLogin,
-                          image: AppIcons.rocket,
-                        ),
-                        SizedBox(height: Get.height * 0.020),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: CommonButton(
-                                onTap: () {
-                                  AppLogs.log("Login mobile");
-                                  Get.to(
-                                    () => MobileScreen(),
-                                    transition: Transition.rightToLeft,
-                                  );
-                                },
-                                title: AppString.mobileLogin,
-                                image: AppIcons.phone,
-                              ),
-                            ),
-                            SizedBox(width: Get.width * 0.020),
+                          }
+                        },
+                      ),
+
+                      SizedBox(height: Get.height * 0.040),
+                      commonRow(),
+                      SizedBox(height: Get.height * 0.040),
+                      OutlineWhiteButton(
+                        onTap: () {
+                          AppLogs.log(AppString.demoLogin);
+                        },
+                        text: AppString.demoLogin,
+                      ),
+                      SizedBox(height: Get.height * 0.020),
+                      Row(
+                        children: [
                           Expanded(
-                              child:loginController.isLoading.value ? Center(child: AppLoaderWidget()) : CommonButton(
-                                onTap: () {
-                                  AppLogs.log("Google Login");
-                                  loginController.googleLoginAndApiCall();
-                                },
-                                title: AppString.googleLogin,
-                                image: AppIcons.google,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: Get.height * 0.030),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Flexible(
-                              child: AppText(
-                                AppString.doNotHaveAccount,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            SizedBox(width: Get.width * 0.020),
-                            InkWell(
+                            child: OutlineWhiteButton(
                               onTap: () {
                                 Get.to(
-                                  () => SignUpScreen(),
+                                      () => MobileScreen(),
                                   transition: Transition.rightToLeft,
                                 );
                               },
-                              child: AppText(
-                                AppString.signUp,
-                                color: AppColor.textBlack,
-                                fontWeight: FontWeight.bold,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                              image: AppIcons.phone, text: AppString.mobileLogin,
                             ),
-                          ],
-                        ),
-                        SizedBox(height: Get.height * 0.030),
-                        CommonButton(
-                          title: AppString.sellerDemoAccount,
-                          onTap: () {
-                            AppLogs.log("Seller Demo Account");
-                            // loginController.showDialog(onTap: () {});
-                          },
-                        ),
-                      ],
-                    ),
+                          ),
+                          SizedBox(width: Get.width * 0.020),
+                          Expanded(
+                            child: loginController.isLoading.value
+                                ? Center(child: AppLoaderWidget())
+                                : OutlineWhiteButton(
+                              onTap: () {
+                                loginController.googleLoginAndApiCall();
+                              },
+                              text: AppString.googleLogin,
+                              image: AppIcons.google,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(height: Get.height * 0.030),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          AppText(AppString.doNotHaveAccount,color: Colors.grey,),
+                          SizedBox(width: 6),
+                          InkWell(
+                            onTap: () {
+                              Get.to(() => SignUpScreen());
+                            },
+                            child: AppText(
+                              AppString.signUp,
+                              color: AppColor.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(height: Get.height * 0.030),
+                      CommonBlackButton(
+                        title: AppString.sellerDemoAccount,
+                        onTap: () {},
+                      ),
+                      SizedBox(height: Get.height * 0.040),
+                    ],
                   ),
                 ),
-              ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
-      )
     );
   }
 
+  /// Divider + or text
   Widget commonRow() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Expanded(child: CustomLine()),
-        SizedBox(width: Get.width * 0.040),
-        AppText(AppString.orContinueWith),
-        Divider(color: AppColor.textBlack),
-        SizedBox(width: Get.width * 0.040),
-        Expanded(child: CustomLine()),
+        Expanded(child: CustomLine(colors: [Colors.green,Colors.grey],)),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: AppText("OR",color: Colors.grey,),
+        ),
+        Expanded(child: CustomLine(colors: [Colors.green,Colors.grey],)),
       ],
     );
   }

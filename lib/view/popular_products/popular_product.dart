@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:trendycart/app_string/app_string.dart';
 import 'package:trendycart/utils/common/app_appbar.dart';
+import 'package:trendycart/utils/common_font.dart';
 import 'package:trendycart/view/home_screen/controller/home_controller.dart';
 
 import '../../utils/app_color.dart';
@@ -28,6 +29,7 @@ class _PopularProductState extends State<PopularProduct> {
   @override
   void initState() {
     // TODO: implement initState
+    homeController.popularProductMethods();
     super.initState();
   }
 
@@ -100,7 +102,7 @@ class _PopularProductState extends State<PopularProduct> {
                           AppText(
                             data.productName.toString(),
                             fontSize: Get.height * 0.014,
-                            fontWeight: FontWeight.w600,
+                            fontFamily: AppFont.bold,
                             color: AppColor.textBlack,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -111,7 +113,7 @@ class _PopularProductState extends State<PopularProduct> {
                                   '\$${data.price}',
                                   fontSize: Get.height * 0.016,
                                   color: AppColor.primary,
-                                  fontWeight: FontWeight.bold,
+                                  fontFamily: AppFont.bold,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Spacer(),
@@ -124,6 +126,7 @@ class _PopularProductState extends State<PopularProduct> {
                                   data.rating == null ? "0" : "No Review",
                                   fontSize: Get.height * 0.013,
                                   color: AppColor.textBlack,
+                                  fontFamily: AppFont.medium,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ],
@@ -133,7 +136,7 @@ class _PopularProductState extends State<PopularProduct> {
                             child: AppText(
                               data.description.toString(),
                               fontSize: Get.height * 0.013,
-                              fontWeight: FontWeight.w500,
+                              fontFamily: AppFont.regular,
                               color: Colors.grey[700],
                               overflow: TextOverflow.ellipsis,
                             ),

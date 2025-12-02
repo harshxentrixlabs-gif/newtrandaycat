@@ -8,6 +8,7 @@ import '../service/api_service.dart';
 import 'app_color.dart';
 import 'app_print.dart';
 import 'common/app_text.dart';
+import 'common_font.dart';
 
 double getSize(double value, {bool isHeight = false, bool isFont = false}) {
   if (isFont) {
@@ -150,12 +151,11 @@ class AppSwitch extends StatelessWidget {
     );
   }
 }
-
 class AppRadioButton<T> extends StatelessWidget {
   final T value;
   final T groupValue;
   final ValueChanged<T?> onChanged;
-  final String? label; // nullable text
+  final String? label;
 
   const AppRadioButton({
     Key? key,
@@ -167,42 +167,46 @@ class AppRadioButton<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final radio = Radio<T>(
+      value: value,
+      groupValue: groupValue,
+      onChanged: onChanged,
+      activeColor: AppColor.primary,
+      fillColor: MaterialStateProperty.resolveWith((states) {
+        if (states.contains(MaterialState.selected)) {
+          return AppColor.primary; // selected color
+        }
+        return Colors.black; // unselected border color
+      }),
+      visualDensity: VisualDensity.compact,
+    );
+
     if (label == null || label!.isEmpty) {
-      // Only radio button, no padding
-      return Radio<T>(
-        value: value,
-        groupValue: groupValue,
-        onChanged: onChanged,
-        activeColor: AppColor.primary,
-      );
-    } else {
-      // Radio with text
-      return InkWell(
-        onTap: () => onChanged(value),
-        borderRadius: BorderRadius.circular(8),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Radio<T>(
-              value: value,
-              groupValue: groupValue,
-              onChanged: onChanged,
-              activeColor: AppColor.primary,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              label!,
-              style: TextStyle(
-                color: AppColor.primary,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      );
+      return radio;
     }
+
+    return InkWell(
+      onTap: () => onChanged(value),
+      borderRadius: BorderRadius.circular(8),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          radio,
+          const SizedBox(width: 0),
+          Text(
+            label!,
+            style: const TextStyle(
+              color: Colors.black,
+              fontFamily: AppFont.semiBold,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
+
 
 class GradientBorder extends StatelessWidget {
   final double width;

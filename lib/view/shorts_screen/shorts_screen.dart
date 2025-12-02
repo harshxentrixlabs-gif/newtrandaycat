@@ -10,7 +10,9 @@ import '../../app_string/app_string.dart';
 import '../../utils/app_color.dart';
 import '../../utils/common/app_button_v1.dart';
 import '../../utils/common/app_image.dart';
+import '../../utils/common/app_loader.dart';
 import '../../utils/common/widgets.dart';
+import '../../utils/common_font.dart';
 import 'controller/shorts_controller.dart';
 
 class ShortsScreen extends StatefulWidget {
@@ -37,8 +39,6 @@ class _ShortsScreenState extends State<ShortsScreen> {
   void initState() {
     super.initState();
 
-
-    // INITIAL VIDEO LOAD
     if (controller.reel.isNotEmpty) {
       controller.initVideo(controller.reel[0].video);
     }
@@ -75,9 +75,7 @@ class _ShortsScreenState extends State<ShortsScreen> {
                                 ),
                               )
                             : Center(
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                ),
+                                child: AppLoaderWidget(),
                               ),
                       ),
                     ),
@@ -131,7 +129,7 @@ class _ShortsScreenState extends State<ShortsScreen> {
                                       AppText(
                                         "Report this product",
                                         fontSize: Get.height * 0.018,
-                                        fontWeight: FontWeight.bold,
+                                        fontFamily: AppFont.bold,
                                       ),
                                       SizedBox(height: 300),
                                       Row(
@@ -178,7 +176,7 @@ class _ShortsScreenState extends State<ShortsScreen> {
                               'Report',
                               color: Colors.white,
                               fontSize: Get.height * 0.012,
-                              fontWeight: FontWeight.bold,
+                              fontFamily: AppFont.bold,
                             ),
                           ),
                         ),
@@ -232,7 +230,7 @@ class _ShortsScreenState extends State<ShortsScreen> {
                                       AppText(
                                         userName,
                                         fontSize: Get.height * 0.015,
-                                        fontWeight: FontWeight.bold,
+                                        fontFamily: AppFont.medium,
                                         color: AppColor.textWhite,
                                       ),
                                       SizedBox(width: Get.width * 0.020),
@@ -254,7 +252,7 @@ class _ShortsScreenState extends State<ShortsScreen> {
                                             'Follow',
                                             color: Colors.white,
                                             fontSize: Get.height * 0.009,
-                                            fontWeight: FontWeight.bold,
+                                            fontFamily: AppFont.medium,
                                           ),
                                         ),
                                       ),
@@ -264,6 +262,7 @@ class _ShortsScreenState extends State<ShortsScreen> {
                                     userEmail,
                                     fontSize: Get.height * 0.012,
                                     color: AppColor.textWhite,
+                                    fontFamily: AppFont.regular,
                                   ),
                                 ],
                               ),
@@ -274,6 +273,7 @@ class _ShortsScreenState extends State<ShortsScreen> {
                             'User Info & Caption',
                             color: Colors.white,
                             fontSize: Get.height * 0.014,
+                            fontFamily: AppFont.regular,
                             overflow: TextOverflow.ellipsis,
                           ),
                           Obx(
@@ -327,6 +327,7 @@ class _ShortsScreenState extends State<ShortsScreen> {
                                                       color: AppColor.textWhite,
                                                       overflow:
                                                           TextOverflow.ellipsis,
+                                                      fontFamily: AppFont.bold,
                                                     ),
                                                   ),
                                                   SizedBox(height: 5),
@@ -349,8 +350,7 @@ class _ShortsScreenState extends State<ShortsScreen> {
                                                         child: AppText(
                                                           "\$ ${data.price}",
                                                           color: AppColor.price,
-                                                          fontWeight:
-                                                              FontWeight.bold,
+                                                          fontFamily: AppFont.bold,
                                                           overflow: TextOverflow
                                                               .ellipsis,
                                                         ),
@@ -382,9 +382,7 @@ class _ShortsScreenState extends State<ShortsScreen> {
                                                               overflow:
                                                                   TextOverflow
                                                                       .ellipsis,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
+                                                              fontFamily: AppFont.bold,
                                                               fontSize:
                                                                   Get.height *
                                                                   0.012,

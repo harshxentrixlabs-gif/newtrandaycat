@@ -6,17 +6,21 @@ import '../model/cart_model.dart';
 
 class CartsController extends GetxController {
   RxBool isLoading = false.obs;
-  RxBool isDeleting = false.obs;
   RxBool isUpdatingQty = false.obs;
 
   Rx<CartModel?> cartModel = Rx<CartModel?>(null);
   RxList<CartItem> cartList = <CartItem>[].obs;
 
-  String userId = "691aaefdf4b6f3b0fa2d1060";     // <-- change this
+  String userId = "691aaefdf4b6f3b0fa2d1060";
 
-  // -----------------------------------------------------
-  // 🔥 GET CART LIST
-  // -----------------------------------------------------
+  @override
+  void onInit() {
+    AppLogs.log("onInit() START");
+    getCartList();
+    AppLogs.log("onInit() END");
+    super.onInit();
+  }
+
   Future<void> getCartList() async {
     try {
       isLoading.value = true;
@@ -43,105 +47,99 @@ class CartsController extends GetxController {
     }
   }
 
-  // -----------------------------------------------------
-  // 🔥 UPDATE CART QUANTITY (PATCH CALL)
-  // -----------------------------------------------------
-  Future<void> updateQuantityAPI({
-    required CartItem item,
-    required int newQty,
+  Future<bool> updateProductQty({
+    required String productId,
+    required int quantity,
+    required List attributes,
   }) async {
+    AppLogs.log("updateProductQty() START");
+
     try {
-      AppLogs.log("Update");
-      isUpdatingQty.value = true;
-
-      final api = AppApi.getInstance();
-
       final body = {
-        "userId": "691aaefdf4b6f3b0fa2d1060",
-        "productId": item.productId.id,
-        "productQuantity": newQty,
-        "attributesArray": item.attributesArray,
+        "userId": userId,
+        "productId": productId,
+        "productQuantity": quantity,
+        "attributesArray": attributes,
       };
 
-      AppLogs.log("PATCH BODY : $body");
+      AppLogs.log("PATCH Body: $body");
 
-      final response = await api.patch(
-        ApiConfig.removeTOCart,
-        data: body,
+      final response = await AppApi.getInstance()
+          .patch(ApiConfig.updateCart, data: body);
+
+      AppLogs.log("Response: ${response.data}");
+
+      return response.data["status"] == true;
+    } catch (e) {
+      AppLogs.log("updateProductQty ERROR: $e");
+      return false;
+    }
+  }
+
+  RxSet<int> updatingIndexes = <int>{}.obs;
+
+  void increment(int index) async {
+    AppLogs.log(" increment() START index: $index");
+    updatingIndexes.add(index); // loader start
+
+    final cart = cartList[index];
+    final newQty = cart.productQuantity + 1;
+
+    cartList[index] = cart.copyWith(productQuantity: newQty);
+    cartList.refresh();
+
+    bool success = await updateProductQty(
+      productId: cart.productId.id,
+      quantity: -1, // backend +1
+      attributes: cart.attributesArray,
+    );
+
+    if (!success) {
+      cartList[index] = cart;
+      cartList.refresh();
+    }
+
+    updatingIndexes.remove(index);
+    AppLogs.log("increment() END --------------------------");
+  }
+
+  void decrement(int index) async {
+    AppLogs.log("decrement() START index: $index");
+    updatingIndexes.add(index);
+
+    final cart = cartList[index];
+
+    if (cart.productQuantity == 1) {
+      cartList.removeAt(index);
+      cartList.refresh();
+
+      await updateProductQty(
+        productId: cart.productId.id,
+        quantity: 1, // backend -1
+        attributes: cart.attributesArray,
       );
 
-      AppLogs.log("PATCH STATUS: ${response.statusCode}");
-      AppLogs.log("PATCH RESPONSE: ${response.data}");
-    } catch (e) {
-      AppLogs.log("PATCH ERROR: $e");
-    } finally {
-      isUpdatingQty.value = false;
-    }
-  }
-
-  // -----------------------------------------------------
-  // 🔥 INCREMENT QTY + CALL API
-  // -----------------------------------------------------
-  void incrementQuantity(int index) async {
-    final item = cartList[index];
-    final newQty = item.productQuantity + 1;
-
-    // Local update
-    cartList[index] = item.copyWith(productQuantity: newQty);
-    calculateTotal();
-
-    // API update
-    await updateQuantityAPI(item: item, newQty: newQty);
-  }
-
-  // -----------------------------------------------------
-  // 🔥 DECREMENT QTY + CALL API
-  // -----------------------------------------------------
-  void decrementQuantity(int index) async {
-    final item = cartList[index];
-
-    if (item.productQuantity <= 1) return;
-
-    final newQty = item.productQuantity - 1;
-
-    // Local update
-    cartList[index] = item.copyWith(productQuantity: newQty);
-    calculateTotal();
-
-    // API update
-    await updateQuantityAPI(item: item, newQty: newQty);
-  }
-
-  // -----------------------------------------------------
-  // 🔥 TOTAL CALCULATION
-  // -----------------------------------------------------
-  void calculateTotal() {
-    int total = 0;
-
-    for (var item in cartList) {
-      total += item.purchasedTimeProductPrice * item.productQuantity;
+      updatingIndexes.remove(index);
     }
 
-    cartModel.value = cartModel.value?.copyWith(subTotal: total);
-  }
+    final newQty = cart.productQuantity - 1;
+    cartList[index] = cart.copyWith(productQuantity: newQty);
+    cartList.refresh();
 
-  // -----------------------------------------------------
-  // 🔥 DELETE FULL CART
-  // -----------------------------------------------------
-  Future<void> deleteCart() async {
-    try {
-      isDeleting.value = true;
-      final api = AppApi.getInstance();
+    bool success = await updateProductQty(
+      productId: cart.productId.id,
+      quantity: 1, // backend -1
+      attributes: cart.attributesArray,
+    );
 
-      await api.delete("${ApiConfig.deleteCart}?userId=$userId");
-
-      cartList.clear();
-      cartModel.value = null;
-
-    } catch (e) {
-      AppLogs.log("Error $e");
-    } finally {
-      isDeleting.value = false;
+    if (!success) {
+      cartList[index] = cart;
+      cartList.refresh();
     }
+
+    updatingIndexes.remove(index);
+    AppLogs.log("decrement() END --------------------------");
   }
+
+
 }

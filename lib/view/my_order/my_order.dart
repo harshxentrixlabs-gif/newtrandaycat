@@ -2,8 +2,10 @@ import 'dart:developer' as AppLogs;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:trendycart/app_string/app_string.dart';
+import 'package:trendycart/utils/app_icons.dart';
 import 'package:trendycart/utils/common/app_appbar.dart';
 import 'package:trendycart/utils/common/app_button_v1.dart';
+import 'package:trendycart/utils/common_font.dart';
 import 'package:trendycart/view/auction_order_details/auction_order_details.dart';
 import '../../utils/app_color.dart';
 import '../../utils/common/app_image.dart';
@@ -38,10 +40,16 @@ class _MyOrderState extends State<MyOrder> {
         children: [
           SizedBox(height: Get.height * 0.020),
           commonNewCategoriesListName(),
-          Divider(color: Colors.black),
           Expanded(
             child: orderController.order.isEmpty
-                ? Center(child: AppText("No Data"))
+                ? Center(child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AppImage.svg(AppIcons.myOrderImages),
+                    SizedBox(height: 30,),
+                    AppText("No Product Found!",color: Colors.grey,fontFamily: AppFont.semiBold,),
+                  ],
+                ))
                 : Obx(() => commonCartWidget()),
           ),
         ],
@@ -55,7 +63,7 @@ class _MyOrderState extends State<MyOrder> {
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: orderController.oderList.length,
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
         itemBuilder: (BuildContext context, int index) {
           return Obx(
             () => Padding(
@@ -73,27 +81,21 @@ class _MyOrderState extends State<MyOrder> {
                     vertical: Get.height * 0.01,
                   ),
                   decoration: BoxDecoration(
-                    color: orderController.selectedIndex.value == index
-                        ? Colors.white
-                        : AppColor.primary,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      if (orderController.selectedIndex.value == index)
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.15),
-                          blurRadius: 8,
-                          offset: Offset(0, 3),
-                        ),
-                    ],
+                    gradient: orderController.selectedIndex.value == index
+                        ? AppColor.primaryGradient
+                        : const LinearGradient(
+                      colors: [Colors.white, Colors.white],
+                    ),
+                    borderRadius: BorderRadius.circular(100),
                   ),
                   child: Center(
                     child: AppText(
                       orderController.oderList[index],
                       fontSize: Get.height * 0.014,
                       color: orderController.selectedIndex.value == index
-                          ? AppColor.textBlack
-                          : AppColor.textWhite.withOpacity(0.9),
-                      fontWeight: FontWeight.bold,
+                          ? AppColor.textWhite
+                          : AppColor.textBlack,
+                      fontFamily: AppFont.semiBold,
                     ),
                   ),
                 ),
@@ -143,7 +145,7 @@ class _MyOrderState extends State<MyOrder> {
                           AppText(
                             "Order AU#35363",
                             fontSize: Get.height * 0.015,
-                            fontWeight: FontWeight.w600,
+                            fontFamily: AppFont.bold,
                           ),
                           Container(
                             padding: EdgeInsets.symmetric(
@@ -192,7 +194,7 @@ class _MyOrderState extends State<MyOrder> {
                                   Expanded(
                                     child: AppText(
                                       "Hello Product Name",
-                                      fontWeight: FontWeight.bold,
+                                      fontFamily: AppFont.bold,
                                       fontSize: Get.height * 0.016,
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -210,7 +212,7 @@ class _MyOrderState extends State<MyOrder> {
                                       "Pending Pay",
                                       fontSize: Get.height * 0.012,
                                       color: Colors.red,
-                                      fontWeight: FontWeight.w600,
+                                      fontFamily: AppFont.semiBold,
                                     ),
                                   ),
                                 ],
@@ -224,12 +226,13 @@ class _MyOrderState extends State<MyOrder> {
                                     '\$3000',
                                     fontSize: Get.height * 0.014,
                                     color: AppColor.textBlack,
-                                    fontWeight: FontWeight.bold,
+                                    fontFamily: AppFont.bold,
                                   ),
                                   AppText(
                                     'Qty: 1',
                                     fontSize: Get.height * 0.014,
                                     color: AppColor.textBlack,
+                                    fontFamily: AppFont.semiBold ,
                                   ),
                                 ],
                               ),

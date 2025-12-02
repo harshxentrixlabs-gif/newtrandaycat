@@ -1,20 +1,27 @@
+import 'dart:developer' as AppLogs;
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:trendycart/service/language_service.dart';
-import 'package:trendycart/view/navigation_menu/navigation_menu.dart';
-import 'package:trendycart/view/welcome_screen/welcome_screen.dart';
+import 'package:trendycart/view/splash_screen/splash_screen.dart';
 
 import 'firebase_options.dart';
 
 
+
+
+
 Future<void> main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await LanguageService().loadLanguages();
   runApp(const MyApp());
+
 }
 
 class MyApp extends StatelessWidget {
@@ -23,17 +30,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      translations: LanguageService(),
-      locale: LanguageService().getInitialLocale(),
-      fallbackLocale: LanguageService().getInitialLocale(),
-      theme: ThemeData(
+     title: 'Flutter Demo',
+     debugShowCheckedModeBanner: false,
+     translations: LanguageService(),
+     locale: LanguageService().getInitialLocale(),
+     fallbackLocale: LanguageService().getInitialLocale(),
+     theme: ThemeData(
        useMaterial3: false,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: WelcomeScreen(),
-    );
+       colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+     ),
+     home: SplashScreen(),
+          );
   }
 }
 

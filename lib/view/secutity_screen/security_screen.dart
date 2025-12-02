@@ -4,6 +4,7 @@ import 'package:trendycart/utils/common/app_appbar.dart';
 
 import '../../utils/app_color.dart';
 import '../../utils/common/app_text.dart';
+import '../../utils/common_font.dart';
 
 class SecurityScreen extends StatefulWidget {
   const SecurityScreen({super.key});
@@ -26,7 +27,7 @@ class _SecurityScreenState extends State<SecurityScreen> {
             AppText(
               "1. Data Protection",
               fontSize: 16,
-              fontWeight: FontWeight.w600,
+              fontFamily: AppFont.bold,
               color: AppColor.textBlack,
             ),
              SizedBox(height: 8),
@@ -34,12 +35,13 @@ class _SecurityScreenState extends State<SecurityScreen> {
               "We take your privacy seriously. All personal information is stored securely and accessed only when necessary to provide services.",
               fontSize: 14,
               color:AppColor.textBlack,
+              fontFamily: AppFont.semiBold,
             ),
              SizedBox(height: 20),
             AppText(
               "2. Secure Transactions",
               fontSize: 16,
-              fontWeight: FontWeight.w600,
+              fontFamily: AppFont.bold,
               color: AppColor.textBlack,
             ),
              SizedBox(height: 8),
@@ -47,25 +49,26 @@ class _SecurityScreenState extends State<SecurityScreen> {
               "All payments are processed through trusted, encrypted gateways to ensure your financial data remains protected.",
               fontSize: 14,
               color:AppColor.textBlack,
+              fontFamily: AppFont.semiBold,
             ),
              SizedBox(height: 20),
             AppText(
               "3. Account Security",
               fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppColor.textBlack,
+              fontFamily: AppFont.bold,
             ),
              SizedBox(height: 8),
             AppText(
               "Please do not share your password or OTP with anyone. We never ask for confidential information over email or calls.",
               fontSize: 14,
-              color:AppColor.textBlack,
+              fontFamily: AppFont.semiBold,
+              color:AppColor.background,
             ),
              SizedBox(height: 20),
             AppText(
               "4. Updates to Policy",
               fontSize: 16,
-              fontWeight: FontWeight.w600,
+              fontFamily: AppFont.bold,
               color: AppColor.textBlack,
             ),
              SizedBox(height: 8),
@@ -73,6 +76,7 @@ class _SecurityScreenState extends State<SecurityScreen> {
               "We may update our Security Policy from time to time. Please review this page periodically for the latest version.",
               fontSize: 14,
               color:AppColor.textBlack,
+              fontFamily: AppFont.semiBold,
             ),
           ],
         ),

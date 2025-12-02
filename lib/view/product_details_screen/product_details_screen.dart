@@ -14,6 +14,7 @@ import 'package:trendycart/view/product_details_screen/controller/product_contro
 
 import '../../utils/common/common_line.dart';
 import '../../utils/common/widgets.dart';
+import '../../utils/common_font.dart';
 import 'model/product_details_model.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
@@ -65,9 +66,23 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               Expanded(
                 child: SizedBox(
                   height: 60,
-                  child: OutlineWhiteButton(text: "Add to cart", onTap: () {
-                    productController.addProduct(productId: data.id ?? "");
-                  },icon: AppImage.svg(AppIcons.addToCart)),
+                  child: Obx(() => OutlineWhiteButton(
+                    text: productController.isLoading.value
+                        ? "Adding..."
+                        : "Add to cart",
+                    onTap: productController.isLoading.value
+                        ? null // disable
+                        : () {
+                      productController.addProduct(productId: data.id ?? "");
+                    },
+                    icon: productController.isLoading.value
+                        ? SizedBox(
+                      width: 22,
+                      height: 22,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                        : AppImage.svg(AppIcons.addToCart),
+                  )),
                 ),
               ),
               SizedBox(width: 10),
@@ -114,7 +129,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           child: AppText(
                             data.productName,
                             color: AppColor.textBlack,
-                            fontWeight: FontWeight.bold,
+                            fontFamily: AppFont.bold,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -146,7 +161,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     AppText(
                       '\$ ${data.price}',
                       color: AppColor.primary,
-                      fontWeight: FontWeight.bold,
+                      fontFamily: AppFont.bold,
                     ),
                     SizedBox(height: 15),
                     Row(
@@ -161,6 +176,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   "4.5",
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
+                                  fontFamily:AppFont.bold,
                                 ),
                                 SizedBox(width: 5),
                                 AppImage.svg(
@@ -175,6 +191,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               "Ratings",
                               fontSize: 16,
                               color: Colors.grey,
+                              fontFamily: AppFont.medium,
                             ),
                           ],
                         ),
@@ -185,9 +202,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               "02",
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
+                              fontFamily: AppFont.bold,
                             ),
                             SizedBox(height: 5),
-                            AppText("Sold", fontSize: 16, color: Colors.grey),
+                            AppText("Sold", fontSize: 16, color: Colors.grey,fontFamily: AppFont.medium,),
                           ],
                         ),
                         Column(
@@ -197,12 +215,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               "Berlin Germany",
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
+                              fontFamily: AppFont.bold,
                             ),
                             SizedBox(height: 5),
                             AppText(
                               "Location",
                               fontSize: 16,
                               color: Colors.grey,
+                              fontFamily: AppFont.medium,
                             ),
                           ],
                         ),
@@ -221,7 +241,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     AppText(
                       'Meterial',
                       fontSize: Get.height * 0.018,
-                      fontWeight: FontWeight.w600,
+                      fontFamily: AppFont.medium,
                       color: AppColor.textBlack,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -283,6 +303,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           AppString.product,
                           fontSize: Get.height * 0.014,
                           color: Colors.grey,
+                          fontFamily: AppFont.medium,
                           overflow: TextOverflow.ellipsis,
                         ),
                         SizedBox(width: Get.width * 0.020),
@@ -290,7 +311,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           'Product Details ',
                           fontSize: Get.height * 0.014,
                           color: AppColor.textBlack,
-                          fontWeight: FontWeight.bold,
+                          fontFamily: AppFont.semiBold,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ],
@@ -302,6 +323,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           'Category :',
                           fontSize: Get.height * 0.014,
                           color: Colors.grey,
+                          fontFamily: AppFont.medium,
                           overflow: TextOverflow.ellipsis,
                         ),
                         SizedBox(width: Get.width * 0.020),
@@ -309,7 +331,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           'Product Details ',
                           fontSize: Get.height * 0.014,
                           color: AppColor.primary,
-                          fontWeight: FontWeight.bold,
+                          fontFamily: AppFont.semiBold,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ],
@@ -319,7 +341,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       AppText(
                         AppString.productDetails,
                         fontSize: Get.height * 0.018,
-                        fontWeight: FontWeight.w600,
+                        fontFamily: AppFont.semiBold,
                         color: AppColor.textBlack,
                       ),
                       SizedBox(height: Get.height * 0.015),
@@ -333,7 +355,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     AppText(
                       AppString.relatedProducts,
                       fontSize: Get.height * 0.018,
-                      fontWeight: FontWeight.w600,
+                      fontFamily: AppFont.bold,
                       color: AppColor.textBlack,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -343,7 +365,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     AppText(
                       AppString.aboutThisSeller,
                       fontSize: Get.height * 0.018,
-                      fontWeight: FontWeight.w600,
+                      fontFamily: AppFont.bold,
                       color: AppColor.textBlack,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -370,7 +392,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             AppText(
                               "Harsh",
                               fontSize: Get.height * 0.015,
-                              fontWeight: FontWeight.bold,
+                              fontFamily: AppFont.bold,
                               color: AppColor.textBlack,
                             ),
                             SizedBox(width: Get.width * 0.020),
@@ -378,6 +400,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               "Follower : ${productController.product.isEmpty ? 0 : (productController.product.first.followerCount ?? 0)}",
                               fontSize: Get.height * 0.012,
                               color: AppColor.textBlack,
+                              fontFamily: AppFont.medium,
                             ),
                           ],
                         ),
@@ -398,7 +421,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               AppString.follow,
                               color: Colors.white,
                               fontSize: Get.height * 0.012,
-                              fontWeight: FontWeight.bold,
+                              fontFamily: AppFont.bold,
                             ),
                           ),
                         ),
@@ -485,7 +508,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 ),
                                 child: Row(
                                   children: [
-                                    AppText("4.5", fontSize: 12),
+                                    AppText("4.5", fontSize: 12,fontFamily: AppFont.bold,),
                                     SizedBox(width: 2),
                                     AppImage.svg(AppIcons.star, height: 18, color: Colors.yellow)
                                   ],
@@ -506,7 +529,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 AppText(
                                   name,
                                   fontSize: Get.height * 0.014,
-                                  fontWeight: FontWeight.w600,
+                                  fontFamily: AppFont.bold,
                                   color: AppColor.textBlack,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -516,6 +539,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   fontSize: Get.height * 0.013,
                                   color: Colors.grey[700],
                                   overflow: TextOverflow.ellipsis,
+                                  fontFamily: AppFont.medium,
                                 ),
                                 SizedBox(height: 8),
                                 Expanded(
@@ -526,7 +550,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         "\$$price",
                                         fontSize: Get.height * 0.016,
                                         color: AppColor.price,
-                                        fontWeight: FontWeight.bold,
+                                        fontFamily: AppFont.bold,
                                       ),
                                       Container(
                                         decoration: BoxDecoration(
@@ -539,7 +563,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             "Buy",
                                             fontSize: Get.height * 0.014,
                                             color: AppColor.textWhite,
-                                            fontWeight: FontWeight.bold,
+                                            fontFamily:AppFont.bold,
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                         ),

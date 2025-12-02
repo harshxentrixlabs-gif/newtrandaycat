@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'app_color.dart';
+import 'common/app_loader.dart';
 
 class AppLoaderShow {
   static void show() {
@@ -13,8 +14,8 @@ class AppLoaderShow {
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: const CircularProgressIndicator(strokeWidth: 3,
-            valueColor: AlwaysStoppedAnimation<Color>(AppColor.primary),
+          child: const AppLoaderWidget(strokeWidth: 3,
+            // valueColor: AlwaysStoppedAnimation<Color>(AppColor.primary),
           ),
         ),
       ),

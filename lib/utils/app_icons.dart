@@ -8,7 +8,7 @@ class AppIcons{
   ///All SVG Images
   static const String title = '$_basePathIcon/titel.svg';
   static const String rocket = '$_basePathIcon/rocket-svgrepo-com.svg';
-  static const String phone = '$_basePathIcon/phone-svgrepo-com.svg';
+  static const String phone = '$_basePathIcon/phone.svg';
   static const String liveAuction = '$_basePathIcon/liveAuction.svg';
   static const String google = '$_basePathIcon/google-color-svgrepo-com.svg';
   static const String success = '$_basePathIcon/success-svgrepo-com.svg';
@@ -36,7 +36,6 @@ class AppIcons{
   static const String security = '$_basePathIcon/security-svgrepo-com.svg';
   static const String legal = '$_basePathIcon/legal-access-phone-smartphone-svgrepo-com.svg';
   static const String help = '$_basePathIcon/help-svgrepo-com.svg';
-  static const String logout = '$_basePathIcon/logout-svgrepo-com.svg';
   static const String send = '$_basePathIcon/send-2-svgrepo-com.svg';
   static const String filter = '$_basePathIcon/fillter.svg';
   static const String share = '$_basePathIcon/share.svg';
@@ -47,7 +46,6 @@ class AppIcons{
   static const String live = '$_basePathIcon/live-fill-svgrepo-com.svg';
   static const String bank = '$_basePathIcon/bank-svgrepo-com.svg';
   static const String withdraw = '$_basePathIcon/withdraw-1-svgrepo-com.svg';
-  static const String edit = '$_basePathIcon/edit-svgrepo-com.svg';
   static const String popular = '$_basePathIcon/popular.svg';
 
 
@@ -68,6 +66,27 @@ class AppIcons{
   static const String myOrderIcon = '$_basePathIcon/myOrderIcon.svg';
   static const String myAddressIcon = '$_basePathIcon/myAddressIcon.svg';
   static const String myBidIcon = '$_basePathIcon/myBidIcon.svg';
+  static const String camera = '$_basePathIcon/camera.svg';
+  static const String myOrderImages = '$_basePathIcon/myOrderImages.svg';
+  static const String addressImages = '$_basePathIcon/addressImages.svg';
+  static const String addAddress = '$_basePathIcon/addAddress.svg';
+  static const String delete = '$_basePathIcon/delete.svg';
+  static const String myBideImages = '$_basePathIcon/myBidImages.svg';
+  static const String sellerProfile = '$_basePathIcon/sellerProfile.svg';
+  static const String verifyDetails = '$_basePathIcon/verifyDetails.svg';
+  static const String right = '$_basePathIcon/right.svg';
+  static const String nullImages = '$_basePathIcon/null.svg';
+  static const String location = '$_basePathIcon/location.svg';
+  static const String file = '$_basePathIcon/file.svg';
+  static const String endImages = '$_basePathIcon/endImages.svg';
+  static const String logout = '$_basePathIcon/logout.svg';
+  static const String first = '$_basePathIcon/1.png';
+  static const String tow = '$_basePathIcon/2.png';
+  static const String three = '$_basePathIcon/3.png';
+  static const String login = '$_basePathIcon/login.png';
+  static const String loginIcons = '$_basePathIcon/loginIcons.svg';
+  static const String successSignUp = '$_basePathIcon/success.svg';
+  static const String eye = '$_basePathIcon/eye.svg';
 
 
 

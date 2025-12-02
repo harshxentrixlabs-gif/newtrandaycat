@@ -2,6 +2,7 @@ import 'dart:developer' as AppLogs;
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:trendycart/app_string/app_string.dart';
@@ -12,6 +13,8 @@ import 'package:trendycart/view/carts_screen/model/cart_model.dart';
 
 import '../../utils/app_icons.dart';
 import '../../utils/common/app_image.dart';
+import '../../utils/common/app_loader.dart';
+import '../../utils/common_font.dart';
 import '../../utils/globle_veriables.dart';
 import 'controller/carts_controller.dart';
 
@@ -35,67 +38,72 @@ class _CartsScreenState extends State<CartsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final model = cartsController.cartModel.value;
-    return Scaffold(
-      backgroundColor: AppColor.background,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        elevation: 0,
-        title: Obx(() {
-          final model = cartsController.cartModel.value;
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              AppText(
-                AppString.carts,
-                fontSize: Get.height * 0.020,
-                fontWeight: FontWeight.bold,
-              ),
-              AppText(
-                "(${model?.totalItems ?? 0})",
-                fontSize: Get.height * 0.020,
-                fontWeight: FontWeight.bold,
-              ),
-            ],
-          );
-        }),
+    return AnnotatedRegion(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Color(0xffffdabe),
+        statusBarIconBrightness: Brightness.dark,
       ),
-      bottomSheet: Obx(() {
-        return SingleChildScrollView(
-          child: Container(
-            color: Colors.white,
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: Get.width * 0.2,
-                vertical: Get.height * 0.02,
-              ),
-              child: Column(
-                children: [
-                  cartsController.cartList.isEmpty
-                      ? const SizedBox()
-                      : CommonBlackButton(
-                          title: AppString.checkOut,
-                          image: AppIcons.back,
-                          onTap: () {
-                            AppLogs.log("CheckOut >>");
-                          },
-                        ),
-                ],
+      child: Scaffold(
+        backgroundColor: AppColor.background,
+        appBar: AppBar(
+          backgroundColor: AppColor.background,
+          centerTitle: true,
+          elevation: 0,
+          title: Obx(() {
+            final model = cartsController.cartModel.value;
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                AppText(
+                  AppString.carts,
+                  fontSize: Get.height * 0.020,
+                  fontWeight: FontWeight.bold,
+                ),
+                AppText(
+                  "(${model?.totalItems ?? 0})",
+                  fontSize: Get.height * 0.020,
+                  fontWeight: FontWeight.bold,
+                ),
+              ],
+            );
+          }),
+        ),
+        bottomSheet: Obx(() {
+          return SingleChildScrollView(
+            child: Container(
+              color: Colors.white,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: Get.width * 0.2,
+                  vertical: Get.height * 0.02,
+                ),
+                child: Column(
+                  children: [
+                    cartsController.cartList.isEmpty
+                        ? const SizedBox()
+                        : CommonBlackButton(
+                            title: AppString.checkOut,
+                            image: AppIcons.back,
+                            onTap: () {
+                              AppLogs.log("CheckOut >>");
+                            },
+                          ),
+                  ],
+                ),
               ),
             ),
-          ),
-        );
-      }),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: Get.width * 0.040),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              commonCarts(),
-              SizedBox(height: Get.height * 0.20),
-            ],
+          );
+        }),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: Get.width * 0.040),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                commonCarts(),
+                SizedBox(height: Get.height * 0.20),
+              ],
+            ),
           ),
         ),
       ),
@@ -107,7 +115,7 @@ class _CartsScreenState extends State<CartsScreen> {
       if (cartsController.isLoading.value) {
         return SizedBox(
           height: Get.height * 0.70,
-          child: Center(child: CircularProgressIndicator()),
+          child: Center(child: AppLoaderWidget()),
         );
       }
       if (cartsController.cartList.isEmpty) {
@@ -119,7 +127,11 @@ class _CartsScreenState extends State<CartsScreen> {
               children: [
                 AppImage.svg(AppIcons.cartImage),
                 SizedBox(height: 25),
-                AppText("No Data Found"),
+                AppText(
+                  "No Data Found!",
+                  fontFamily: AppFont.semiBold,
+                  color: Colors.grey,
+                ),
               ],
             ),
           ),
@@ -132,6 +144,7 @@ class _CartsScreenState extends State<CartsScreen> {
         itemBuilder: (BuildContext context, int index) {
           final data = cartsController.cartList[index];
           final product = data.productId;
+          AppLogs.log("product Id == ${product.id}");
           return GestureDetector(
             onTap: () => AppLogs.log('Tapped item $index'),
             child: Container(
@@ -141,7 +154,7 @@ class _CartsScreenState extends State<CartsScreen> {
                 borderRadius: BorderRadius.circular(15),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.08),
+                    color: Colors.black.withValues(alpha: 0.08),
                     blurRadius: 6,
                     offset: Offset(0, 3),
                   ),
@@ -167,14 +180,12 @@ class _CartsScreenState extends State<CartsScreen> {
                         children: [
                           AppText(
                             product.productName,
-                            fontWeight: FontWeight.bold,
+                            fontFamily: AppFont.bold,
                           ),
-                          SizedBox(height: Get.height * 0.008),
-                          AppText(product.productName, fontSize: 12),
                           SizedBox(height: Get.height * 0.010),
                           AppText(
                             '\$ ${data.purchasedTimeProductPrice}',
-                            fontWeight: FontWeight.bold,
+                            fontFamily: AppFont.bold,
                             color: AppColor.price,
                           ),
                         ],
@@ -194,58 +205,69 @@ class _CartsScreenState extends State<CartsScreen> {
                         ],
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(8.0),
                         child: Column(
                           children: [
-                            InkWell(
-                              onTap: () {
-                                if (data.productQuantity == 1) {
-                                  cartsController.deleteCart();
-                                  AppLogs.log("if Part ");
-                                  cartsController.getCartList();
-                                } else {
-                                  cartsController.decrementQuantity(index);
-                                  AppLogs.log("===============${product.id}");
-                                  AppLogs.log("else Part ");
-                                }
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle,
-                                  border: Border.all(color: Colors.grey),
+                            Obx(() {
+                              final isUpdating = cartsController.updatingIndexes.contains(index);
+                              return InkWell(
+                                onTap: isUpdating ? null : () {
+                                  cartsController.decrement(index);
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.all(4),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(color: Colors.grey),
+                                  ),
+                                  child: isUpdating
+                                      ? Icon(
+                                    Icons.remove,
+                                    size: Get.height * 0.015,
+                                    color: Colors.grey,
+                                  )
+                                      : Icon(
+                                    Icons.remove,
+                                    size: Get.height * 0.015,
+                                    color: Colors.grey,
+                                  ),
                                 ),
-                                child: Icon(
-                                  Icons.remove,
-                                  size: Get.height * 0.015,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ),
+                              );
+                            }),
                             SizedBox(height: 10),
-                            AppText(
-                              "${data.productQuantity}",
+                            Obx(() => AppText(
+                              "${cartsController.cartList[index].productQuantity}",
                               color: Colors.black,
-                              fontWeight: FontWeight.w600,
-                            ),
+                              fontFamily: AppFont.bold,
+                            )),
                             SizedBox(height: 10),
-                            InkWell(
-                              onTap: () =>
-                                  cartsController.incrementQuantity(index),
-                              child: Container(
-                                padding: EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(color: Colors.grey),
+                            Obx(() {
+                              final isUpdating = cartsController.updatingIndexes.contains(index);
+                              return InkWell(
+                                onTap: isUpdating ? null : () {
+                                  cartsController.increment(index);
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.all(4),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(color: Colors.grey),
+                                  ),
+                                  child: isUpdating
+                                      ? Icon(
+                                    Icons.add,
+                                    size: Get.height * 0.015,
+                                    color: Colors.grey,
+                                  )
+                                      : Icon(
+                                    Icons.add,
+                                    size: Get.height * 0.015,
+                                    color: Colors.grey,
+                                  ),
                                 ),
-                                child: Icon(
-                                  Icons.add,
-                                  size: Get.height * 0.015,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ),
+                              );
+                            }),
                           ],
                         ),
                       ),

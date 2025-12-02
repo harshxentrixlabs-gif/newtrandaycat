@@ -8,7 +8,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import '../../../service/api_config.dart';
 import '../../../utils/app_storage.dart';
-import '../../navigation_menu/navigation_menu.dart';
+import '../../bottom_bar/bottom_bar.dart';
 import '../model/login_model.dart';
 
 class LoginController extends GetxController {

@@ -32,7 +32,8 @@ class ApiConfig {
   static const getCategory = "$baseUrl/category";
   static const reelLikeOrDislikeOfReel = "$baseUrl/reel/likeOrDislikeOfReel";
   static const getRelatedProductsByCategory = "$baseUrl/product/getRelatedProductsByCategory";
-  static const removeTOCart = "$baseUrl/cart/removeProduct";
+  static const updateCart = "$baseUrl/cart/removeProduct";
+  static const searchProduct = "$baseUrl/product/searchProduct";
 
 
 

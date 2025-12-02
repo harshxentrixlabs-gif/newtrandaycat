@@ -4,6 +4,7 @@ import 'package:trendycart/utils/common/app_appbar.dart';
 import 'package:trendycart/utils/common/app_text.dart';
 import 'package:trendycart/utils/common/app_image.dart';
 import '../../utils/app_color.dart';
+import '../../utils/common_font.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -41,7 +42,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
             children: [
               AppImage.svg(AppIcons.noData),
               SizedBox(height: 15,),
-              AppText("No Notification"),
+              AppText("No Notification",fontFamily:AppFont.semiBold,),
             ],
           ))
           : ListView.builder(
@@ -80,13 +81,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       item["title"]!,
                       color: AppColor.textBlack,
                       fontSize: 14,
-                      fontWeight: FontWeight.w600,
+                      fontFamily: AppFont.bold,
                     ),
                     SizedBox(height: 5,),
                     AppText(
                       "2h ago",
                       color: AppColor.textBlack,
                       fontSize: 12,
+                      fontFamily: AppFont.medium,
                     ),
                   ],
                 ),
