@@ -15,7 +15,6 @@ import '../../utils/app_icons.dart';
 import '../../utils/common/app_image.dart';
 import '../../utils/common/app_loader.dart';
 import '../../utils/common_font.dart';
-import '../../utils/globle_veriables.dart';
 import 'controller/carts_controller.dart';
 
 class CartsScreen extends StatefulWidget {
