@@ -261,6 +261,7 @@ class _CartsScreenState extends State<CartsScreen> {
                                     size: Get.height * 0.015,
                                     color: Colors.grey,
                                   )
+
                                       : Icon(
                                     Icons.add,
                                     size: Get.height * 0.015,
