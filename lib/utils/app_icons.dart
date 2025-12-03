@@ -87,6 +87,7 @@ class AppIcons{
   static const String loginIcons = '$_basePathIcon/loginIcons.svg';
   static const String successSignUp = '$_basePathIcon/success.svg';
   static const String eye = '$_basePathIcon/eye.svg';
+  static const String appBar = '$_basePathIcon/appBar.svg';
 
 
 

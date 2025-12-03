@@ -29,14 +29,14 @@ class _LikeScreenState extends State<LikeScreen> {
   @override
   void initState() {
     super.initState();
-    favoriteController.fetchFavoriteList();  // 🔥 Load favorites
+    favoriteController.fetchFavoriteList();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.background,
-      appBar: AppAppBar(title: "Wishlist"),
+      appBar: CommonAppBar( name: 'Wishlist',),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
@@ -70,117 +70,115 @@ class _LikeScreenState extends State<LikeScreen> {
                     itemBuilder: (context, index) {
                       final item = favoriteController.favoriteList[index];
                       final product = item.product.first;
-                      return Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(14),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
-                                blurRadius: 6,
-                                offset: Offset(1, 1),
-                              )
-                            ],
-                          ),
-                          child: Column(
-                            children: [
-                              Stack(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                      child: AppImage.network(
-                                        product.mainImage,
-                                        height: 150,
-                                        width: double.infinity,
-                                        fit: BoxFit.cover,
-                                      ),
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(14),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 6,
+                              offset: Offset(1, 1),
+                            )
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            Stack(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    child: AppImage.network(
+                                      product.mainImage,
+                                      height: 150,
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
-                                  Positioned(
-                                    top: 15,
-                                    right: 15,
+                                ),
+                                Positioned(
+                                  top: 15,
+                                  right: 15,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.all(Radius.circular(100)),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        AppText("4.5", fontSize: 12,fontFamily:AppFont.bold),
+                                        SizedBox(width: 2),
+                                        AppImage.svg(AppIcons.star, height: 18, color: Colors.yellow)
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: 15,
+                                  right: 15,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      favoriteController.toggleFavorite(
+                                        item.productId,
+                                        item.categoryId,
+                                      );
+                                    },
                                     child: Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                                      decoration: const BoxDecoration(
+                                      padding: EdgeInsets.all(6),
+                                      decoration: BoxDecoration(
                                         color: Colors.white,
-                                        borderRadius: BorderRadius.all(Radius.circular(100)),
+                                        shape: BoxShape.circle,
                                       ),
-                                      child: Row(
-                                        children: [
-                                          AppText("4.5", fontSize: 12,fontFamily:AppFont.bold),
-                                          SizedBox(width: 2),
-                                          AppImage.svg(AppIcons.star, height: 18, color: Colors.yellow)
-                                        ],
+                                      child: Icon(
+                                        Icons.favorite,
+                                        color: Colors.red,
+                                        size: 22,
                                       ),
                                     ),
                                   ),
-                                  Positioned(
-                                    bottom: 15,
-                                    right: 15,
-                                    child: GestureDetector(
+                                ),
+
+                              ],
+                            ),
+                            Padding(
+                              padding:  EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  AppText(
+                                    product.productName,
+                                    fontSize: 14,
+                                    fontFamily:AppFont.bold,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  SizedBox(height: 10),
+                                  AppText(
+                                    "\$ ${product.price}",
+                                    fontSize: 15,
+                                    color: AppColor.price,
+                                      fontFamily: AppFont.bold,
+                                  ),
+                                  SizedBox(height: 6),
+                                  SizedBox(
+                                    height: 35,
+                                    width: double.infinity,
+                                    child: CommonButton(
                                       onTap: () {
-                                        favoriteController.toggleFavorite(
-                                          item.productId,
-                                          item.categoryId,
+                                        Get.to(()=>ProductDetailsScreen(productId: "",),
+                                            transition: Transition.rightToLeft
                                         );
                                       },
-                                      child: Container(
-                                        padding: EdgeInsets.all(6),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Icon(
-                                          Icons.favorite,
-                                          color: Colors.red,
-                                          size: 22,
-                                        ),
-                                      ),
+                                      title: "Add to Cart",
                                     ),
                                   ),
-
                                 ],
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    AppText(
-                                      product.productName,
-                                      fontSize: 14,
-                                      fontFamily:AppFont.bold,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    SizedBox(height: 10),
-                                    AppText(
-                                      "\$ ${product.price}",
-                                      fontSize: 15,
-                                      color: AppColor.price,
-                                        fontFamily: AppFont.bold,
-                                    ),
-                                    SizedBox(height: 6),
-                                    SizedBox(
-                                      height: 35,
-                                      width: double.infinity,
-                                      child: CommonButton(
-                                        onTap: () {
-                                          Get.to(()=>ProductDetailsScreen(productData: product,),
-                                              transition: Transition.rightToLeft
-                                          );
-                                        },
-                                        title: "Add to Cart",
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                            ),
 
-                            ],
-                          ),
+                          ],
                         ),
                       );
                     },

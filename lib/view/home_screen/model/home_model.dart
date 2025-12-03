@@ -786,6 +786,7 @@ class RelatedProduct {
   String? category;
   bool isFavorite;
 
+
   RelatedProduct({
     this.id,
     this.productName,
@@ -816,7 +817,6 @@ class RelatedProduct {
     );
   }
 
-  /// ⭐ MUST HAVE for state updates
   RelatedProduct copyWith({
     bool? isFavorite,
   }) {

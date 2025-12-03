@@ -59,8 +59,15 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         child: Scaffold(
           backgroundColor: AppColor.background,
-          appBar: CommonAppBar(
-            name: "",
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            title: Row(
+              children: [
+                AppText("Trendycart",fontFamily: AppFont.bold,fontSize: 22,),
+                AppImage.svg(AppIcons.appBar)
+              ],
+            ),
+            elevation: 0,
             actions: [
               Padding(
                 padding: EdgeInsets.only(right: Get.width * 0.07),
@@ -70,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     InkWell(
                       onTap: () {
                         Get.to(
-                          () => NotificationScreen(),
+                              () => NotificationScreen(),
                           transition: Transition.rightToLeft,
                         );
                       },
@@ -80,10 +87,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ],
-            onTap: () {
-              navigationController.changeIndex(4);
-            },
-            image: AppIcons.title,
           ),
           body: SingleChildScrollView(
             child: Padding(
@@ -197,15 +200,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                   SizedBox(height: Get.height * 0.020),
-                  Obx(
-                    () => newCollectionList(
-                      onTap: (productData) {
-                        Get.to(
-                          () => ProductDetailsScreen(productData: productData),
-                        );
-                      },
-                    ),
-                  ),
+                  Obx(() => newCollectionList(onTap: (data) {
+                    Get.to(() => ProductDetailsScreen(
+                      productId: data.id,
+                    ));
+                  })),
                   SizedBox(height: Get.height * 0.020),
                   commonViewAllAndTitle(
                     title: AppString.popularProducts,
@@ -219,22 +218,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     images: AppIcons.popular,
                   ),
                   SizedBox(height: Get.height * 0.020),
-                  Obx(
-                    () => popularProductsList(
-                      onTap: (productData) {
-                        Get.to(
-                          () => ProductDetailsScreen(productData: productData),
-                        );
-                      },
-                    ),
-                  ),
+                  Obx(() => popularProductsList(onTap: (data) {
+                    Get.to(() => ProductDetailsScreen(
+                      productId: data.id,
+                    ));
+                  })),
                   SizedBox(height: Get.height * 0.020),
                   AppText(AppString.justForYou, fontWeight: FontWeight.w600),
-                  Obx(
-                    () => commonJustForYou((just) {
-                      Get.to(() => ProductDetailsScreen(productData: just),transition: Transition.rightToLeft);
-                    }),
-                  ),
+                  Obx(() => commonJustForYou((data) {
+                    Get.to(
+                          () => ProductDetailsScreen(productId: data.id),
+                      transition: Transition.rightToLeft,
+                    );
+                  })),
                 ],
               ),
             ),

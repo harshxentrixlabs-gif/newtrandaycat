@@ -101,7 +101,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               SizedBox(height: 15),
               Obx(() => commonSearch((product) {
-                Get.to(() => ProductDetailsScreen(productData: product),transition: Transition.rightToLeft);
+                Get.to(() => ProductDetailsScreen(productId: product),transition: Transition.rightToLeft);
               })),
             ],
           ),

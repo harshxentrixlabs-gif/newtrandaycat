@@ -80,7 +80,7 @@ class _CartsScreenState extends State<CartsScreen> {
                 child: Column(
                   children: [
                     cartsController.cartList.isEmpty
-                        ? const SizedBox()
+                        ?  SizedBox()
                         : CommonBlackButton(
                             title: AppString.checkOut,
                             image: AppIcons.back,

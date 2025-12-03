@@ -93,6 +93,9 @@ class HomeController extends GetxController {
 
 
 
+
+
+
   Future<void> getCategory() async {
     AppLogs.log("🔷 getCategory STARTED");
 
@@ -237,7 +240,6 @@ class HomeController extends GetxController {
       bool isFav,
       ) async {
     AppLogs.log("🔷 updateFavoriteOnServer STARTED");
-
     try {
       final api = AppApi.getInstance();
 
@@ -261,4 +263,8 @@ class HomeController extends GetxController {
       return false;
     }
   }
+
+
+
+
 }
