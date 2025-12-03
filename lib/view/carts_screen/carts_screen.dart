@@ -48,6 +48,7 @@ class _CartsScreenState extends State<CartsScreen> {
           backgroundColor: AppColor.background,
           centerTitle: true,
           elevation: 0,
+
           title: Obx(() {
             final model = cartsController.cartModel.value;
             return Row(
